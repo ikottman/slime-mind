@@ -3,11 +3,7 @@
     "version": "2.3.0",
     "description": "pixi.js typescript boilerplate",
     "scripts": {
-        "test": "npx jest",
-        "code-coverage": "jest --coverage",
-        "type-check": "tsc --noEmit",
-        "clean-build": "npx del-cli ./dist",
-        "dev": "parcel ./src/index.html --port=8080 --open ",
+        "start": "parcel ./src/index.html --port=8080 --open ",
         "build": "npm run type-check & npm run clean-build & parcel build ./src/index.html",
         "pretty-format": "npx prettier --write src/**/*.ts",
         "pretty-check": "npx prettier -c ./src/**/*.ts",
