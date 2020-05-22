@@ -5,7 +5,10 @@ import Sprite from './models/sprite';
 
 const SIZE = 360;
 const app = new PIXI.Application({
-    width: SIZE, height: SIZE, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
+    width: SIZE,
+    height: SIZE,
+    backgroundColor: 0x1099bb,
+    resolution: 1,
 });
 document.body.appendChild(app.view);
 
