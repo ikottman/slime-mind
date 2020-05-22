@@ -12,7 +12,6 @@ for (let i = 0; i < GRID_SIZE; i++) {
 // move back and forth
 let flip = false;
 function moveBunny(bunny: Sprite) {
-    
     if (bunny.x == GRID_SIZE) {
         flip = true;
     } else if (bunny.x == 0) {
