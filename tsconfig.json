@@ -5,5 +5,5 @@
         "strict": true,
         "esModuleInterop": true
     },
-    "include": ["src/main.ts", "./types/*.d.ts"]
+    "include": ["src/game/game.ts", "./types/*.d.ts"]
 }

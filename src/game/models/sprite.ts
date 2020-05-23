@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { SPRITE_SIZE, APP } from "../constants";
 export enum TYPE {
-  PLANT,
-  BUNNY
+  PLANT= 'PLANT',
+  BUNNY= 'BUNNY'
 };
 export class Sprite {
   id = PIXI.utils.uid();
@@ -21,6 +21,7 @@ export class Sprite {
   }
 
   move(x: number, y: number) {
+    //console.log(`${this.type} ${this.id} moving from ${this.x},${this.y} to ${x},${y}`);
     this.x = x;
     this.y = y;
     this.sprite.x = x * SPRITE_SIZE;
