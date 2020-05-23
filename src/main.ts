@@ -1,7 +1,7 @@
 import rabbitImage from "./assets/rabbit.png";
 import plantImage from "./assets/plant.png";
 import { Sprite, TYPE } from './models/sprite';
-import { APP, GRID_SIZE } from './constants';
+import { APP, GRID_SIZE, TURN } from './constants';
 document.body.appendChild(APP.view);
 // all the sprites on the grid. An empty space is null
 const map: Array<Array<Sprite | null>> = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
@@ -104,13 +104,14 @@ const sprites: Array<Sprite> = [].concat(...map).filter((s: Sprite | null) => s 
 const bunnies: Array<Sprite> = sprites.filter((s: Sprite) => s.type == TYPE.BUNNY);
 const plants: Array<Sprite> = sprites.filter((s: Sprite) => s.type == TYPE.PLANT);
 
-// game clock
-let turn = 0;
+// TODO: manually call render so we can simulate without painting to screen https://pixijs.download/dev/docs/PIXI.Ticker.html#.shared
 APP.ticker.add(() => {
+    TURN++;
+    console.log(TURN);
     bunnies.forEach(bunny => moveBunny(bunny));
     plants.forEach(plant => growPlant(plant));
 
-    if (turn > 1000) {
-        throw Error();
+    if (TURN > 1000) {
+        APP.ticker.stop();
     }
 });

@@ -5,13 +5,14 @@ export enum TYPE {
   BUNNY
 };
 export class Sprite {
+  id = PIXI.utils.uid();
   sprite: PIXI.Sprite;
   x = 0;
   y = 0;
   type: TYPE;
 
   constructor(asset: string, x = 0, y = 0, type: TYPE) {
-      this.sprite = new PIXI.Sprite(PIXI.Texture.from(asset));
+      this.sprite = PIXI.Sprite.from(asset);
       this.type = type;
       this.sprite.height = SPRITE_SIZE;
       this.sprite.width = SPRITE_SIZE;
