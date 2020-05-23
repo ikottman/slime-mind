@@ -4,7 +4,7 @@
     "description": "pixi.js typescript boilerplate",
     "scripts": {
         "start": "parcel ./src/main.html --port=8080 --open ",
-        "build": "parcel build ./src/main.html",
+        "build": "rm -rf ./dist && parcel build ./src/main.html --public-url ./",
         "pretty-format": "npx prettier --write src/**/*.ts"
     },
     "author": "ikottman",
