@@ -1,13 +1,18 @@
 import * as PIXI from "pixi.js";
 import { SPRITE_SIZE, APP } from "../constants";
-
-export default class Sprite {
+export enum TYPE {
+  PLANT,
+  BUNNY
+};
+export class Sprite {
   sprite: PIXI.Sprite;
   x = 0;
   y = 0;
+  type: TYPE;
 
-  constructor(asset: string, x = 0, y = 0) {
+  constructor(asset: string, x = 0, y = 0, type: TYPE) {
       this.sprite = new PIXI.Sprite(PIXI.Texture.from(asset));
+      this.type = type;
       this.sprite.height = SPRITE_SIZE;
       this.sprite.width = SPRITE_SIZE;
       APP.stage.addChild(this.sprite);
