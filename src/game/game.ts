@@ -74,7 +74,9 @@ export default class Game {
     }
 
     private invalidAction(action: Action, playerId: number) {
-        if (!action || action.id == undefined || action.id == null) {
+        if (!action || action.id == undefined || action.id == null || 
+            action.x == null || action.x == undefined || 
+            action.y == null || action.y == undefined) {
             console.log(`invalid action, something is null: ${JSON.stringify(action)}`);
             return true;
         }
@@ -90,8 +92,13 @@ export default class Game {
             return true;
         }
 
-        if (this.invalidMove(action.x, action.y)) {
-            console.log(`invalid action, x, y are invalid: ${JSON.stringify(action)}`);
+        if (!inBounds(action.x, action.y)) {
+            console.log(`invalid action, out of bounds: ${JSON.stringify(action)}`);
+            return true;
+        }
+        
+        if (action.action === ACTIONS.MOVE && this.spaceOccupied(action.x, action.y)) {
+            console.log(`invalid action, target square occupied: ${JSON.stringify(action)}`);
             return true;
         }
 

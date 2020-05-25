@@ -16,34 +16,28 @@ export default class Random implements AI {
     return [x, y];
   }
 
+  private findValidMove(pawn: any) {
+    // brute force finding a valid move with max attempts
+    let x, y;
+    let [xDelta, yDelta] = this.randomMove();
+    x = pawn.x + xDelta;
+    y = pawn.y + yDelta;
+    return [x, y];
+  }
+
   takeAction(map: any) {
     const myPawns = [];
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map.length; j++) {
         if (map[i][j]?.owner == this.playerId) {
-          myPawns.push(map[i][j].id);
+          myPawns.push(map[i][j]);
         }
       }
     }
   
-    const id = myPawns[randomInt(0, myPawns.length - 1)];
-    const example = new Action(id, ACTIONS.MOVE, randomInt(0, GRID_SIZE-1), randomInt(0, GRID_SIZE-1));
+    const pawn = myPawns[randomInt(0, myPawns.length - 1)];
+    const [x, y] = this.findValidMove(pawn);
+    const example = new Action(pawn.id, ACTIONS.MOVE, x, y);
     return example
   }
 }
-
-// // brute force finding a valid move with max attempts
-// let x, y;
-// let tries = 0;
-// do {
-//     let [xDelta, yDelta] = this.randomMove();
-//     x = bunny.x + xDelta;
-//     y = bunny.y + yDelta;
-//     tries++;
-// }
-// while (this.invalidMove(x, y) && tries < 10);
-
-// if (!this.invalidMove(x, y)) {
-//     bunny.move(x, y);
-//     this.refreshMap();
-// }
