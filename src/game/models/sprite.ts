@@ -7,19 +7,20 @@ export enum TYPE {
   BUNNY= 'BUNNY'
 };
 export class Sprite {
-  id = PIXI.utils.uid();
+  id: number;
   sprite: PIXI.Sprite;
   type: TYPE;
   pawn: Pawn;
 
-  constructor(asset: string, pawn: Pawn, type: TYPE) {
-      this.sprite = PIXI.Sprite.from(asset);
-      this.type = type;
-      this.sprite.height = SPRITE_SIZE;
-      this.sprite.width = SPRITE_SIZE;
-      APP.stage.addChild(this.sprite);
-      this.pawn = pawn;
-      this.move(pawn.x, pawn.y);
+  constructor(id: number, asset: string, pawn: Pawn, type: TYPE) {
+    this.id = id;
+    this.sprite = PIXI.Sprite.from(asset);
+    this.type = type;
+    this.sprite.height = SPRITE_SIZE;
+    this.sprite.width = SPRITE_SIZE;
+    APP.stage.addChild(this.sprite);
+    this.pawn = pawn;
+    this.move(pawn.x, pawn.y);
   }
 
   move(x: number, y: number) {

@@ -4,7 +4,10 @@ import { GRID_SIZE } from '../constants';
 import { randomInt } from '../utils';
 
 export default class Random implements AI {
-  constructor() {}
+  playerId: number
+  constructor(playerId: number) {
+    this.playerId = playerId;
+  }
 
   // random x, y both in range [-1, 1]
   private randomMove() {
@@ -13,7 +16,17 @@ export default class Random implements AI {
     return [x, y];
   }
 
-  takeAction(id: number) {
+  takeAction(map: any) {
+    const myPawns = [];
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map.length; j++) {
+        if (map[i][j]?.owner == this.playerId) {
+          myPawns.push(map[i][j].id);
+        }
+      }
+    }
+  
+    const id = myPawns[randomInt(0, myPawns.length - 1)];
     const example = new Action(id, ACTIONS.MOVE, randomInt(0, GRID_SIZE-1), randomInt(0, GRID_SIZE-1));
     return example
   }

@@ -6,9 +6,9 @@ export class Action {
   id: number;
   x = 0;
   y = 0;
-  action: ACTION;
+  action: ACTIONS;
 
-  constructor(id: number, action: ACTION, x: number, y: number) {
+  constructor(id: number, action: ACTIONS, x: number, y: number) {
       this.id = id;
       this.action = action;
       this.x = x;
