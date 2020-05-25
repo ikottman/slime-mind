@@ -4,7 +4,8 @@ import { GRID_SIZE } from '../constants';
 import { randomInt } from '../utils';
 
 export default class Random implements AI {
-  playerId: number
+  playerId: number;
+  map = [];
   constructor(playerId: number) {
     this.playerId = playerId;
   }
@@ -16,16 +17,26 @@ export default class Random implements AI {
     return [x, y];
   }
 
+  private invalidMove(x: number, y: number) {
+    return x < 0 || y < 0 || x >= GRID_SIZE || y >= GRID_SIZE || this.map[x][y];
+  }
+
   private findValidMove(pawn: any) {
     // brute force finding a valid move with max attempts
-    let x, y;
-    let [xDelta, yDelta] = this.randomMove();
-    x = pawn.x + xDelta;
-    y = pawn.y + yDelta;
+    let x, y = [pawn.x, pawn.y];
+    let tries = 0;
+    do {
+        let [xDelta, yDelta] = this.randomMove();
+        x = pawn.x + xDelta;
+        y = pawn.y + yDelta;
+        tries++;
+    }
+    while (this.invalidMove(x, y) && tries < 100);
     return [x, y];
   }
 
   takeAction(map: any) {
+    this.map = map;
     const myPawns = [];
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map.length; j++) {
