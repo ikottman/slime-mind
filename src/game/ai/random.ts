@@ -1,11 +1,11 @@
 import { AI } from '../models/player';
+import Pawn from '../models/pawn';
 import { Action, ACTIONS } from '../models/action';
 import { GRID_SIZE } from '../constants';
 import { randomInt } from '../utils';
-
 export default class Random implements AI {
   playerId: number;
-  map = [];
+  map: Array<Array<any>> = [];
   constructor(playerId: number) {
     this.playerId = playerId;
   }
@@ -21,9 +21,9 @@ export default class Random implements AI {
     return x < 0 || y < 0 || x >= GRID_SIZE || y >= GRID_SIZE || this.map[x][y];
   }
 
-  private findValidMove(pawn: any) {
+  private findValidMove(pawn: Pawn) {
     // brute force finding a valid move with max attempts
-    let x, y = [pawn.x, pawn.y];
+    let [x, y] = [pawn.x, pawn.y];
     let tries = 0;
     do {
         let [xDelta, yDelta] = this.randomMove();
@@ -35,7 +35,7 @@ export default class Random implements AI {
     return [x, y];
   }
 
-  takeAction(map: any) {
+  takeAction(map: Array<Array<Pawn>>) {
     this.map = map;
     const myPawns = [];
     for (let i = 0; i < map.length; i++) {
