@@ -1,5 +1,6 @@
 <script>
-  export let turn;
+  import { turnStore } from './store';
+
 </script>
 
 <style>
@@ -8,5 +9,4 @@
   }
 </style>
 
-<h1>Turn: {turn}</h1>
-<button>start</button>
+<h1>Turn: {$turnStore}</h1>

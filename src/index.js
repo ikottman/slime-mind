@@ -1,15 +1,9 @@
-import Controls from './ui/Controls.svelte';
+import Turn from './ui/Turn.svelte';
 import Game from './game/game';
-import { TURN } from './game/constants';
-
-// render UI
-const controls = new Controls({
-  target: document.body,
-  props: {
-    turn: TURN,
-  },
-});
-export default controls;
 
 const game = new Game();
 game.run();
+
+// render UI
+const turn = new Turn({target: document.body});
+export default turn;

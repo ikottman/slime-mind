@@ -1,8 +1,9 @@
 import rabbitImage from "./assets/rabbit.png";
 import plantImage from "./assets/plant.png";
 import { Sprite, TYPE } from './models/sprite';
-import { APP, GRID_SIZE, TURN } from './constants';
+import { APP, GRID_SIZE } from './constants';
 import { inBounds, randomInt } from './utils';
+import { turn, turnStore } from '../ui/store';
 
 export default class Game {
     // all the sprites on the grid. An empty space is null
@@ -105,15 +106,14 @@ export default class Game {
         this.plants.forEach((plant) => this.map[plant.x][plant.y] = plant);
         // TODO: can we get list of all rendered sprites and calculate their grid point so we don't have to use these lists?
     }
-  
+
     run() {
-        // TODO: manually call render so we can simulate without painting to screen https://pixijs.download/dev/docs/PIXI.Ticker.html#.shared
         APP.ticker.add(() => {
-            TURN++;
+            turnStore.update(t => t + 1);
             this.bunnies.forEach(bunny => this.moveBunny(bunny));
             this.plants.forEach(plant => this.growPlant(plant));
 
-            if (TURN > 1000) {
+            if (turn > 500) {
                 APP.ticker.stop();
             }
         });
