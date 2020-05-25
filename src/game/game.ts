@@ -73,7 +73,41 @@ export default class Game {
         });
     }
 
-    private executeAction(action: Action) {
+    private invalidAction(action: Action, playerId: number) {
+        if (!action || action.id == undefined || action.id == null) {
+            console.log(`invalid action, something is null: ${JSON.stringify(action)}`);
+            return true;
+        }
+
+        const target = this.sprites.find((s) => s.id == action.id);
+        if (!target) {
+            console.log(`invalid action, no pawn with the id: ${JSON.stringify(action)}`);
+            return true;
+        }
+
+        if (target.pawn.owner != playerId) {
+            console.log(`invalid action, owner does not match ${JSON.stringify(action)}`);
+            return true;
+        }
+
+        if (this.invalidMove(action.x, action.y)) {
+            console.log(`invalid action, x, y are invalid: ${JSON.stringify(action)}`);
+            return true;
+        }
+
+        if (action.x < target.x() - 1 || action.x > target.x() + 1 || 
+            action.y < target.y() - 1 || action.y > target.y() + 1) {
+            console.log(`invalid action, more than one square away: ${JSON.stringify(action)}`);
+            return true;
+        }
+
+        return false;
+    }
+
+    private executeAction(action: Action, playerId: number) {
+        if (this.invalidAction(action, playerId)) {
+            return;
+        }
         switch (action.action) {
             case ACTIONS.MOVE:
                 const target = this.sprites.find((s) => s.id == action.id);
@@ -95,7 +129,7 @@ export default class Game {
 
         APP.ticker.add(() => {
             turnStore.update(t => t + 1);
-            this.executeAction(playerOne.ai.takeAction(this.map));
+            this.executeAction(playerOne.ai.takeAction(this.map), playerOne.id);
             
             this.growPlants();
 
