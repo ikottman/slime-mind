@@ -1,6 +1,7 @@
 import rabbitImage from "./assets/rabbit.png";
 import plantImage from "./assets/plant.png";
 import { Sprite, TYPE } from './models/sprite';
+import { Action, ACTIONS } from './models/action';
 import { APP, GRID_SIZE } from './constants';
 import { inBounds, randomInt } from './utils';
 import { turn, turnStore } from '../ui/store';
@@ -61,25 +62,6 @@ export default class Game {
         return [x, y];
     }
 
-    // make random valid moves
-    private moveBunny(bunny: Sprite) {
-        // brute force finding a valid move with max attempts
-        let x, y;
-        let tries = 0;
-        do {
-            let [xDelta, yDelta] = this.randomMove();
-            x = bunny.x + xDelta;
-            y = bunny.y + yDelta;
-            tries++;
-        }
-        while (this.invalidMove(x, y) && tries < 10);
-
-        if (!this.invalidMove(x, y)) {
-            bunny.move(x, y);
-            this.refreshMap();
-        }
-    }
-
     // occasionally have plants replicate
     private growPlant(plant: Sprite, chance = 1) {
         if (randomInt(0, 100) < chance) {
@@ -107,13 +89,27 @@ export default class Game {
         // TODO: can we get list of all rendered sprites and calculate their grid point so we don't have to use these lists?
     }
 
+    private executeAction(action: Action) {
+        switch (action.action) {
+            case ACTIONS.MOVE:
+                const target = this.bunnies.find((b) => b.id == action.id);
+                target?.move(action.x, action.y);
+            default:
+                console.log(`skipping invalid action: ${action.action}`);
+        }
+    }
+
     run() {
         APP.ticker.add(() => {
             turnStore.update(t => t + 1);
-            this.bunnies.forEach(bunny => this.moveBunny(bunny));
+
+            const id = this.bunnies.map(b => b.id)[randomInt(0, this.bunnies.length)];
+            const example = new Action(id, ACTIONS.MOVE, randomInt(0, GRID_SIZE-1), randomInt(0, GRID_SIZE-1));
+            this.executeAction(example);
+
             this.plants.forEach(plant => this.growPlant(plant));
 
-            if (turn > 500) {
+            if (turn >= 500) {
                 APP.ticker.stop();
             }
         });
