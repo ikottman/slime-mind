@@ -1,5 +1,5 @@
 import { AI } from '../models/player';
-import Pawn from '../models/pawn';
+import { Pawn } from '../models/pawn';
 import { Action, ACTIONS } from '../models/action';
 import { GRID_SIZE } from '../constants';
 import { randomInt } from '../utils';
@@ -26,10 +26,10 @@ export default class Random implements AI {
     let [x, y] = [pawn.x, pawn.y];
     let tries = 0;
     do {
-        let [xDelta, yDelta] = this.randomMove();
-        x = pawn.x + xDelta;
-        y = pawn.y + yDelta;
-        tries++;
+      let [xDelta, yDelta] = this.randomMove();
+      x = pawn.x + xDelta;
+      y = pawn.y + yDelta;
+      tries++;
     }
     while (this.invalidMove(x, y) && tries < 100);
     return [x, y];

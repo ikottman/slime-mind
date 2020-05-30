@@ -9,9 +9,9 @@ export class Action {
   action: ACTIONS;
 
   constructor(id: number, action: ACTIONS, x: number, y: number) {
-      this.id = id;
-      this.action = action;
-      this.x = x;
-      this.y = y;
+    this.id = id;
+    this.action = action;
+    this.x = x;
+    this.y = y;
   }
 }

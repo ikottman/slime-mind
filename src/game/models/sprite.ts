@@ -1,21 +1,13 @@
 import * as PIXI from "pixi.js";
 import { SPRITE_SIZE, APP } from "../constants";
-import Pawn from '../models/pawn';
+import { Pawn } from '../models/pawn';
 
-export enum TYPE {
-  PLANT= 'PLANT',
-  BUNNY= 'BUNNY'
-};
 export class Sprite {
-  id: number;
   sprite: PIXI.Sprite;
-  type: TYPE;
   pawn: Pawn;
 
-  constructor(id: number, asset: string, pawn: Pawn, type: TYPE) {
-    this.id = id;
+  constructor(asset: string, pawn: Pawn) {
     this.sprite = PIXI.Sprite.from(asset);
-    this.type = type;
     this.sprite.height = SPRITE_SIZE;
     this.sprite.width = SPRITE_SIZE;
     APP.stage.addChild(this.sprite);
@@ -31,11 +23,19 @@ export class Sprite {
     this.sprite.y = y * SPRITE_SIZE;
   }
 
-  x() {
+  get x() {
     return this.sprite.x / SPRITE_SIZE;
   }
 
-  y() {
+  get y() {
     return this.sprite.y / SPRITE_SIZE;
+  }
+
+  get type() {
+    return this.pawn.type;
+  }
+
+  get id() {
+    return this.pawn.id;
   }
 }
