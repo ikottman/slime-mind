@@ -10,6 +10,8 @@
     "author": "ikottman",
     "license": "MIT",
     "dependencies": {
+        "codejar": "^3.0.0",
+        "highlight.js": "^10.0.3",
         "pixi.js": "^5.2.3"
     },
     "devDependencies": {

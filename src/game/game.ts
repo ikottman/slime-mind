@@ -16,9 +16,6 @@ export default class Game {
   sprites: Array<Sprite> = [];
 
   constructor() {
-    // display the canvas
-    document.body.appendChild(APP.view);
-
     // fill first column with sprites
     for (let i = 0; i < GRID_SIZE; i++) {
       const slime = new Pawn(PIXI.utils.uid(), 1, TYPE.SLIME, 0, i); // TODO: assign owners
