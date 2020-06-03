@@ -3,6 +3,7 @@
   import { withLineNumbers } from 'codejar/linenumbers';
   import { onMount } from 'svelte';
   import hljs from 'highlight.js';
+  import { codeStore } from './store';
 
   let codeEditor;
   const editorOptions = {
@@ -16,7 +17,17 @@
   }
 
   onMount(() => {
+    // create editor and save off any updates
     const jar = CodeJar(codeEditor, withLineNumbers(highlight), editorOptions);
+    jar.onUpdate(code => {
+      codeStore.update(c => code);
+    });
+
+    // see if they have previously saved code and load it
+    const storedCode = window.localStorage.getItem('ai_code');
+    if (storedCode) {
+      jar.updateCode(storedCode);
+    }
   });
   const editorWidth = window.innerWidth - window.innerHeight - 30;
   const editorHeight = window.innerHeight - 10;
