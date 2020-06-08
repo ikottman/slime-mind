@@ -4,7 +4,7 @@ import { Sprite } from './models/sprite';
 import Player from './models/player';
 import { Action, ACTIONS } from './models/action';
 import { inBounds, randomInt } from './utils';
-import { turn, turnStore, APP, GRID_SIZE } from '../ui/store';
+import { turn, turnStore, APP, GRID_SIZE, code } from '../ui/store';
 import { Pawn, TYPE } from "./models/pawn";
 import * as PIXI from "pixi.js";
 
@@ -127,14 +127,11 @@ export default class Game {
   }
 
   run() {
-    const foo = window.localStorage.getItem('ai_code');
     try {
-      const ai = eval(`(${foo})`); // https://stackoverflow.com/a/39299283
+      const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
       const playerOne = new Player(1, new ai(1));
-      console.log('action!', playerOne.ai.takeAction(this.map));
       APP.ticker.add(() => {
         turnStore.update(t => t + 1);
-        console.log('action!', playerOne.ai.takeAction(this.map));
         this.executeAction(playerOne.ai.takeAction(this.map), playerOne.id);
         
         this.growPlants();

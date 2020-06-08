@@ -8,13 +8,13 @@ export let turn: number;
 turnStore.subscribe(value => turn = value);
 
 // code from the editor
-export const codeStore = writable('');
+export const codeStore = writable(window.localStorage.getItem('ai_code'));
 export let code: string;
 codeStore.subscribe(value => {
   if (value) {
     window.localStorage.setItem('ai_code', value);
+    code = value
   }
-  code = value
 });
 
 // game
