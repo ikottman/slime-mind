@@ -2,6 +2,8 @@
   import Game from './Game.svelte';
   import Turn from './Turn.svelte';
   import Editor from './Editor.svelte';
+  import StartButton from './StartButton.svelte';
+  import StopButton from './StopButton.svelte';
 </script>
 
 <style>
@@ -14,6 +16,9 @@
 </style>
 
 <Turn/>
+<StartButton/>
+<StopButton/>
+<br/>
 <div class='outerGrid'>
   <Editor/>
   <Game/>

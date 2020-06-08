@@ -1,4 +1,4 @@
-import { GRID_SIZE } from './constants';
+import { GRID_SIZE } from '../ui/store';
 
 export function inBounds(x: number, y: number) {
   return x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;

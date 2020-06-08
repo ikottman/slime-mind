@@ -3,9 +3,9 @@
 </script>
 
 <style>
-div {
+span {
   padding: 5px;
 }
 </style>
 
-<div>Turn: {$turnStore}</div>
+<span>Turn: {$turnStore}</span>

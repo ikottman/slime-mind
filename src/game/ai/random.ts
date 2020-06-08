@@ -1,7 +1,7 @@
 import { AI } from '../models/player';
 import { Pawn } from '../models/pawn';
 import { Action, ACTIONS } from '../models/action';
-import { GRID_SIZE } from '../constants';
+import { GRID_SIZE } from '../../ui/store';
 import { randomInt } from '../utils';
 export default class Random implements AI {
   playerId: number;

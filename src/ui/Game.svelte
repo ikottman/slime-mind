@@ -1,5 +1,5 @@
 <script>
-  import { APP } from '../game/constants';
+  import { APP } from './store';
   import { onMount } from 'svelte';
 
   let view;

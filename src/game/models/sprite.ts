@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { SPRITE_SIZE, APP } from "../constants";
+import { SPRITE_SIZE, APP } from "../../ui/store";
 import { Pawn } from '../models/pawn';
 
 export class Sprite {

@@ -3,10 +3,8 @@ import plantImage from "./assets/plant.png";
 import { Sprite } from './models/sprite';
 import Player from './models/player';
 import { Action, ACTIONS } from './models/action';
-import { APP, GRID_SIZE } from './constants';
 import { inBounds, randomInt } from './utils';
-import { turn, turnStore } from '../ui/store';
-import Random from './ai/random';
+import { turn, turnStore, APP, GRID_SIZE } from '../ui/store';
 import { Pawn, TYPE } from "./models/pawn";
 import * as PIXI from "pixi.js";
 
@@ -129,17 +127,24 @@ export default class Game {
   }
 
   run() {
-    const playerOne = new Player(1, new Random(1));
-
-    APP.ticker.add(() => {
-      turnStore.update(t => t + 1);
-      this.executeAction(playerOne.ai.takeAction(this.map), playerOne.id);
-      
-      this.growPlants();
-
-      if (turn >= 100) {
-        APP.ticker.stop();
-      }
-    });
+    const foo = window.localStorage.getItem('ai_code');
+    try {
+      const ai = eval(`(${foo})`); // https://stackoverflow.com/a/39299283
+      const playerOne = new Player(1, new ai(1));
+      console.log('action!', playerOne.ai.takeAction(this.map));
+      APP.ticker.add(() => {
+        turnStore.update(t => t + 1);
+        console.log('action!', playerOne.ai.takeAction(this.map));
+        this.executeAction(playerOne.ai.takeAction(this.map), playerOne.id);
+        
+        this.growPlants();
+  
+        if (turn >= 100) {
+          APP.ticker.stop();
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
