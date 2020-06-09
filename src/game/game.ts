@@ -20,6 +20,7 @@ export default class Game {
       this.sprites.push(new Sprite(redSlimeImage, slime));
       this.map[0][i] = slime;
     }
+    
 
     // attempt to fill 10% of the map with plants
     for (let i = 0; i < GRID_SIZE / 10; i ++) {
@@ -126,19 +127,26 @@ export default class Game {
     }
   }
 
+  private updateTurn() {
+    turnStore.update(t => t + 1);
+    if (turn >= 100) {
+      APP.ticker.stop();
+    }
+  }
+
   run() {
     try {
       const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
       const playerOne = new Player(1, new ai(1));
       APP.ticker.add(() => {
-        turnStore.update(t => t + 1);
-        this.executeAction(playerOne.ai.takeAction(this.map), playerOne.id);
-        
+        this.updateTurn();
+
+        const playerAction = playerOne.ai.takeAction(this.map);
+        const action = new Action(playerAction.id, playerAction.action, playerAction.x, playerAction.y);
+
+        this.executeAction(action, playerOne.id);
+
         this.growPlants();
-  
-        if (turn >= 100) {
-          APP.ticker.stop();
-        }
       });
     } catch (e) {
       console.log(e);

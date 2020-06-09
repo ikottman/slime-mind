@@ -24,11 +24,11 @@ export class Sprite {
   }
 
   get x() {
-    return this.sprite.x / SPRITE_SIZE;
+    return this.pawn.x;
   }
 
   get y() {
-    return this.sprite.y / SPRITE_SIZE;
+    return this.pawn.y
   }
 
   get type() {
