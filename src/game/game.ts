@@ -142,19 +142,19 @@ export default class Game {
   }
 
   private executeAction(action: Action, playerId: number) {
-    if (this.invalidAction(action, playerId)) {
+    const target = this.sprites.find((s) => s.id === action.id);
+    if (this.invalidAction(action, playerId) || target === undefined) {
       return;
     }
     switch (action.action) {
       case ACTIONS.MOVE:
-        const target = this.sprites.find((s) => s.id == action.id);
-        if (target) {
-          this.map[target.x][target.y] = null; // clear old position
-          target?.move(action.x, action.y);
-          this.map[action.x][action.x] = target.pawn;
-        } else {
-          console.log(`Target missing. skipping invalid action: ${JSON.stringify(action)}`);
+        // no-op moving to current location
+        if (target.x === action.x && target.y === action.y) {
+          break;
         }
+        this.map[target.x][target.y] = null; // clear old position
+        target.move(action.x, action.y);
+        this.map[action.x][action.y] = target.pawn;
         break;
       default:
         console.log(`skipping invalid action: ${action.action}`);
@@ -168,18 +168,43 @@ export default class Game {
     }
   }
 
+  // debugging utilities
+  private collapseMap(map: Array<Array<any>>) {
+    // console.log(JSON.stringify(this.collapseMap(this.map)));
+    const ret = []
+    for (let i  = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        if (map[i][j]) {
+          ret.push(map[i][j]);
+        }
+      }
+    }
+    return ret;
+  }
+
+  private debugAction(action: Action) {
+    const target = this.sprites.find((s) => s.id == action.id);
+    if (target) {
+      console.group(`turn: ${turn}`);
+      console.log(`action: ${action.action}`);
+      console.log(`pawnId: ${action.id}`);
+      console.log(`from: ${target.x} ${target.y}`);
+      console.log(`to: ${action.x} ${action.y}`);
+      console.log(`at target: ${this.map[action.x][action.y]}`)
+      console.groupEnd();
+    }
+  }
+
   run() {
     try {
       const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
       const playerOne = new Player(1, new ai(1));
       APP.ticker.add(() => {
         this.updateTurn();
-
+        
         const playerAction = playerOne.ai.takeAction(this.map);
         const action = new Action(playerAction.id, playerAction.action, playerAction.x, playerAction.y);
-
         this.executeAction(action, playerOne.id);
-
         this.growPlants();
       });
     } catch (e) {
