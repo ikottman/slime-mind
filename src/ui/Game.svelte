@@ -10,6 +10,9 @@
 </script>
 
 <style>
+  div {
+    align-self: start;
+  }
 </style>
 
 <div bind:this={view}></div>

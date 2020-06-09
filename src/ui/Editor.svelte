@@ -29,7 +29,7 @@
       jar.updateCode(storedCode);
     }
   });
-  const editorWidth = window.innerWidth - window.innerHeight - 30;
+  const editorWidth = window.innerWidth - window.innerHeight - 50;
   const editorHeight = window.innerHeight - 10;
   const style = `width: ${editorWidth}px; height: ${editorHeight}px`;
 </script>

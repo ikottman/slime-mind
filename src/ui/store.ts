@@ -18,11 +18,12 @@ codeStore.subscribe(value => {
 });
 
 // game
+const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
-export const SPRITE_SIZE =  window.innerHeight / GRID_SIZE; // size each grid box should be
+export const SPRITE_SIZE =  canvasSize / GRID_SIZE; // size each grid box should be
 export const APP = new PIXI.Application({
-  width:  window.innerHeight, // make square
-  height:  window.innerHeight,
+  width: canvasSize, // make square
+  height: canvasSize,
   backgroundColor: 0x1099bb,
   autoStart: false
 });

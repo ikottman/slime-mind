@@ -1,4 +1,5 @@
 import redSlimeImage from "./assets/red_slime.png";
+import blueSlimeImage from "./assets/blue_slime.png";
 import plantImage from "./assets/plant.png";
 import { Sprite } from './models/sprite';
 import Player from './models/player';
@@ -22,13 +23,39 @@ export default class Game {
     this.map = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
     this.sprites = [];
 
-    // fill first column with sprites
-    for (let i = 0; i < GRID_SIZE; i++) {
-      const slime = new Pawn(PIXI.utils.uid(), 1, TYPE.SLIME, 0, i); // TODO: assign owners
-      this.sprites.push(new Sprite(redSlimeImage, slime));
-      this.map[0][i] = slime;
-    }
+    this.placeSlimes();
 
+    this.placePlants();
+
+    // show beginning state
+    APP.renderer.render(APP.stage);
+  }
+
+  private addSlime(x: number, y: number, owner: number) {
+    const image = owner === 1 ? redSlimeImage : blueSlimeImage;
+    
+    const pawn = new Pawn(PIXI.utils.uid(), owner, TYPE.SLIME, x, y);
+    this.map[x][y] = pawn;
+    const sprite = new Sprite(image, pawn);
+    this.sprites.push(sprite);
+  }
+
+  private placeSlimes() {
+    // hardcoded layout
+    this.addSlime(0, 2, 1);
+    this.addSlime(0, 7, 1);
+    this.addSlime(0, 12, 1);
+    this.addSlime(0, 17, 1);
+    this.addSlime(0, 22, 1);
+
+    this.addSlime(24, 2, 2);
+    this.addSlime(24, 7, 2);
+    this.addSlime(24, 12, 2);
+    this.addSlime(24, 17, 2);
+    this.addSlime(24, 22, 2);
+  }
+
+  private placePlants() {
     // attempt to fill 10% of the map with plants
     for (let i = 0; i < GRID_SIZE / 10; i ++) {
       const x = randomInt(0, GRID_SIZE);
@@ -39,9 +66,6 @@ export default class Game {
         this.map[x][y] = plant;
       }
     }
-
-    // show beginning state
-    APP.renderer.render(APP.stage);
   }
 
   private spaceOccupied(x: number, y: number) {
