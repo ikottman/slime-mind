@@ -1,10 +1,10 @@
 <script>
-  import { APP, game } from './store';
+  import { APP, turnStore, game } from './store';
   
   function handleClick() {
-    // start the game
-    game.run();
-    APP.ticker.start();
+    turnStore.update(_ => 0);
+    APP.stage.removeChildren();
+    game.initializeMap();
   }
 </script>
 
@@ -20,7 +20,7 @@
   text-shadow: 0 0.04em 0.04em grey;
   text-align: center;
   transition: all 0.2s;
-  background-color: #1ECBE1;
+  background-color: #961EE1;
   }
 
   button:hover{
@@ -29,5 +29,5 @@
 </style>
 
 <button on:click={handleClick}>
-Start
+Reset
 </button>

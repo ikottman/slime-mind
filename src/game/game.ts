@@ -14,13 +14,20 @@ export default class Game {
   sprites: Array<Sprite> = [];
 
   constructor() {
+    this.initializeMap();
+  }
+
+  initializeMap() {
+    // reset state
+    this.map = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
+    this.sprites = [];
+
     // fill first column with sprites
     for (let i = 0; i < GRID_SIZE; i++) {
       const slime = new Pawn(PIXI.utils.uid(), 1, TYPE.SLIME, 0, i); // TODO: assign owners
       this.sprites.push(new Sprite(redSlimeImage, slime));
       this.map[0][i] = slime;
     }
-    
 
     // attempt to fill 10% of the map with plants
     for (let i = 0; i < GRID_SIZE / 10; i ++) {
@@ -32,6 +39,9 @@ export default class Game {
         this.map[x][y] = plant;
       }
     }
+
+    // show beginning state
+    APP.renderer.render(APP.stage);
   }
 
   private spaceOccupied(x: number, y: number) {

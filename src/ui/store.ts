@@ -1,6 +1,6 @@
-
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
+import Game from '../game/game';
 
 // turn
 export const turnStore = writable(0);
@@ -26,3 +26,5 @@ export const APP = new PIXI.Application({
   backgroundColor: 0x1099bb,
   autoStart: false
 });
+
+export const game = new Game();

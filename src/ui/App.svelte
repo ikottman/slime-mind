@@ -4,6 +4,7 @@
   import Editor from './Editor.svelte';
   import StartButton from './StartButton.svelte';
   import StopButton from './StopButton.svelte';
+  import ResetButton from './ResetButton.svelte';
 </script>
 
 <style>
@@ -18,6 +19,7 @@
 <Turn/>
 <StartButton/>
 <StopButton/>
+<ResetButton/>
 <br/>
 <div class='outerGrid'>
   <Editor/>
