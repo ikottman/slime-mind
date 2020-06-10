@@ -1,9 +1,10 @@
 import { AI } from '../models/player';
 import { Pawn } from '../models/pawn';
-import { Action, ACTIONS } from '../models/action';
+import { ACTIONS } from '../models/action';
 import { GRID_SIZE } from '../../ui/store';
 import { randomInt } from '../utils';
-export default class Random implements AI {
+
+export class Random implements AI {
   playerId: number;
   map: Array<Array<any>> = [];
   constructor(playerId: number) {
@@ -48,7 +49,11 @@ export default class Random implements AI {
   
     const pawn = myPawns[randomInt(0, myPawns.length - 1)];
     const [x, y] = this.findValidMove(pawn);
-    const example = new Action(pawn.id, ACTIONS.MOVE, x, y);
-    return example
+    return {
+      id: pawn.id,
+      action: ACTIONS.MOVE,
+      x,
+      y
+    }
   }
 }

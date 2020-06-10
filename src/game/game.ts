@@ -1,13 +1,14 @@
+import * as PIXI from "pixi.js";
+import { turn, turnStore, APP, GRID_SIZE, code } from '../ui/store';
+import { Random } from './ai/random';
 import redSlimeImage from "./assets/red_slime.png";
 import blueSlimeImage from "./assets/blue_slime.png";
 import plantImage from "./assets/plant.png";
 import { Sprite } from './models/sprite';
+import { Pawn, TYPE } from "./models/pawn";
 import Player from './models/player';
 import { Action, ACTIONS } from './models/action';
-import { inBounds, randomInt } from './utils';
-import { turn, turnStore, APP, GRID_SIZE, code } from '../ui/store';
-import { Pawn, TYPE } from "./models/pawn";
-import * as PIXI from "pixi.js";
+import { inBounds, randomInt, shuffle } from './utils';
 
 export default class Game {
   // all the sprites on the grid. An empty space is null
@@ -195,20 +196,38 @@ export default class Game {
     }
   }
 
+  private loadPlayers() {
+    // load player's code
+    const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
+
+    // randomly assign turn order
+    const players = [ai, Random];
+    shuffle(players);
+    const playerOne = new Player(1, new players[0](1));
+    const playerTwo = new Player(2, new players[1](2));
+
+    return [playerOne, playerTwo];
+  }
+
+  private takeTurn(player: Player) {
+    const playerAction = player.ai.takeAction(this.map);
+    // TODO: validate the action has the right fields
+    const action = new Action(playerAction.id, playerAction.action, playerAction.x, playerAction.y);
+    return this.executeAction(action, player.id);;
+  }
+
   run() {
     try {
-      const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
-      const playerOne = new Player(1, new ai(1));
+      // this is called once per turn
       APP.ticker.add(() => {
         this.updateTurn();
-        
-        const playerAction = playerOne.ai.takeAction(this.map);
-        const action = new Action(playerAction.id, playerAction.action, playerAction.x, playerAction.y);
-        this.executeAction(action, playerOne.id);
+        const [playerOne, playerTwo] = this.loadPlayers();
+        this.takeTurn(playerOne);
+        this.takeTurn(playerTwo);
         this.growPlants();
       });
-    } catch (e) {
-      console.log(e);
+    } catch (exception) {
+      console.log(exception);
     }
   }
 }
