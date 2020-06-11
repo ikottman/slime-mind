@@ -1,18 +1,16 @@
-import * as PIXI from "pixi.js";
+import { PAWN_TYPE, Pawn } from './schema';
 import { turn, turnStore, APP, GRID_SIZE, code } from '../ui/store';
 import { Random } from './ai/random';
-import redSlimeImage from "./assets/red_slime.png";
-import blueSlimeImage from "./assets/blue_slime.png";
-import plantImage from "./assets/plant.png";
 import { Sprite } from './models/sprite';
-import { Pawn, TYPE } from "./models/pawn";
+import { Slime} from "./models/pawns/slime";
+import { Plant } from "./models/pawns/plant";
 import Player from './models/player';
 import { Action, ACTIONS } from './models/action';
-import { inBounds, randomInt, shuffle } from './utils';
+import { inBounds, randomInt } from './utils';
 
 export default class Game {
   // all the sprites on the grid. An empty space is null
-  map: Array<Array<Pawn | null>> = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
+  map: Array<Array< Pawn | null>> = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
   sprites: Array<Sprite> = [];
 
   constructor() {
@@ -33,12 +31,9 @@ export default class Game {
   }
 
   private addSlime(x: number, y: number, owner: number) {
-    const image = owner === 1 ? redSlimeImage : blueSlimeImage;
-    
-    const pawn = new Pawn(PIXI.utils.uid(), owner, TYPE.SLIME, x, y);
-    this.map[x][y] = pawn;
-    const sprite = new Sprite(image, pawn);
-    this.sprites.push(sprite);
+    const slime = new Slime(owner, x, y);
+    this.map[x][y] = slime;
+    this.sprites.push(new Sprite(slime));
   }
 
   private placeSlimes() {
@@ -62,8 +57,8 @@ export default class Game {
       const x = randomInt(0, GRID_SIZE);
       const y = randomInt(0, GRID_SIZE);
       if (!this.invalidMove(x, y)) {
-        const plant = new Pawn(PIXI.utils.uid(), -1, TYPE.PLANT, x, y);
-        this.sprites.push(new Sprite(plantImage, plant));
+        const plant = new Plant(x, y);
+        this.sprites.push(new Sprite(plant));
         this.map[x][y] = plant;
       }
     }
@@ -90,15 +85,15 @@ export default class Game {
   // occasionally have plants replicate
   private growPlants() {
     this.sprites
-    .filter((s) => s.type == TYPE.PLANT)
+    .filter((s) => s.type == PAWN_TYPE.PLANT)
     .forEach((plant) => {
       if (randomInt(0, 100) < 1) {
         const options = this.emptySpaces(plant.x, plant.y);
         if (options.length > 0) {
           const [x, y] = options[randomInt(0, options.length - 1)];
-          const plant = new Pawn(PIXI.utils.uid(), -1, TYPE.PLANT, x, y);
+          const plant = new Plant(x, y);
           this.map[x][y] = plant;
-          this.sprites.push(new Sprite(plantImage, plant));
+          this.sprites.push(new Sprite(plant));
         }
       }
     });
@@ -164,7 +159,7 @@ export default class Game {
 
   private updateTurn() {
     turnStore.update(t => t + 1);
-    if (turn >= 100) {
+    if (turn >= 1000) {
       APP.ticker.stop();
     }
   }
@@ -200,11 +195,8 @@ export default class Game {
     // load player's code
     const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
 
-    // randomly assign turn order
-    const players = [ai, Random];
-    shuffle(players);
-    const playerOne = new Player(1, new players[0](1));
-    const playerTwo = new Player(2, new players[1](2));
+    const playerOne = new Player(1, new ai(1));
+    const playerTwo = new Player(2, new Random(2));
 
     return [playerOne, playerTwo];
   }

@@ -1,16 +1,32 @@
 import * as PIXI from "pixi.js";
 import { SPRITE_SIZE, APP } from "../../ui/store";
-import { Pawn } from '../models/pawn';
+import { Pawn, PAWN_TYPE } from '../schema';
+import redSlime from '../assets/red_slime.png'
+import blueSlime from '../assets/blue_slime.png'
+import plant from '../assets/plant.png'
 
 export class Sprite {
   sprite: PIXI.Sprite;
   pawn: Pawn;
 
-  constructor(asset: string, pawn: Pawn) {
-    this.sprite = PIXI.Sprite.from(asset);
+  constructor(pawn: Pawn) {
+    switch (pawn.type) {
+      case PAWN_TYPE.PLANT:
+        this.sprite = PIXI.Sprite.from(plant); // TODO: is this inefficient? do we need a cache?
+        break;
+      case PAWN_TYPE.SLIME:
+        if (pawn.owner === 1) {
+          this.sprite = PIXI.Sprite.from(redSlime);
+        } else {
+          this.sprite = PIXI.Sprite.from(blueSlime);
+        }
+        break;
+    }
+
     this.sprite.height = SPRITE_SIZE;
     this.sprite.width = SPRITE_SIZE;
     APP.stage.addChild(this.sprite);
+
     this.pawn = pawn;
     this.move(pawn.x, pawn.y);
   }
