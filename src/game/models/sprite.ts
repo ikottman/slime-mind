@@ -54,4 +54,8 @@ export class Sprite {
   get id() {
     return this.pawn.id;
   }
+
+  get owner() {
+    return this.pawn.owner;
+  }
 }

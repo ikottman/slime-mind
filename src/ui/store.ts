@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
-import Game from '../game/game';
+import { Game } from '../game/game';
 
 // turn
 export const turnStore = writable(0);
