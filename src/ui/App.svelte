@@ -5,6 +5,7 @@
   import StartButton from './StartButton.svelte';
   import StopButton from './StopButton.svelte';
   import ResetButton from './ResetButton.svelte';
+  import FPS from './FPS.svelte';
 </script>
 
 <style>
@@ -20,6 +21,7 @@
 <StartButton/>
 <StopButton/>
 <ResetButton/>
+<FPS/>
 <br/>
 <div class='outerGrid'>
   <Editor/>
