@@ -3,9 +3,8 @@
   
   function handleClick() {
     APP.ticker.stop();
-    turnStore.update(_ => 0);
     APP.stage.removeChildren();
-    game.initializeMap();
+    game.reset();
   }
 </script>
 

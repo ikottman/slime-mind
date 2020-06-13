@@ -1,5 +1,5 @@
 import { Action } from './action';
-import Pawn from "./pawn";
+import { Pawn } from "../schema";
 
 export interface AI {
   takeAction(map: Array<Array<Pawn | null>>): Action;
