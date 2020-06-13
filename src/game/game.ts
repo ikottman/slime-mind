@@ -15,6 +15,7 @@ export default class Game {
 
   constructor() {
     this.initializeMap();
+    this.run();
   }
 
   initializeMap() {

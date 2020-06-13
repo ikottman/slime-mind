@@ -2,6 +2,7 @@
   import { APP, turnStore, game } from './store';
   
   function handleClick() {
+    APP.ticker.stop();
     turnStore.update(_ => 0);
     APP.stage.removeChildren();
     game.initializeMap();
