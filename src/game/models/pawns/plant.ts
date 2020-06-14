@@ -12,4 +12,14 @@ export class Plant implements Pawn {
     this.x = x;
     this.y = y;
   }
+
+  json() {
+    return {
+      id: this.id,
+      x: this.x,
+      y: this.y,
+      type: this.type,
+      owner: -1
+    }
+  }
 }

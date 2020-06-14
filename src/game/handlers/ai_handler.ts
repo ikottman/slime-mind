@@ -53,7 +53,7 @@ export class AiHandler {
 
   private executeAction(action: Action, playerId: number) {
     const target = this.map.findById(action.id);
-    if (target === null || this.invalidAction(action, playerId)) {
+    if (target === null || action?.action === ACTIONS.NOTHING || this.invalidAction(action, playerId)) {
       return;
     }
     switch (action.action) {
@@ -88,7 +88,7 @@ export class AiHandler {
     }
 
     const action = new Action(playerAction.id, playerAction.action, playerAction.x, playerAction.y);
-    return this.executeAction(action, player.id);;
+    return this.executeAction(action, player.id);
   }
 
   loadAis(): void {

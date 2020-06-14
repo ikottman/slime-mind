@@ -36,7 +36,7 @@ export class Map {
 
   // return list of all valid empty cells surrounding a pawn
   // if all are occupied, returns empty list
-  emptyCells(pawn: Pawn) {
+  emptyCells(pawn: Sprite) {
     const x = pawn.x;
     const y = pawn.y;
     const options = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
@@ -57,13 +57,12 @@ export class Map {
     return sprites;
   }
 
-  // TODO: make read only
   get readOnlyMap(): Array<Array<Pawn | null>> {
     const grid = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
     for (let i  = 0; i < this.grid.length; i++) {
       for (let j = 0; j < this.grid.length; j++) {
         if (this.grid[i][j]) {
-          grid[i][j] = this.grid[i][j]?.pawn;
+          grid[i][j] = this.grid[i][j]?.pawn.json();
         }
       }
     }
@@ -82,11 +81,7 @@ export class Map {
   }
 
   // put target in new position, setting previous cell to null
-  // does nothing if the target is already at that location
   move(target: Sprite, x: number, y: number): void {
-    if (target.x === x && target.y === y) {
-      return;
-    }
     this.grid[target.x][target.y] = null;
     this.grid[x][y] = target;
     // update pawn and rendered sprite's position

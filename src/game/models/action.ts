@@ -1,5 +1,6 @@
 export enum ACTIONS {
-  MOVE= 'MOVE'
+  MOVE = 'MOVE',
+  NOTHING = 'NOTHING'
 };
 
 export class Action {

@@ -8,5 +8,6 @@ export interface Pawn {
   x: number,
   y: number,
   type: PAWN_TYPE,
-  owner?: number
+  owner?: number,
+  json(): any;
 }
