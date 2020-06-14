@@ -2,7 +2,7 @@ import { Action } from './action';
 import { Pawn } from "../schema";
 
 export interface AI {
-  takeAction(map: Array<Array<Pawn | null>>): Action;
+  takeAction(map: Array<Array<Pawn | null>>, id: number): Action;
 }
 
 export default class Player {

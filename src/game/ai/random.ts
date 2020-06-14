@@ -36,7 +36,7 @@ export class Random implements AI {
     return [x, y];
   }
 
-  takeAction(map: Array<Array<Pawn>>) {
+  takeAction(map: Array<Array<Pawn>>, id: number) {
     this.map = map;
     const myPawns = [];
     for (let i = 0; i < map.length; i++) {
@@ -47,7 +47,7 @@ export class Random implements AI {
       }
     }
 
-    const pawn = myPawns[randomInt(0, myPawns.length - 1)];
+    const pawn = myPawns.find(p => p.id === id);
     const [x, y] = this.findValidMove(pawn);
 
     let action = ACTIONS.MOVE;
@@ -56,7 +56,6 @@ export class Random implements AI {
     }
 
     return {
-      id: pawn.id,
       action,
       x,
       y

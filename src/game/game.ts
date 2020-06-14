@@ -55,19 +55,6 @@ export class Game {
     }
   }
 
-  // private debugAction(action: Action) {
-  //   const target = this.sprites.find((s) => s.id == action.id);
-  //   if (target) {
-  //     console.group(`turn: ${turn}`);
-  //     console.log(`action: ${action.action}`);
-  //     console.log(`pawnId: ${action.id}`);
-  //     console.log(`from: ${target.x} ${target.y}`);
-  //     console.log(`to: ${action.x} ${action.y}`);
-  //     console.log(`at target: ${this.map[action.x][action.y]}`)
-  //     console.groupEnd();
-  //   }
-  // }
-
   run() {
     // this is called once per turn
     APP.ticker.add(() => {

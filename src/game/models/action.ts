@@ -4,7 +4,7 @@ export enum ACTIONS {
 };
 
 export class Action {
-  id: number;
+  id?: number;
   x = 0;
   y = 0;
   action: ACTIONS;
