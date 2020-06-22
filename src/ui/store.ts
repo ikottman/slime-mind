@@ -17,6 +17,11 @@ codeStore.subscribe(value => {
   }
 });
 
+// player scores
+export const scoresStore = writable([0, 0]);
+export let scores: Array<number>;
+scoresStore.subscribe(value => scores = value);
+
 // game
 const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid

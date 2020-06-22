@@ -1,24 +1,28 @@
-import { turn, turnStore, APP } from '../ui/store';
+import { turn, turnStore, scoresStore, APP } from '../ui/store';
 import { Map } from './models/map';
 import { Slime} from "./models/pawns/slime";
 import { PlantHandler } from "./handlers/plant_handler";
 import { AiHandler } from "./handlers/ai_handler";
+import { ScoreHandler } from "./handlers/score_handler";
 
 export class Game {
   map: Map;
   plantHandler: PlantHandler;
   aiHandler: AiHandler;
+  scoreHandler: ScoreHandler;
 
   constructor() {
     this.map = new Map();
     this.plantHandler = new PlantHandler(this.map);
     this.aiHandler = new AiHandler(this.map);
+    this.scoreHandler = new ScoreHandler(this.map);
     this.reset();
     this.run();
   }
 
   reset(): void {
     turnStore.update(_ => 0);
+    scoresStore.update(_ => [0, 0])
     this.map.reset();
     this.placeSlimes();
     this.plantHandler.placeInitialPlants();
@@ -61,6 +65,7 @@ export class Game {
       this.updateTurn();
       this.plantHandler.takeTurn();
       this.aiHandler.takeTurn();
+      this.scoreHandler.updateScores();
     });
   }
 }

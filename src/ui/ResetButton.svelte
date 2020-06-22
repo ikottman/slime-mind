@@ -1,5 +1,5 @@
 <script>
-  import { APP, turnStore, game } from './store';
+  import { APP, game } from './store';
   
   function handleClick() {
     APP.ticker.stop();
