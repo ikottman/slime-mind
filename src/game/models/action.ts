@@ -1,7 +1,4 @@
-export enum ACTIONS {
-  MOVE = 'MOVE',
-  NOTHING = 'NOTHING'
-};
+import { ACTIONS } from '../schema';
 
 export class Action {
   id?: number;

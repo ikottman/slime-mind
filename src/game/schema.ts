@@ -1,3 +1,5 @@
+import { Action } from './models/action';
+
 export enum PAWN_TYPE {
   PLANT = 'PLANT',
   SLIME = 'SLIME'
@@ -10,4 +12,14 @@ export interface Pawn {
   type: PAWN_TYPE,
   owner?: number,
   json(): any;
+}
+
+export enum ACTIONS {
+  MOVE = 'MOVE',
+  BITE = 'BITE',
+  NOTHING = 'NOTHING'
+}
+
+export interface AI {
+  takeAction(map: Array<Array<Pawn | null>>, id: number): Action;
 }

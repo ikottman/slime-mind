@@ -3,7 +3,8 @@ import { Random } from '../ai/random';
 import { Map } from '../models/map';
 import { Sprite } from '../models/sprite';
 import Player from '../models/player';
-import { Action, ACTIONS } from '../models/action';
+import { Action } from '../models/action';
+import { ACTIONS } from '../schema';
 
 export class AiHandler {
   map: Map;

@@ -1,6 +1,4 @@
-import { AI } from '../models/player';
-import { Pawn } from '../schema';
-import { ACTIONS } from '../models/action';
+import { Pawn, AI, ACTIONS } from '../schema';
 import { GRID_SIZE } from '../../ui/store';
 import { randomInt } from '../utils';
 
