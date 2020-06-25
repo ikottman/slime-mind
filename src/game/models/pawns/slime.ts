@@ -7,12 +7,16 @@ export class Slime implements Pawn {
   type = PAWN_TYPE.SLIME;
   x: number;
   y: number;
+  hp: number;
+  attack: number;
 
   constructor(owner: number, x: number, y: number) {
     this.id = PIXI.utils.uid();
     this.owner = owner;
     this.x = x;
     this.y = y;
+    this.hp = 10;
+    this.attack = 3;
   }
 
   json() {

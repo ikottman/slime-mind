@@ -16,7 +16,32 @@ export class AiHandler {
     this.loadAis();
   }
 
-  private invalidAction(action: Action, target: Sprite) {
+  private invalidMove(action: Action, source: Sprite): boolean {
+    if (this.map.cellOccupied(action.x, action.y)) {
+      console.log(`invalid MOVE, target square occupied: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    if (action.x < source.x - 1 || action.x > source.x + 1 || 
+      action.y < source.y - 1 || action.y > source.y + 1) {
+      console.log(`invalid MOVE, more than one square away: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    return false;
+  }
+
+  private invalidBite(action: Action, source: Sprite, target: Sprite | null): boolean {
+    if (!target) {
+      return true;
+    }
+
+    // TODO: make sure target is within a square of the source
+
+    return false;
+  }
+
+  private invalidAction(action: Action): boolean {
     if (!action || action.id == undefined || action.id == null || 
       action.x == null || action.x == undefined || 
       action.y == null || action.y == undefined) {
@@ -28,28 +53,31 @@ export class AiHandler {
       console.log(`invalid action, out of bounds: ${JSON.stringify(action)}`);
       return true;
     }
-    
-    if (action.action === ACTIONS.MOVE && this.map.cellOccupied(action.x, action.y)) {
-      console.log(`invalid action, target square occupied: ${JSON.stringify(action)}`);
-      return true;
-    }
-
-    if (action.x < target.x - 1 || action.x > target.x + 1 || 
-      action.y < target.y - 1 || action.y > target.y + 1) {
-      console.log(`invalid action, more than one square away: ${JSON.stringify(action)}`);
-      return true;
-    }
 
     return false;
   }
 
-  private executeAction(action: Action, target: Sprite) {
-    if (action?.action === ACTIONS.NOTHING || this.invalidAction(action, target)) {
+  private executeAction(action: Action, source: Sprite) {
+    if (action?.action === ACTIONS.NOTHING || this.invalidAction(action)) {
       return;
     }
     switch (action.action) {
       case ACTIONS.MOVE:
-        this.map.move(target, action.x, action.y);
+        if (this.invalidMove(action, source)) {
+          return;
+        }
+        this.map.move(source, action.x, action.y);
+        break;
+      case ACTIONS.BITE:
+        const target = this.map.get(action.x, action.y);
+        if (this.invalidBite(action, source, target) || !source.pawn.attack || !target) {
+          return;
+        }
+        const killed = target?.takeDamage(source.pawn.attack);
+        if (killed) {
+          console.log(`Killed target at ${target.x} ${target.y}`);
+          this.map.clearCell(target.x, target.y);
+        }
         break;
       default:
         console.log(`skipping invalid action: ${action.action}`);

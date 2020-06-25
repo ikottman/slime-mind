@@ -6,11 +6,13 @@ export class Plant implements Pawn {
   type = PAWN_TYPE.PLANT;
   x: number;
   y: number;
+  hp: number;
 
   constructor(x: number, y: number) {
     this.id = PIXI.utils.uid();
     this.x = x;
     this.y = y;
+    this.hp = 3;
   }
 
   json() {
@@ -19,6 +21,7 @@ export class Plant implements Pawn {
       x: this.x,
       y: this.y,
       type: this.type,
+      hp: this.hp,
       owner: -1
     }
   }

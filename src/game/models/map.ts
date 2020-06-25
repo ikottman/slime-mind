@@ -76,7 +76,7 @@ export class Map {
 
   // remove pawn (if any) from the map
   clearCell(x: number, y: number): void {
-    this.grid[x][y]?.sprite.destroy;
+    this.grid[x][y]?.sprite.destroy();
     this.grid[x][y] = null;
   }
 
@@ -91,5 +91,13 @@ export class Map {
   // return sprite with given id, or null if it isn't in the map
   findById(id: number): Sprite | null {
     return this.sprites.find((s) => s.id === id) || null;
+  }
+
+  // get Sprite from cell. Returns null if out of bounds.
+  get(x: number, y: number): Sprite | null {
+    if (!this.inBounds(x, y)) {
+      return null;
+    }
+    return this.grid[x][y];
   }
 }

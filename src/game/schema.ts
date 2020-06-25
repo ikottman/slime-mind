@@ -11,6 +11,8 @@ export interface Pawn {
   y: number,
   type: PAWN_TYPE,
   owner?: number,
+  hp: number,
+  attack?: number,
   json(): any;
 }
 
