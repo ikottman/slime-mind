@@ -104,6 +104,11 @@ export class AiHandler {
   }
 
   private runAi(slime: Sprite): void {
+    // skip slimes that were eaten before we got to their turn
+    if (slime.pawn.hp < 0) {
+      return;
+    }
+
     let playerAction;
     try {
       if (slime.owner === 1) {
