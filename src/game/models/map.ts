@@ -31,7 +31,7 @@ export class Map {
   }
 
   inBounds(x: number, y: number): boolean {
-    return x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
+    return Number.isInteger(x) && Number.isInteger(y) && x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE;
   }
 
   // return list of all valid empty cells surrounding a pawn
@@ -41,6 +41,18 @@ export class Map {
     const y = pawn.y;
     const options = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
     return options.filter(pt => !this.invalidMove(x + pt[0], y + pt[1])).map(pt => [x + pt[0], y + pt[1]]);
+  }
+
+  // return list of all pawns surrounding a pawn
+  // if all cells are empty, returns empty list
+  neighbors(pawn: Pawn) {
+    const x = pawn.x;
+    const y = pawn.y;
+    const options = [[x - 1, y - 1], [x -1, y], [x - 1, y + 1], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y + 1]];
+    return options
+      .filter(pt => this.inBounds(pt[0], pt[1]))
+      .map(pt => this.grid[pt[0]][pt[1]]?.pawn)
+      .filter(pawn => pawn !== null);
   }
 
   // list of all occupants of the map

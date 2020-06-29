@@ -12,7 +12,7 @@ export class ScoreHandler {
   private calculateScore(slimes: Array<Sprite>) {
     return slimes.reduce((score, slime) => {
       // TODO: replace with logic from https://github.com/ikottman/slime_ai/wiki/Welcome-to-Slime-Mind!#victory-conditions
-      return score + slime.id; 
+      return score + slime.pawn.xp; 
     }, 0);
   }
 

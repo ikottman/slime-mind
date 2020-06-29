@@ -2,6 +2,7 @@ import { code } from '../../ui/store';
 import { Random } from '../ai/random';
 import { Map } from '../models/map';
 import { Sprite } from '../models/sprite';
+import { Slime } from '../models/pawns/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
 import { ACTIONS } from '../schema';
@@ -17,6 +18,10 @@ export class AiHandler {
   }
 
   private invalidMove(action: Action, source: Sprite): boolean {
+    if (!Number.isInteger(action.x) || !Number.isInteger(action.y)) {
+      return true;
+    }
+
     if (this.map.cellOccupied(action.x, action.y)) {
       console.log(`invalid MOVE, target square occupied: ${JSON.stringify(action)}`);
       return true;
@@ -36,25 +41,36 @@ export class AiHandler {
       return true;
     }
 
-    // TODO: make sure target is within a square of the source
+    if (action.x < source.x - 1 || action.x > source.x + 1 || 
+      action.y < source.y - 1 || action.y > source.y + 1) {
+      console.log(`invalid BITE, more than one square away: ${JSON.stringify(action)}`);
+      return true;
+    }
 
     return false;
   }
 
   private invalidAction(action: Action): boolean {
-    if (!action || action.id == undefined || action.id == null || 
-      action.x == null || action.x == undefined || 
-      action.y == null || action.y == undefined) {
+    if (!action || action.id === undefined || action.id === null) {
       console.log(`invalid action, something is null: ${JSON.stringify(action)}`);
       return true;
     }
 
-    if (!this.map.inBounds(action.x, action.y)) {
-      console.log(`invalid action, out of bounds: ${JSON.stringify(action)}`);
-      return true;
-    }
-
     return false;
+  }
+
+  private attemptMerge(slime: Slime): void {
+    const mergeableSlimes =
+      this.map.neighbors(slime)
+        .filter(pawn => pawn?.owner === slime.owner)
+        .filter(slime => slime?.readyToMerge);
+    if (mergeableSlimes[0]) {
+      const sacrifice = mergeableSlimes[0];
+      slime.gainExperience(sacrifice.xp);
+      this.map.clearCell(sacrifice.x, sacrifice.y);
+    } else {
+      slime.readyToMerge = true;
+    }
   }
 
   private executeAction(action: Action, source: Sprite) {
@@ -75,27 +91,17 @@ export class AiHandler {
         }
         const killed = target?.takeDamage(source.pawn.attack);
         if (killed) {
-          console.log(`Killed target at ${target.x} ${target.y}`);
           this.map.clearCell(target.x, target.y);
         }
+        source.pawn.gainExperience(1);
+        break;
+      case ACTIONS.MERGE:
+        this.attemptMerge(source.pawn as Slime);
         break;
       default:
         console.log(`skipping invalid action: ${action.action}`);
     }
   }
-
-  // private debugAction(action: Action) {
-  //   const target = this.sprites.find((s) => s.id == action.id);
-  //   if (target) {
-  //     console.group(`turn: ${turn}`);
-  //     console.log(`action: ${action.action}`);
-  //     console.log(`pawnId: ${action.id}`);
-  //     console.log(`from: ${target.x} ${target.y}`);
-  //     console.log(`to: ${action.x} ${action.y}`);
-  //     console.log(`at target: ${this.map[action.x][action.y]}`)
-  //     console.groupEnd();
-  //   }
-  // }
 
   private runAi(slime: Sprite): void {
     let playerAction;
@@ -130,19 +136,6 @@ export class AiHandler {
     return slimes;
   }
 
-  // private debugAction(action: Action) {
-  //   const target = this.sprites.find((s) => s.id == action.id);
-  //   if (target) {
-  //     console.group(`turn: ${turn}`);
-  //     console.log(`action: ${action.action}`);
-  //     console.log(`pawnId: ${action.id}`);
-  //     console.log(`from: ${target.x} ${target.y}`);
-  //     console.log(`to: ${action.x} ${action.y}`);
-  //     console.log(`at target: ${this.map[action.x][action.y]}`)
-  //     console.groupEnd();
-  //   }
-  // }
-
   loadAis(): void {
     // load player's code
     const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
@@ -152,9 +145,10 @@ export class AiHandler {
   }
 
   takeTurn() {
-    if (this.playerOne && this.playerTwo) {
-      const slimes = this.getSlimes();
-      slimes.forEach((slime) => this.runAi(slime));
-    }
+    const slimes = this.getSlimes();
+    // run AI alternating between each player's slimes
+    slimes.forEach((slime) => this.runAi(slime));
+
+    slimes.forEach((slime) => slime.pawn.readyToMerge = false);
   }
 }

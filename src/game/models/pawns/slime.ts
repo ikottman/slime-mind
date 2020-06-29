@@ -8,7 +8,9 @@ export class Slime implements Pawn {
   x: number;
   y: number;
   hp: number;
+  xp: number;
   attack: number;
+  readyToMerge: boolean;
 
   constructor(owner: number, x: number, y: number) {
     this.id = PIXI.utils.uid();
@@ -17,6 +19,12 @@ export class Slime implements Pawn {
     this.y = y;
     this.hp = 10;
     this.attack = 3;
+    this.readyToMerge = false;
+    this.xp = 0;
+  }
+
+  gainExperience(xp: number) {
+    this.xp += xp;
   }
 
   json() {

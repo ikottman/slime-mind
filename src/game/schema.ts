@@ -12,14 +12,18 @@ export interface Pawn {
   type: PAWN_TYPE,
   owner?: number,
   hp: number,
+  xp: number,
   attack?: number,
-  json(): any;
+  readyToMerge?: boolean,
+  json(): any
+  gainExperience(xp: number): void;
 }
 
 export enum ACTIONS {
   MOVE = 'MOVE',
   BITE = 'BITE',
-  NOTHING = 'NOTHING'
+  NOTHING = 'NOTHING',
+  MERGE = 'MERGE',
 }
 
 export interface AI {
