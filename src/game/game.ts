@@ -52,9 +52,15 @@ export class Game {
     this.addSlime(24, 22, 2);
   }
 
+  private playerOutOfSlimes(): boolean {
+    const one = this.map.sprites.filter(s => s.owner === 1);
+    const two = this.map.sprites.filter(s => s.owner === 2);
+    return one.length === 0 || two.length === 0;
+  }
+
   private updateTurn() {
     turnStore.update(t => t + 1);
-    if (turn >= 1000) {
+    if (turn >= 1000 || this.playerOutOfSlimes()) {
       APP.ticker.stop();
     }
   }
