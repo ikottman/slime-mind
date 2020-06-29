@@ -6,6 +6,7 @@ import { Slime } from '../models/pawns/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
 import { ACTIONS } from '../schema';
+import { randomInt } from '../utils';
 
 export class AiHandler {
   map: Map;
@@ -131,14 +132,17 @@ export class AiHandler {
     const one = this.map.sprites.filter(s => s.owner === 1);
     const two = this.map.sprites.filter(s => s.owner === 2);
     let slimes = [];
-    if (one.length < two.length) {
-      slimes = one.flatMap((s, i) => [one[i], two[i]]);
-      slimes.concat(two.slice(one.length - 1, two.length - 1));
-    } else {
-      slimes = two.flatMap((s, i) => [two[i], one[i]]);
-      slimes.concat(one.slice(two.length - 1, one.length - 1));
+    const whoGoesFirst = randomInt(1, 2);
+    while (one.length > 0 || two.length > 0) {
+      if (whoGoesFirst === 1) {
+        slimes.push(one.pop());
+        slimes.push(two.pop());
+      } else {
+        slimes.push(two.pop());
+        slimes.push(one.pop());
+      }
     }
-    return slimes;
+    return slimes.filter(s => s);
   }
 
   loadAis(): void {
