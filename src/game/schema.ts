@@ -24,6 +24,7 @@ export enum ACTIONS {
   BITE = 'BITE',
   NOTHING = 'NOTHING',
   MERGE = 'MERGE',
+  SPLIT = 'SPLIT',
 }
 
 export interface AI {

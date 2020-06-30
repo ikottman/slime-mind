@@ -33,7 +33,8 @@ export class Slime implements Pawn {
       x: this.x,
       y: this.y,
       type: this.type,
-      owner: this.owner
+      owner: this.owner,
+      xp: this.xp
     }
   }
 }

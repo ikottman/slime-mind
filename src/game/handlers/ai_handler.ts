@@ -74,6 +74,19 @@ export class AiHandler {
     }
   }
 
+  private attemptSplit(slime: Sprite): void {
+    const cells = this.map.emptyCells(slime);
+    // TODO: check slime level
+    if (cells.length > 0) {
+      slime.pawn.xp = Math.floor(slime.pawn.xp / 4);
+      const targetCell = cells[randomInt(0, cells.length - 1)];
+      const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
+      this.map.placeNew(child);
+    } else {
+      console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
+    }
+  }
+
   private executeAction(action: Action, source: Sprite) {
     if (action?.action === ACTIONS.NOTHING || this.invalidAction(action)) {
       return;
@@ -98,6 +111,9 @@ export class AiHandler {
         break;
       case ACTIONS.MERGE:
         this.attemptMerge(source.pawn as Slime);
+        break;
+      case ACTIONS.SPLIT:
+        this.attemptSplit(source);
         break;
       default:
         console.log(`skipping invalid action: ${action.action}`);
