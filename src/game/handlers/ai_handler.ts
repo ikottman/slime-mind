@@ -10,8 +10,9 @@ import { randomInt } from '../utils';
 
 export class AiHandler {
   map: Map;
-  playerOne: Player;
-  playerTwo: Player;
+
+  playerOne!: Player;
+  playerTwo!: Player;
 
   constructor(map: Map) {
     this.map = map;
@@ -158,7 +159,8 @@ export class AiHandler {
         slimes.push(one.pop());
       }
     }
-    return slimes.filter(s => s);
+
+    return slimes.filter(s => s) as Array<Sprite>
   }
 
   loadAis(): void {
