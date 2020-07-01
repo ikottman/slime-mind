@@ -1,10 +1,10 @@
 <script>
-  import { APP, turnStore, game } from './store';
+  import { APP, game } from './store';
   
   function handleClick() {
-    turnStore.update(_ => 0);
+    APP.ticker.stop();
     APP.stage.removeChildren();
-    game.initializeMap();
+    game.reset();
   }
 </script>
 

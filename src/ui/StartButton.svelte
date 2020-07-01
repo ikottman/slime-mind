@@ -1,9 +1,7 @@
 <script>
-  import { APP, game } from './store';
+  import { APP } from './store';
   
   function handleClick() {
-    // start the game
-    game.run();
     APP.ticker.start();
   }
 </script>

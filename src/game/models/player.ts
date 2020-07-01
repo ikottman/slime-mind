@@ -1,9 +1,4 @@
-import { Action } from './action';
-import Pawn from "./pawn";
-
-export interface AI {
-  takeAction(map: Array<Array<Pawn | null>>): Action;
-}
+import { AI } from "../schema";
 
 export default class Player {
   id: number;

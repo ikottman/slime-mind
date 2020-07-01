@@ -39,6 +39,12 @@ export class Sprite {
     this.sprite.y = y * SPRITE_SIZE;
   }
 
+  // take damage and return true if this killed the sprite
+  takeDamage(damage: number): boolean {
+    this.pawn.hp = this.pawn.hp - damage;
+    return this.pawn.hp <= 0;
+  }
+
   get x() {
     return this.pawn.x;
   }
@@ -53,5 +59,9 @@ export class Sprite {
 
   get id() {
     return this.pawn.id;
+  }
+
+  get owner() {
+    return this.pawn.owner;
   }
 }

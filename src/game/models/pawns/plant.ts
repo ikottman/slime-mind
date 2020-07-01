@@ -6,20 +6,29 @@ export class Plant implements Pawn {
   type = PAWN_TYPE.PLANT;
   x: number;
   y: number;
-  maxHp: number;
   hp: number;
   xp: number;
-  lvl: number;
-  canSeed: number;
 
   constructor(x: number, y: number) {
     this.id = PIXI.utils.uid();
     this.x = x;
     this.y = y;
-    this.maxHp = 10;
-    this.hp = 10;
+    this.hp = 3;
     this.xp = 0;
-    this.lvl = 1;
-    this.canSeed = 0;
+  }
+
+  gainExperience(xp: number) {
+    this.xp += xp;
+  }
+
+  json() {
+    return {
+      id: this.id,
+      x: this.x,
+      y: this.y,
+      type: this.type,
+      hp: this.hp,
+      owner: -1
+    }
   }
 }

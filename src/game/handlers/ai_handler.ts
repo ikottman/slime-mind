@@ -1,0 +1,179 @@
+import { code } from '../../ui/store';
+import { Random } from '../ai/random';
+import { Map } from '../models/map';
+import { Sprite } from '../models/sprite';
+import { Slime } from '../models/pawns/slime';
+import Player from '../models/player';
+import { Action } from '../models/action';
+import { ACTIONS } from '../schema';
+import { randomInt } from '../utils';
+
+export class AiHandler {
+  map: Map;
+  playerOne: Player;
+  playerTwo: Player;
+
+  constructor(map: Map) {
+    this.map = map;
+    this.loadAis();
+  }
+
+  private invalidMove(action: Action, source: Sprite): boolean {
+    if (!Number.isInteger(action.x) || !Number.isInteger(action.y)) {
+      return true;
+    }
+
+    if (this.map.cellOccupied(action.x, action.y)) {
+      console.log(`invalid MOVE, target square occupied: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    if (action.x < source.x - 1 || action.x > source.x + 1 || 
+      action.y < source.y - 1 || action.y > source.y + 1) {
+      console.log(`invalid MOVE, more than one square away: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    return false;
+  }
+
+  private invalidBite(action: Action, source: Sprite, target: Sprite | null): boolean {
+    if (!target) {
+      return true;
+    }
+
+    if (action.x < source.x - 1 || action.x > source.x + 1 || 
+      action.y < source.y - 1 || action.y > source.y + 1) {
+      console.log(`invalid BITE, more than one square away: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    return false;
+  }
+
+  private invalidAction(action: Action): boolean {
+    if (!action || action.id === undefined || action.id === null) {
+      console.log(`invalid action, something is null: ${JSON.stringify(action)}`);
+      return true;
+    }
+
+    return false;
+  }
+
+  private attemptMerge(slime: Slime): void {
+    const mergeableSlimes =
+      this.map.neighbors(slime)
+        .filter(pawn => pawn?.owner === slime.owner)
+        .filter(slime => slime?.readyToMerge);
+    if (mergeableSlimes[0]) {
+      const sacrifice = mergeableSlimes[0];
+      slime.gainExperience(sacrifice.xp);
+      this.map.clearCell(sacrifice.x, sacrifice.y);
+    } else {
+      slime.readyToMerge = true;
+    }
+  }
+
+  private attemptSplit(slime: Sprite): void {
+    const cells = this.map.emptyCells(slime);
+    // TODO: check slime level
+    if (cells.length > 0) {
+      slime.pawn.xp = Math.floor(slime.pawn.xp / 4);
+      const targetCell = cells[randomInt(0, cells.length - 1)];
+      const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
+      this.map.placeNew(child);
+    } else {
+      console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
+    }
+  }
+
+  private executeAction(action: Action, source: Sprite) {
+    if (action?.action === ACTIONS.NOTHING || this.invalidAction(action)) {
+      return;
+    }
+    switch (action.action) {
+      case ACTIONS.MOVE:
+        if (this.invalidMove(action, source)) {
+          return;
+        }
+        this.map.move(source, action.x, action.y);
+        break;
+      case ACTIONS.BITE:
+        const target = this.map.get(action.x, action.y);
+        if (this.invalidBite(action, source, target) || !source.pawn.attack || !target) {
+          return;
+        }
+        const killed = target?.takeDamage(source.pawn.attack);
+        if (killed) {
+          this.map.clearCell(target.x, target.y);
+        }
+        source.pawn.gainExperience(1);
+        break;
+      case ACTIONS.MERGE:
+        this.attemptMerge(source.pawn as Slime);
+        break;
+      case ACTIONS.SPLIT:
+        this.attemptSplit(source);
+        break;
+      default:
+        console.log(`skipping invalid action: ${action.action}`);
+    }
+  }
+
+  private runAi(slime: Sprite): void {
+    // skip slimes that were eaten before we got to their turn
+    if (slime.pawn.hp < 0) {
+      return;
+    }
+
+    let playerAction;
+    try {
+      if (slime.owner === 1) {
+        playerAction = this.playerOne.ai.takeAction(this.map.readOnlyMap, slime.id);
+      } else {
+        playerAction = this.playerTwo.ai.takeAction(this.map.readOnlyMap, slime.id);
+      }
+    } catch (exception) {
+      console.log(`player ${slime.owner} takeAction errored with: ${exception}`);
+      return;
+    }
+
+    const action = new Action(slime.id, playerAction.action, playerAction.x, playerAction.y);
+    return this.executeAction(action, slime);
+  }
+
+  // get array alternating each player's slimes
+  // leftover slimes are at the end of the array
+  private getSlimes(): Array<Sprite> {
+    const one = this.map.sprites.filter(s => s.owner === 1);
+    const two = this.map.sprites.filter(s => s.owner === 2);
+    let slimes = [];
+    const whoGoesFirst = randomInt(1, 2);
+    while (one.length > 0 || two.length > 0) {
+      if (whoGoesFirst === 1) {
+        slimes.push(one.pop());
+        slimes.push(two.pop());
+      } else {
+        slimes.push(two.pop());
+        slimes.push(one.pop());
+      }
+    }
+    return slimes.filter(s => s);
+  }
+
+  loadAis(): void {
+    // load player's code
+    const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
+
+    this.playerOne = new Player(1, new ai(1));
+    this.playerTwo = new Player(2, new Random(2));
+  }
+
+  takeTurn() {
+    const slimes = this.getSlimes();
+    // run AI alternating between each player's slimes
+    slimes.forEach((slime) => this.runAi(slime));
+
+    slimes.forEach((slime) => slime.pawn.readyToMerge = false);
+  }
+}

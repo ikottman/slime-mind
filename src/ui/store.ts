@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
-import Game from '../game/game';
+import { Game } from '../game/game';
 
 // turn
 export const turnStore = writable(0);
@@ -16,6 +16,11 @@ codeStore.subscribe(value => {
     code = value
   }
 });
+
+// player scores
+export const scoresStore = writable([0, 0]);
+export let scores: Array<number>;
+scoresStore.subscribe(value => scores = value);
 
 // game
 const canvasSize = window.innerHeight - 25;

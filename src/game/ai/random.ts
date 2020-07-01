@@ -1,6 +1,4 @@
-import { AI } from '../models/player';
-import { Pawn } from '../models/pawn';
-import { ACTIONS } from '../models/action';
+import { Pawn, AI, ACTIONS } from '../schema';
 import { GRID_SIZE } from '../../ui/store';
 import { randomInt } from '../utils';
 
@@ -36,22 +34,27 @@ export class Random implements AI {
     return [x, y];
   }
 
-  takeAction(map: Array<Array<Pawn>>) {
+  takeAction(map: Array<Array<Pawn>>, id: number) {
     this.map = map;
     const myPawns = [];
     for (let i = 0; i < map.length; i++) {
       for (let j = 0; j < map.length; j++) {
-        if (map[i][j]?.owner == this.playerId) {
+        if (map[i][j]?.owner === this.playerId) {
           myPawns.push(map[i][j]);
         }
       }
     }
-  
-    const pawn = myPawns[randomInt(0, myPawns.length - 1)];
+
+    const pawn = myPawns.find(p => p.id === id);
     const [x, y] = this.findValidMove(pawn);
+
+    let action = ACTIONS.MOVE;
+    if (this.invalidMove(x, y)) {
+      action = ACTIONS.NOTHING;
+    }
+
     return {
-      id: pawn.id,
-      action: ACTIONS.MOVE,
+      action,
       x,
       y
     }
