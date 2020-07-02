@@ -10,7 +10,6 @@ import { randomInt } from '../utils';
 
 export class AiHandler {
   map: Map;
-
   playerOne!: Player;
   playerTwo!: Player;
 
@@ -77,14 +76,18 @@ export class AiHandler {
 
   private attemptSplit(slime: Sprite): void {
     const cells = this.map.emptyCells(slime);
-    // TODO: check slime level
-    if (cells.length > 0) {
+    if (cells.length > 0 && slime.pawn.level >= 4) {
       slime.pawn.xp = Math.floor(slime.pawn.xp / 4);
       const targetCell = cells[randomInt(0, cells.length - 1)];
       const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
       this.map.placeNew(child);
     } else {
-      console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
+      if (cells.length === 0) {
+        console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
+      }
+      if (slime.pawn.level < 4) {
+        console.log(`slime ${slime.id} for player ${slime.owner} can't split, it's lower than the minimum level 4`);
+      }
     }
   }
 
@@ -160,7 +163,7 @@ export class AiHandler {
       }
     }
 
-    return slimes.filter(s => s) as Array<Sprite>
+    return slimes.filter(s => s) as Array<Sprite>;
   }
 
   loadAis(): void {

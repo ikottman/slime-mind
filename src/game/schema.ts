@@ -15,6 +15,8 @@ export interface Pawn {
   xp: number,
   attack?: number,
   readyToMerge?: boolean,
+  level: number,
+  max_level: number,
   json(): any
   gainExperience(xp: number): void;
 }
