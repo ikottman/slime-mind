@@ -42,6 +42,11 @@ export class AiHandler {
       return true;
     }
 
+    if (source.x === target.x && source.y === target.y) {
+      console.log(`pawn ${target?.pawn.id} tried to bite itself`);
+      return true;
+    }
+
     if (action.x < source.x - 1 || action.x > source.x + 1 || 
       action.y < source.y - 1 || action.y > source.y + 1) {
       console.log(`invalid BITE, more than one square away: ${JSON.stringify(action)}`);
