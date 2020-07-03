@@ -12,13 +12,13 @@ export interface Pawn {
   type: PAWN_TYPE,
   owner: number,
   hp: number,
-  xp: number,
+  xp?: number,
   attack?: number,
   readyToMerge?: boolean,
   level: number,
   max_level: number,
   json(): any
-  gainExperience(xp: number): void;
+  gainExperience?(xp: number): void;
 }
 
 export enum ACTIONS {

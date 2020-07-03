@@ -6,23 +6,42 @@ import { randomInt } from '../utils';
 
 export class PlantHandler {
   map: Map;
+
   constructor(map: Map) {
     this.map = map;
   }
 
-  // occasionally have plants replicate
-  private seedPlants() {
+  // plants have a chance to level
+  private levelUp() {
+    const levelUpChance = 10;
     this.map.sprites
-    .filter((s) => s.type === PAWN_TYPE.PLANT)
-    .forEach((plant) => {
-      if (randomInt(0, 100) < 1) {
-        const options = this.map.emptyCells(plant);
-        if (options.length > 0) {
-          const [x, y] = options[randomInt(0, options.length - 1)];
-          this.map.placeNew(new Plant(x, y));
+      .filter(sprite => sprite.type === PAWN_TYPE.PLANT)
+      .map(sprite => sprite.pawn)
+      .filter(plant => plant.level < plant.max_level)
+      .forEach(plant => {
+        if (randomInt(0, 100) < levelUpChance) {
+          plant.level = plant.level + 1;
+          // regain lost HP
+          plant.hp = plant.hp + (Math.floor(plant.max_hp / 2));
         }
-      }
-    });
+      });
+  }
+
+  // max level plants have a chance to replicate
+  private seed() {
+    const seedChance = 1;
+    this.map.sprites
+      .filter(sprite => sprite.type === PAWN_TYPE.PLANT)
+      .filter(plant => plant.pawn.level === plant.pawn.max_level)
+      .forEach(plant => {
+        if (randomInt(0, 100) < seedChance) {
+          const options = this.map.emptyCells(plant);
+          if (options.length > 0) {
+            const [x, y] = options[randomInt(0, options.length - 1)];
+            this.map.placeNew(new Plant(x, y));
+          }
+        }
+      });
   }
 
   placeInitialPlants() {
@@ -37,6 +56,7 @@ export class PlantHandler {
   }
 
   takeTurn() {
-    this.seedPlants();
+    this.levelUp();
+    this.seed();
   }
 }
