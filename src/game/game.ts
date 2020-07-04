@@ -1,6 +1,6 @@
 import { turn, turnStore, scoresStore, APP } from '../ui/store';
 import { Map } from './models/map';
-import { Slime} from "./models/pawns/slime";
+import { Slime} from "./models/slime";
 import { PlantHandler } from "./handlers/plant_handler";
 import { AiHandler } from "./handlers/ai_handler";
 import { ScoreHandler } from "./handlers/score_handler";
@@ -34,7 +34,7 @@ export class Game {
 
   private addSlime(x: number, y: number, owner: number) {
     const slime = new Slime(owner, x, y);
-    this.map.placeNew(slime);
+    this.map.move(slime, x, y);
   }
 
   private placeSlimes() {
@@ -53,8 +53,8 @@ export class Game {
   }
 
   private playerOutOfSlimes(): boolean {
-    const one = this.map.sprites.filter(s => s.owner === 1);
-    const two = this.map.sprites.filter(s => s.owner === 2);
+    const one = this.map.pawns.filter(pawn => pawn.owner === 1);
+    const two = this.map.pawns.filter(pawn => pawn.owner === 2);
     return one.length === 0 || two.length === 0;
   }
 

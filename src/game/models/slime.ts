@@ -1,26 +1,28 @@
 import * as PIXI from "pixi.js";
-import { PAWN_TYPE, Pawn } from '../../schema';
+import { PAWN_TYPE } from '../schema';
+import redSlime from '../assets/red_slime.png';
+import blueSlime from '../assets/blue_slime.png';
+import { Pawn } from './pawn';
 
-export class Slime implements Pawn {
-  id: number;
-  owner: number;
-  type = PAWN_TYPE.SLIME;
-  x: number;
-  y: number;
+export class Slime extends Pawn {
   hp: number;
   xp: number;
   readyToMerge: boolean;
   max_level: number;
 
   constructor(owner: number, x: number, y: number) {
-    this.id = PIXI.utils.uid();
-    this.owner = owner;
-    this.x = x;
-    this.y = y;
+    super(owner, x, y);
+    this.type = PAWN_TYPE.SLIME;
     this.hp = 10;
     this.readyToMerge = false;
     this.xp = 1;
     this.max_level = 12;
+
+    if (owner === 1) {
+      this.addSprite(PIXI.Sprite.from(redSlime));
+    } else {
+      this.addSprite(PIXI.Sprite.from(blueSlime));
+    }
   }
 
   gainExperience(xp: number) {
@@ -80,6 +82,11 @@ export class Slime implements Pawn {
       122
     ];
     return hpByLevel[this.level - 1];
+  }
+
+  takeDamage(damage: number) {
+    this.hp = this.hp - damage;
+    return this.hp <= 0;
   }
 
   json() {

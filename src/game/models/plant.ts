@@ -1,24 +1,20 @@
 import * as PIXI from "pixi.js";
-import { PAWN_TYPE, Pawn } from '../../schema';
+import { PAWN_TYPE } from '../schema';
+import { Pawn } from './pawn';
+import plant from '../assets/plant.png'
 
-export class Plant implements Pawn {
-  id: number;
-  type = PAWN_TYPE.PLANT;
-  x: number;
-  y: number;
+export class Plant extends Pawn {
   current_hp: number;
   level: number;
   max_level: number;
-  owner: number;
 
   constructor(x: number, y: number) {
-    this.id = PIXI.utils.uid();
-    this.x = x;
-    this.y = y;
+    super(-1, x, y);
+    this.type = PAWN_TYPE.PLANT;
     this.current_hp = 3;
     this.level = 1;
     this.max_level = 12;
-    this.owner = -1;
+    this.addSprite(PIXI.Sprite.from(plant));
   }
 
   get max_hp(): number {
@@ -45,7 +41,7 @@ export class Plant implements Pawn {
       level: this.level,
       max_level: this.max_level,
       max_hp: this.max_hp,
-      owner: -1
+      owner: this.owner,
     }
   }
 }

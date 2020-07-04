@@ -1,7 +1,7 @@
 import { PAWN_TYPE } from '../schema';
 import { Map } from '../models/map'
 import { GRID_SIZE } from '../../ui/store';
-import { Plant } from "../models/pawns/plant";
+import { Plant } from "../models/plant";
 import { randomInt } from '../utils';
 
 export class PlantHandler {
@@ -14,9 +14,8 @@ export class PlantHandler {
   // plants have a chance to level
   private levelUp() {
     const levelUpChance = 10;
-    this.map.sprites
+    this.map.pawns
       .filter(sprite => sprite.type === PAWN_TYPE.PLANT)
-      .map(sprite => sprite.pawn)
       .filter(plant => plant.level < plant.max_level)
       .forEach(plant => {
         if (randomInt(0, 100) < levelUpChance) {
@@ -30,15 +29,15 @@ export class PlantHandler {
   // max level plants have a chance to replicate
   private seed() {
     const seedChance = 1;
-    this.map.sprites
-      .filter(sprite => sprite.type === PAWN_TYPE.PLANT)
-      .filter(plant => plant.pawn.level === plant.pawn.max_level)
+    this.map.pawns
+      .filter(pawn => pawn.type === PAWN_TYPE.PLANT)
+      .filter(plant => plant.level === plant.max_level)
       .forEach(plant => {
         if (randomInt(0, 100) < seedChance) {
           const options = this.map.emptyCells(plant);
           if (options.length > 0) {
             const [x, y] = options[randomInt(0, options.length - 1)];
-            this.map.placeNew(new Plant(x, y));
+            this.map.move(new Plant(x, y), x, y);
           }
         }
       });
@@ -50,7 +49,7 @@ export class PlantHandler {
       const x = randomInt(0, GRID_SIZE);
       const y = randomInt(0, GRID_SIZE);
       if (!this.map.invalidMove(x, y)) {
-        this.map.placeNew(new Plant(x, y));
+        this.map.move(new Plant(x, y), x, y);
       }
     }
   }

@@ -1,8 +1,8 @@
 import { code } from '../../ui/store';
 import { Random } from '../ai/random';
 import { Map } from '../models/map';
-import { Sprite } from '../models/sprite';
-import { Slime } from '../models/pawns/slime';
+import { Pawn } from '../models/pawn';
+import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
 import { ACTIONS } from '../schema';
@@ -18,7 +18,7 @@ export class AiHandler {
     this.loadAis();
   }
 
-  private invalidMove(action: Action, source: Sprite): boolean {
+  private invalidMove(action: Action, source: Pawn): boolean {
     if (!Number.isInteger(action.x) || !Number.isInteger(action.y)) {
       return true;
     }
@@ -37,13 +37,13 @@ export class AiHandler {
     return false;
   }
 
-  private invalidBite(action: Action, source: Sprite, target: Sprite | null): boolean {
+  private invalidBite(action: Action, source: Slime, target: Pawn | null): boolean {
     if (!target) {
       return true;
     }
 
     if (source.x === target.x && source.y === target.y) {
-      console.log(`pawn ${target?.pawn.id} tried to bite itself`);
+      console.log(`pawn ${target?.id} tried to bite itself`);
       return true;
     }
 
@@ -69,7 +69,7 @@ export class AiHandler {
     const mergeableSlimes =
       this.map.neighbors(slime)
         .filter(pawn => pawn?.owner === slime.owner)
-        .filter(slime => slime?.readyToMerge);
+        .filter(slime => slime?.readyToMerge) as Array<Slime>;
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);
@@ -79,24 +79,24 @@ export class AiHandler {
     }
   }
 
-  private attemptSplit(slime: Sprite): void {
+  private attemptSplit(slime: Slime): void {
     const cells = this.map.emptyCells(slime);
-    if (cells.length > 0 && slime.pawn.level >= 4) {
-      slime.pawn.xp = Math.floor(slime.pawn.xp / 4);
+    if (cells.length > 0 && slime.level >= 4) {
+      slime.xp = Math.floor(slime.xp / 4);
       const targetCell = cells[randomInt(0, cells.length - 1)];
       const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
-      this.map.placeNew(child);
+      this.map.move(child, child.x, child.y);
     } else {
       if (cells.length === 0) {
         console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
       }
-      if (slime.pawn.level < 4) {
+      if (slime.level < 4) {
         console.log(`slime ${slime.id} for player ${slime.owner} can't split, it's lower than the minimum level 4`);
       }
     }
   }
 
-  private executeAction(action: Action, source: Sprite) {
+  private executeAction(action: Action, source: Slime) {
     if (action?.action === ACTIONS.NOTHING || this.invalidAction(action)) {
       return;
     }
@@ -109,29 +109,29 @@ export class AiHandler {
         break;
       case ACTIONS.BITE:
         const target = this.map.get(action.x, action.y);
-        if (this.invalidBite(action, source, target) || !source.pawn.attack || !target) {
+        if (this.invalidBite(action, source, target) || !source.attack || !target) {
           return;
         }
-        const killed = target?.takeDamage(source.pawn.attack);
+        const killed = target?.takeDamage(source.attack);
         if (killed) {
           this.map.clearCell(target.x, target.y);
         }
-        source.pawn.gainExperience(1);
+        source.gainExperience(1);
         break;
       case ACTIONS.MERGE:
-        this.attemptMerge(source.pawn as Slime);
+        this.attemptMerge(source as Slime);
         break;
       case ACTIONS.SPLIT:
-        this.attemptSplit(source);
+        this.attemptSplit(source as Slime);
         break;
       default:
         console.log(`skipping invalid action: ${action.action}`);
     }
   }
 
-  private runAi(slime: Sprite): void {
+  private runAi(slime: Slime): void {
     // skip slimes that were eaten before we got to their turn
-    if (slime.pawn.hp < 0) {
+    if (slime.hp < 0) {
       return;
     }
 
@@ -153,9 +153,9 @@ export class AiHandler {
 
   // get array alternating each player's slimes
   // leftover slimes are at the end of the array
-  private getSlimes(): Array<Sprite> {
-    const one = this.map.sprites.filter(s => s.owner === 1);
-    const two = this.map.sprites.filter(s => s.owner === 2);
+  private getSlimes(): Array<Slime> {
+    const one = this.map.pawns.filter(pawn => pawn.owner === 1);
+    const two = this.map.pawns.filter(pawn => pawn.owner === 2);
     let slimes = [];
     const whoGoesFirst = randomInt(1, 2);
     while (one.length > 0 || two.length > 0) {
@@ -168,7 +168,7 @@ export class AiHandler {
       }
     }
 
-    return slimes.filter(s => s) as Array<Sprite>;
+    return slimes.filter(s => s) as Array<Slime>;
   }
 
   loadAis(): void {
@@ -184,6 +184,6 @@ export class AiHandler {
     // run AI alternating between each player's slimes
     slimes.forEach((slime) => this.runAi(slime));
 
-    slimes.forEach((slime) => slime.pawn.readyToMerge = false);
+    slimes.forEach((slime) => slime.readyToMerge = false);
   }
 }

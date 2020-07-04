@@ -1,10 +1,9 @@
-import { Pawn } from '../schema';
 import { GRID_SIZE } from '../../ui/store';
-import { Sprite } from '../models/sprite';
+import { Pawn } from './pawn';
 
 export class Map {
   // the game map. An empty space is null
-  grid: Array<Array< Sprite | null>>;
+  grid: Array<Array< Pawn | null>>;
 
   constructor() {
     this.grid = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
@@ -36,7 +35,7 @@ export class Map {
 
   // return list of all valid empty cells surrounding a pawn
   // if all are occupied, returns empty list
-  emptyCells(pawn: Sprite) {
+  emptyCells(pawn: Pawn) {
     const x = pawn.x;
     const y = pawn.y;
     const options = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
@@ -51,22 +50,22 @@ export class Map {
     const options = [[x - 1, y - 1], [x -1, y], [x - 1, y + 1], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y + 1]];
     return options
       .filter(pt => this.inBounds(pt[0], pt[1]))
-      .map(pt => this.grid[pt[0]][pt[1]]?.pawn)
+      .map(pt => this.grid[pt[0]][pt[1]])
       .filter(pawn => pawn !== null);
   }
 
   // list of all occupants of the map
-  get sprites(): Array<Sprite> {
-    const sprites: Array<Sprite> = [];
+  get pawns(): Array<Pawn> {
+    const pawns: Array<Pawn> = [];
     for (let i  = 0; i < this.grid.length; i++) {
       for (let j = 0; j < this.grid.length; j++) {
         const cell = this.grid[i][j];
         if (cell) {
-          sprites.push(cell);
+          pawns.push(cell);
         }
       }
     }
-    return sprites;
+    return pawns;
   }
 
   get readOnlyMap(): Array<Array<Pawn | null>> {
@@ -74,16 +73,11 @@ export class Map {
     for (let i  = 0; i < this.grid.length; i++) {
       for (let j = 0; j < this.grid.length; j++) {
         if (this.grid[i][j]) {
-          grid[i][j] = this.grid[i][j]?.pawn.json();
+          grid[i][j] = this.grid[i][j]?.json();
         }
       }
     }
     return grid;
-  }
-
-  // create a new map piece
-  placeNew(pawn: Pawn): void {
-    this.grid[pawn.x][pawn.y] = new Sprite(pawn);
   }
 
   // remove pawn (if any) from the map
@@ -93,20 +87,20 @@ export class Map {
   }
 
   // put target in new position, setting previous cell to null
-  move(target: Sprite, x: number, y: number): void {
+  move(target: Pawn, x: number, y: number): void {
     this.grid[target.x][target.y] = null;
     this.grid[x][y] = target;
     // update pawn and rendered sprite's position
     target.move(x, y);
   }
 
-  // return sprite with given id, or null if it isn't in the map
-  findById(id: number): Sprite | null {
-    return this.sprites.find((s) => s.id === id) || null;
+  // return pawn with given id, or null if it isn't in the map
+  findById(id: number): Pawn | null {
+    return this.pawns.find((s) => s.id === id) || null;
   }
 
-  // get Sprite from cell. Returns null if out of bounds.
-  get(x: number, y: number): Sprite | null {
+  // get occupant at coordinates. Returns null if out of bounds.
+  get(x: number, y: number): Pawn | null {
     if (!this.inBounds(x, y)) {
       return null;
     }

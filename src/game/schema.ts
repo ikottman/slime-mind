@@ -1,25 +1,10 @@
 import { Action } from './models/action';
+import { Pawn } from './models/pawn';
 
 export enum PAWN_TYPE {
   PLANT = 'PLANT',
   SLIME = 'SLIME'
 };
-
-export interface Pawn {
-  id: number,
-  x: number,
-  y: number,
-  type: PAWN_TYPE,
-  owner: number,
-  hp: number,
-  xp?: number,
-  attack?: number,
-  readyToMerge?: boolean,
-  level: number,
-  max_level: number,
-  json(): any
-  gainExperience?(xp: number): void;
-}
 
 export enum ACTIONS {
   MOVE = 'MOVE',
