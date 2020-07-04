@@ -1,4 +1,3 @@
-import { PAWN_TYPE } from '../schema';
 import { Map } from '../models/map'
 import { GRID_SIZE } from '../../ui/store';
 import { Plant } from "../models/plant";
@@ -18,9 +17,7 @@ export class PlantHandler {
       .filter(plant => plant.level < plant.max_level)
       .forEach(plant => {
         if (randomInt(0, 100) < levelUpChance) {
-          plant.level = plant.level + 1;
-          // regain lost HP
-          plant.hp = plant.hp + (Math.floor(plant.max_hp / 2));
+          plant.gainLevel();
         }
       });
   }

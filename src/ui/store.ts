@@ -29,7 +29,7 @@ export const SPRITE_SIZE =  canvasSize / GRID_SIZE; // size each grid box should
 export const APP = new PIXI.Application({
   width: canvasSize, // make square
   height: canvasSize,
-  backgroundColor: 0x1099bb,
+  backgroundColor: 0x778899,
   autoStart: false
 });
 

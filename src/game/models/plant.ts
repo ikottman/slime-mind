@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { PAWN_TYPE } from '../schema';
 import { Pawn } from './pawn';
 import plant from '../assets/plant.png'
+import max_level_plant from '../assets/max_level_plant.png'
 
 export class Plant extends Pawn {
   current_hp: number;
@@ -29,6 +30,17 @@ export class Plant extends Pawn {
 
   get hp(): number {
     return this.current_hp;
+  }
+
+  gainLevel() {
+    this.level = this.level + 1;
+    // regain lost HP
+    this.hp = this.hp + (Math.floor(this.max_hp / 2));
+    // swap out sprite to show we hit max level
+    if (this.level === this.max_level) {
+      this.sprite.destroy();
+      this.addSprite(PIXI.Sprite.from(max_level_plant));
+    }
   }
 
   takeDamage(damage: number) {
