@@ -1,5 +1,8 @@
 import { GRID_SIZE } from '../../ui/store';
 import { Pawn } from './pawn';
+import { Plant } from './plant';
+import { Slime } from './slime';
+import { PAWN_TYPE } from '../schema';
 
 export class Map {
   // the game map. An empty space is null
@@ -44,14 +47,14 @@ export class Map {
 
   // return list of all pawns surrounding a pawn
   // if all cells are empty, returns empty list
-  neighbors(pawn: Pawn) {
+  neighbors(pawn: Pawn): Array<Pawn> {
     const x = pawn.x;
     const y = pawn.y;
     const options = [[x - 1, y - 1], [x -1, y], [x - 1, y + 1], [x, y - 1], [x, y + 1], [x + 1, y - 1], [x + 1, y], [x + 1, y + 1]];
     return options
       .filter(pt => this.inBounds(pt[0], pt[1]))
       .map(pt => this.grid[pt[0]][pt[1]])
-      .filter(pawn => pawn !== null);
+      .filter(pawn => pawn !== null) as Array<Pawn>;
   }
 
   // list of all occupants of the map
@@ -78,6 +81,14 @@ export class Map {
       }
     }
     return grid;
+  }
+
+  get plants(): Array<Plant> {
+    return this.pawns.filter(p => p.type === PAWN_TYPE.PLANT) as Array<Plant>;
+  }
+
+  get slimes(): Array<Slime> {
+    return this.pawns.filter(p => p.type === PAWN_TYPE.SLIME) as Array<Slime>;
   }
 
   // remove pawn (if any) from the map

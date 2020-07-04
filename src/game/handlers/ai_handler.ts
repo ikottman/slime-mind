@@ -66,10 +66,8 @@ export class AiHandler {
   }
 
   private attemptMerge(slime: Slime): void {
-    const mergeableSlimes =
-      this.map.neighbors(slime)
-        .filter(pawn => pawn?.owner === slime.owner)
-        .filter(slime => slime?.readyToMerge) as Array<Slime>;
+    const mySlimes = this.map.neighbors(slime).filter(pawn => pawn.owner === slime.owner) as Array<Slime>; 
+    const mergeableSlimes = mySlimes.filter(slime => slime?.readyToMerge);
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);

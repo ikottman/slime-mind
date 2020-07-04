@@ -14,8 +14,7 @@ export class PlantHandler {
   // plants have a chance to level
   private levelUp() {
     const levelUpChance = 10;
-    this.map.pawns
-      .filter(sprite => sprite.type === PAWN_TYPE.PLANT)
+    this.map.plants
       .filter(plant => plant.level < plant.max_level)
       .forEach(plant => {
         if (randomInt(0, 100) < levelUpChance) {
@@ -29,8 +28,7 @@ export class PlantHandler {
   // max level plants have a chance to replicate
   private seed() {
     const seedChance = 1;
-    this.map.pawns
-      .filter(pawn => pawn.type === PAWN_TYPE.PLANT)
+    this.map.plants
       .filter(plant => plant.level === plant.max_level)
       .forEach(plant => {
         if (randomInt(0, 100) < seedChance) {
