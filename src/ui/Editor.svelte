@@ -29,9 +29,6 @@
       jar.updateCode(storedCode);
     }
   });
-  const editorWidth = window.innerWidth - window.innerHeight - 50;
-  const editorHeight = window.innerHeight - 10;
-  const style = `width: ${editorWidth}px; height: ${editorHeight}px`;
 </script>
 
 <style>
@@ -42,12 +39,15 @@
     font-weight: 400;
     letter-spacing: normal;
     line-height: 20px;
+    min-height: 700px;
   }
   pre {
     margin: 0px;
     margin-left: 5px;
+    width: 80%;
+    height: 100%;
   }
 </style>
 <pre>
-  <code {style} class='language-js editor' bind:this={codeEditor}/>
+  <code class='language-js editor' bind:this={codeEditor}/>
 </pre>

@@ -31,6 +31,11 @@
     grid-column: 9 / 12;
     justify-self: end;
   }
+
+  .editor {
+    display: grid;
+    place-items: center;
+  }
 </style>
 
 <Tabs let:selected={selected}>
@@ -52,7 +57,9 @@
     <Game/>
   </div>
   {:else if selected === 'CODE'}
-    <Editor/>
+    <div class="editor">
+      <Editor/>
+    </div>
   {/if}
 </Tabs>
 
