@@ -14,6 +14,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
     place-items: start;
+    margin-top: -5px;
   }
 
   .controlGrid {
@@ -21,6 +22,11 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
     place-items: center;
+    margin-top: 5px;
+  }
+
+  .scoreboard {
+    margin-top: 5px;
   }
 </style>
 

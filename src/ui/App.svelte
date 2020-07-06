@@ -1,5 +1,5 @@
 <script>
-  import Tabs from './Tabs.svelte';
+  import Navigation from './Navigation.svelte';
   import GameTab from './GameTab.svelte';
   import Editor from './Editor.svelte';
 </script>
@@ -11,7 +11,7 @@
   }
 </style>
 
-<Tabs let:selected={selected}>
+<Navigation let:selected={selected}>
   {#if selected === 'GAME'}
     <GameTab/>
   {:else if selected === 'CODE'}
@@ -19,5 +19,5 @@
       <Editor/>
     </div>
   {/if}
-</Tabs>
+</Navigation>
 

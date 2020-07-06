@@ -13,7 +13,7 @@ export let code: string;
 codeStore.subscribe(value => {
   if (value) {
     window.localStorage.setItem('ai_code', value);
-    code = value
+    code = value;
   }
 });
 
@@ -29,7 +29,7 @@ export const SPRITE_SIZE =  canvasSize / GRID_SIZE; // size each grid box should
 export const APP = new PIXI.Application({
   width: canvasSize, // make square
   height: canvasSize,
-  backgroundColor: 0x778899,
+  backgroundColor: 0x668E86, // 0x778899
   autoStart: false
 });
 
