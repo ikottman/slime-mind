@@ -1,4 +1,5 @@
 <script>
+  import Tabs from './Tabs.svelte';
   import Game from './Game.svelte';
   import Turn from './Turn.svelte';
   import Editor from './Editor.svelte';
@@ -12,7 +13,6 @@
 <style>
   .gameGrid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     align-items: center;
     grid-gap: 5px;
   }
@@ -33,19 +33,26 @@
   }
 </style>
 
-<div class='headerGrid'>
-  <div class='controls'>
-    <StartButton/>
-    <StopButton/>
-    <ResetButton/>
-    <FPS/>
+<Tabs let:selected={selected}>
+  {#if selected === 'GAME'}
+    <!-- TODO: all the game stuff should be its own component -->
+    <div class='headerGrid'>
+    <div class='controls'>
+      <StartButton/>
+      <StopButton/>
+      <ResetButton/>
+      <FPS/>
+    </div>
+    <div class="scoreboard">
+      <Turn/>
+      <Scoreboard/>
+    </div>
   </div>
-  <div class="scoreboard">
-    <Turn/>
-    <Scoreboard/>
+  <div class='gameGrid'>
+    <Game/>
   </div>
-</div>
-<div class='gameGrid'>
-  <Editor/>
-  <Game/>
-</div>
+  {:else if selected === 'CODE'}
+    <Editor/>
+  {/if}
+</Tabs>
+
