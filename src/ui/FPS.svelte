@@ -1,10 +1,11 @@
 <script>
   import { APP } from './store';
   let fps = 1;
-  $: APP.ticker.maxFPS = fps;
+  // transform the fps so there's more slow options
+  $: APP.ticker.maxFPS = (fps * fps / 60);
 </script>
 
 <style>
 </style>
 
-slow<input type=range bind:value={fps} min=0.5 step=0.5 max=60>fast
+slow<input type=range bind:value={fps} min=25 step=0.5 max=60>fast
