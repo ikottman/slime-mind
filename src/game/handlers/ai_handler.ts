@@ -171,10 +171,16 @@ export class AiHandler {
 
   loadAis(): void {
     // load player's code
-    const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
-
-    this.playerOne = new Player(1, new ai(1));
-    this.playerTwo = new Player(2, new Random(2));
+    try {
+      const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
+      if (ai) {
+        this.playerOne = new Player(1, new ai(1));
+        this.playerTwo = new Player(2, new Random(2));
+      }
+    } catch (exception) {
+      console.log(`can't parse player code, errored with: ${exception}`);
+      return;
+    }
   }
 
   takeTurn() {
