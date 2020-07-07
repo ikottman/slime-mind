@@ -12,7 +12,7 @@ export class PlantHandler {
 
   // plants have a chance to level
   private levelUp() {
-    const levelUpChance = 10;
+    const levelUpChance = 20;
     this.map.plants
       .filter(plant => plant.level < plant.max_level)
       .forEach(plant => {
@@ -24,7 +24,7 @@ export class PlantHandler {
 
   // max level plants have a chance to replicate
   private seed() {
-    const seedChance = 1;
+    const seedChance = 5;
     this.map.plants
       .filter(plant => plant.level === plant.max_level)
       .forEach(plant => {

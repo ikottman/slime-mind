@@ -20,8 +20,11 @@ export class TextHandler {
     this.texts = this.texts.filter(text => turn - text.turnAdded < 5);
   }
 
-  addText(text: string, target: Pawn) {
-    const renderedText = new PIXI.Text(text);
+  addText(text: string, target: Pawn, color: string) {
+    const style = new PIXI.TextStyle({
+      fill: color
+    });
+    const renderedText = new PIXI.Text(text, style);
     renderedText.x = target.sprite.x;
     renderedText.y = target.sprite.y;
     APP.stage.addChild(renderedText);

@@ -72,7 +72,7 @@ export class AiHandler {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);
       this.map.clearCell(sacrifice.x, sacrifice.y);
-      textHandler.addText('MERGE', slime);
+      textHandler.addText('MERGE', slime, '#72fa78');
     } else {
       slime.readyToMerge = true;
     }
@@ -85,7 +85,7 @@ export class AiHandler {
       const targetCell = cells[randomInt(0, cells.length - 1)];
       const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
       this.map.move(child, child.x, child.y);
-      textHandler.addText('SPLIT', slime);
+      textHandler.addText('SPLIT', slime, '#941651');
     } else {
       if (cells.length === 0) {
         console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
