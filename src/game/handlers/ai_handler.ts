@@ -1,4 +1,4 @@
-import { code } from '../../ui/store';
+import { code, textHandler } from '../../ui/store';
 import { Random } from '../ai/random';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
@@ -72,6 +72,7 @@ export class AiHandler {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);
       this.map.clearCell(sacrifice.x, sacrifice.y);
+      textHandler.addText('MERGE', slime);
     } else {
       slime.readyToMerge = true;
     }
@@ -84,6 +85,7 @@ export class AiHandler {
       const targetCell = cells[randomInt(0, cells.length - 1)];
       const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
       this.map.move(child, child.x, child.y);
+      textHandler.addText('SPLIT', slime);
     } else {
       if (cells.length === 0) {
         console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);

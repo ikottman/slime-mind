@@ -1,4 +1,4 @@
-import { turn, turnStore, scoresStore, APP } from '../ui/store';
+import { turn, turnStore, scoresStore, APP, textHandler } from '../ui/store';
 import { Map } from './models/map';
 import { Slime} from "./models/slime";
 import { PlantHandler } from "./handlers/plant_handler";
@@ -72,6 +72,7 @@ export class Game {
       this.plantHandler.takeTurn();
       this.aiHandler.takeTurn();
       this.scoreHandler.updateScores();
+      textHandler.takeTurn();
     });
   }
 }

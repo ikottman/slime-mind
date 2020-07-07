@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
+import { TextHandler } from '../game/handlers/text_handler'; 
 
 // turn
 export const turnStore = writable(0);
@@ -21,6 +22,9 @@ codeStore.subscribe(value => {
 export const scoresStore = writable([0, 0]);
 export let scores: Array<number>;
 scoresStore.subscribe(value => scores = value);
+
+// handles rendered text (like SPLIT and MERGE)
+export const textHandler = new TextHandler();
 
 // game
 const canvasSize = window.innerHeight - 25;
