@@ -40,7 +40,7 @@ class ExampleAICode {           // This line defines the user submited code, the
       .filter(pawn => pawn !== null);
   }
 
-  // determine if the given location is out of bounds or occupide
+  // determine if the given location is out of bounds or occupied
   invalidMove(x, y) {
     return this.outOfBounds(x, y) || this.map[x][y];
   }
@@ -103,14 +103,14 @@ class ExampleAICode {           // This line defines the user submited code, the
       return {
         action: 'MERGE'
       }
-    } else if (neighbors.length > 0) {                  // If there are any neighbors near by bite a random one
+    } else if (neighbors.length > 0) {                  // If there are any neighbors nearby bite a random one
       const target = biteableNeighbors[this.randomInt(0, neighbors.length - 1)];
       return {
         action: 'BITE',
         x: target.x,
         y: target.y
       }
-    } else if (pawn.lvl >= 4) {                         // If this pawn is over lvl 4 attempt to split
+    } else if (pawn.level >= 4) {                         // If this pawn is over level 4 attempt to split
       return {
         action: 'SPLIT'
       }
