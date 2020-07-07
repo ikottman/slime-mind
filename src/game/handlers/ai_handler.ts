@@ -144,6 +144,7 @@ export class AiHandler {
       }
     } catch (exception) {
       console.log(`player ${slime.owner} takeAction errored with: ${exception}`);
+      console.log(exception.stack);
       return;
     }
 
