@@ -81,7 +81,7 @@ class ExampleAICode {           // This line defines the user submited code, the
     }
   
     // This is the method for the player code that the game code will call, all player code actions must come from this method to be useable in game
-    takeAction(gameMap, id) {     // Do not edit - Game code will pass the current slime pawn's id and a game map matrix
+    takeAction(gameMap, id) {         // Do not edit - Game code will pass the current slime pawn's id and a game map matrix
       this.gameMap = gameMap;         // Loads the current game map for this turn
       
       // This is a custom section of code that is not required for this to be a valid player AI
