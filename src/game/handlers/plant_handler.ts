@@ -40,13 +40,18 @@ export class PlantHandler {
 
   placeInitialPlants() {
     // attempt to fill 10% of the map with plants
-    for (let i = 0; i < GRID_SIZE / 10; i ++) {
-      const x = randomInt(0, GRID_SIZE);
-      const y = randomInt(0, GRID_SIZE);
+    let numPlants = 0;
+    let tries = 0;
+    do {
+      tries++
+      const x = randomInt(0, GRID_SIZE-1);
+      const y = randomInt(0, GRID_SIZE-1);
       if (!this.map.invalidMove(x, y)) {
         this.map.move(new Plant(x, y), x, y);
+        numPlants++
       }
     }
+    while (tries < 100000 && numPlants < GRID_SIZE**2/10);
   }
 
   takeTurn() {

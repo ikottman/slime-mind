@@ -4,6 +4,8 @@ import { Slime} from "./models/slime";
 import { PlantHandler } from "./handlers/plant_handler";
 import { AiHandler } from "./handlers/ai_handler";
 import { ScoreHandler } from "./handlers/score_handler";
+import { GRID_SIZE } from '../ui/store';
+import { randomInt } from './utils';
 
 export class Game {
   map: Map;
@@ -38,18 +40,22 @@ export class Game {
   }
 
   private placeSlimes() {
-    // hardcoded layout
-    this.addSlime(0, 2, 1);
-    this.addSlime(0, 7, 1);
-    this.addSlime(0, 12, 1);
-    this.addSlime(0, 17, 1);
-    this.addSlime(0, 22, 1);
+    // Randomly choose spots to place the slimes on the far left colomn then mirror them to the far right
 
-    this.addSlime(24, 2, 2);
-    this.addSlime(24, 7, 2);
-    this.addSlime(24, 12, 2);
-    this.addSlime(24, 17, 2);
-    this.addSlime(24, 22, 2);
+    const numSlimeStart = 5;
+    let tries = 0;
+    let numSlimes = 0;
+
+    do {
+      tries++
+      const y = randomInt(0, GRID_SIZE-1);
+      if (!this.map.invalidMove(0, y)&&!this.map.invalidMove(GRID_SIZE-1, y)) {
+        this.addSlime(0, y, 1);
+        this.addSlime(GRID_SIZE-1, y, 2);
+        numSlimes++
+      }
+    }
+    while (tries < 100000 && numSlimes < numSlimeStart);
   }
 
   private playerOutOfSlimes(): boolean {
