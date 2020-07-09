@@ -81,7 +81,7 @@ export class AiHandler {
   private attemptSplit(slime: Slime): void {
     const cells = this.map.emptyCells(slime);
     if (cells.length > 0 && slime.level >= 4) {
-      slime.xp = Math.floor(slime.xp / 4);
+      slime.split();
       const targetCell = cells[randomInt(0, cells.length - 1)];
       const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
       this.map.move(child, child.x, child.y);
