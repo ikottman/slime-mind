@@ -9,7 +9,6 @@ export class Slime extends Pawn {
   xp: number;
   readyToMerge: boolean;
   max_level: number;
-  hpBar!: PIXI.Graphics;
 
   constructor(owner: number, x: number, y: number) {
     super(owner, x, y);
@@ -25,14 +24,17 @@ export class Slime extends Pawn {
       this.addSprite(PIXI.Sprite.from(blueSlime));
     }
 
-    this.hpBar = new PIXI.Graphics();
-    this.hpBar.name = 'hpBar';
-    this.sprite.addChild(this.hpBar);
     this.updateHpBar();
   }
 
   private updateHpBar(): void {
-    const bar = this.sprite.getChildByName('hpBar') as PIXI.Graphics;
+    let bar = this.sprite.getChildByName('hpBar') as PIXI.Graphics;
+    if (bar) {
+      bar.destroy();
+    }
+    bar = new PIXI.Graphics();
+    bar.name = 'hpBar';
+    this.sprite.addChild(bar);
     // render an arc relative to how much health they have left
     bar.lineStyle(20, 0xDC143C);
     const halfPi = 3 * Math.PI / 2;
@@ -41,7 +43,16 @@ export class Slime extends Pawn {
   }
 
   gainExperience(xp: number) {
-    this.xp += xp;
+    if (this.level < this.max_level) {
+      this.xp += xp;
+    }
+  }
+
+  gainHp(hp: number) {
+    if (this.hp < this.max_hp) {
+      this.hp += hp;
+      this.updateHpBar();
+    }
   }
 
   split(): void {

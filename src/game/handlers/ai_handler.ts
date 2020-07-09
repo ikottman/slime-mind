@@ -117,6 +117,7 @@ export class AiHandler {
           this.map.clearCell(target.x, target.y);
         }
         source.gainExperience(1);
+        source.gainHp(1);
         break;
       case ACTIONS.MERGE:
         this.attemptMerge(source as Slime);
