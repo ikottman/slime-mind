@@ -6,6 +6,7 @@
   import ResetButton from './ResetButton.svelte';
   import FPS from './FPS.svelte';
   import Scoreboard from './Scoreboard.svelte';
+  import PawnStats from './PawnStats.svelte';
 </script>
 
 <style>
@@ -41,6 +42,8 @@
   <div class="scoreboard">
     <Turn/>
     <Scoreboard/>
+    <br/>
+    <PawnStats/>
   </div>
 </div>
 

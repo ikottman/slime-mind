@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { SPRITE_SIZE, APP } from "../../ui/store";
+import { SPRITE_SIZE, APP, hoveredPawnStore } from "../../ui/store";
 import { PAWN_TYPE } from "../schema";
 
 export class Pawn {
@@ -17,6 +17,20 @@ export class Pawn {
     this.x = x;
     this.y = y;
   }
+
+  /**
+   * show details of the pawn when it's hovered over
+   */
+  private handleMouseHover(): void {
+     // allow listening for events like onmouseover
+    this.sprite.interactive = true;
+    this.sprite.on("mouseover", _ => {
+      hoveredPawnStore.update(pawn => pawn = this.json());
+    });
+    this.sprite.on("mouseout", _ => {
+      hoveredPawnStore.update(_ => ({}));
+    });
+  }
   
   move(x: number, y: number) {
     this.x = x;
@@ -29,6 +43,7 @@ export class Pawn {
     this.sprite = sprite;
     this.sprite.height = SPRITE_SIZE;
     this.sprite.width = SPRITE_SIZE;
+    this.handleMouseHover();
     APP.stage.addChild(this.sprite);
     // update sprite's location
     this.move(this.x, this.y);
@@ -39,7 +54,7 @@ export class Pawn {
     return false;
   }
 
-  json() {
+  json() : any {
     throw Error('Classes extending Pawn must implement a json method');
   }
 }

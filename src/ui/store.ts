@@ -26,6 +26,11 @@ scoresStore.subscribe(value => scores = value);
 // handles rendered text (like SPLIT and MERGE)
 export const textHandler = new TextHandler();
 
+// for displaying details of the pawn the mouse is hovering over
+export const hoveredPawnStore = writable({});
+export let hoveredPawn: any;
+hoveredPawnStore.subscribe(value => hoveredPawn = value);
+
 // game
 const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
