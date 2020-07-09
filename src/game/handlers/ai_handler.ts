@@ -1,4 +1,4 @@
-import { code, textHandler } from '../../ui/store';
+import { code, textHandler, APP } from '../../ui/store';
 import { Random } from '../ai/random';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
@@ -130,8 +130,9 @@ export class AiHandler {
   }
 
   private runAi(slime: Slime): void {
-    // skip slimes that were eaten before we got to their turn
-    if (slime.hp < 0) {
+    // skip slimes that were eaten or merged away
+    const currentCellOccupant = this.map.get(slime.x, slime.y);
+    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id) {
       return;
     }
 
