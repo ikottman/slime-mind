@@ -29,9 +29,11 @@ export class Game {
     this.placeSlimes();
     this.plantHandler.placeInitialPlants();
     this.aiHandler.loadAis();
-
-    // show beginning state
-    APP.renderer.render(APP.stage);
+    // wait on GPU to receive all our assets before rendering the stage
+    // prevents a weird glitches on first page load
+    APP.renderer.plugins.prepare.upload(APP.stage, () => {
+      APP.renderer.render(APP.stage);
+    });
   }
 
   private addSlime(x: number, y: number, owner: number) {
