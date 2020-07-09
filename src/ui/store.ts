@@ -41,5 +41,7 @@ export const APP = new PIXI.Application({
   backgroundColor: 0x668E86, // 0x778899
   autoStart: false
 });
+APP.ticker.minFPS = 5;
+APP.ticker.maxFPS = 6;
 
 export const game = new Game();
