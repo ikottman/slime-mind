@@ -9,7 +9,7 @@ export class Pawn {
   owner: number;
   // provided by extending classes like Slime
   type!: PAWN_TYPE;
-  sprite!: PIXI.Sprite;
+  sprite!: PIXI.Container;
 
   constructor(owner: number, x: number, y: number) {
     this.id = PIXI.utils.uid();
@@ -17,7 +17,7 @@ export class Pawn {
     this.x = x;
     this.y = y;
   }
-
+  
   move(x: number, y: number) {
     this.x = x;
     this.y = y;
