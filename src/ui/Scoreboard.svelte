@@ -1,5 +1,5 @@
 <script>
-  import { scoresStore } from './store';
+  import { scoresStore, selectedAIStore } from './store';
 </script>
 
 <style>
@@ -10,7 +10,13 @@
 .twoScore {
   color: blue;
 }
+
+lable {
+  padding: 5px;
+}
 </style>
 
+<br/>
 <lable class='oneScore'>You:</lable> <span>{$scoresStore[0]}</span>
-<lable class='twoScore'>Them:</lable> <span>{$scoresStore[1]}</span>
+<br/>
+<lable class='twoScore'>{$selectedAIStore.name}:</lable> <span>{$scoresStore[1]}</span>

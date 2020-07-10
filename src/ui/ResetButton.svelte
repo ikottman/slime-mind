@@ -1,9 +1,7 @@
 <script>
-  import { APP, game } from './store';
+  import { game } from './store';
   
-  function handleClick() {
-    APP.ticker.stop();
-    APP.stage.removeChildren();
+  function reset() {
     game.reset();
   }
 </script>
@@ -28,6 +26,6 @@
   }
 </style>
 
-<button on:click={handleClick}>
+<button on:click={reset}>
 Reset
 </button>

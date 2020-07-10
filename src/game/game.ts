@@ -23,6 +23,8 @@ export class Game {
   }
 
   reset(): void {
+    APP.ticker.stop();
+    APP.stage.removeChildren();
     turnStore.update(_ => 0);
     scoresStore.update(_ => [0, 0])
     this.map.reset();
