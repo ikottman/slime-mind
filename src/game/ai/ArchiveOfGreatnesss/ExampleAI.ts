@@ -9,6 +9,7 @@
 export class ExampleAI {           // This line defines the user submited code, the name can be changed freely
     playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
     gameMap = [];                 // Do not edit - This is the game map passed to the player's code
+    static displayName = 'Example AI'; // name to show on screen when fighting this AI
     constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
       this.playerId = playerId;
     }

@@ -9,6 +9,7 @@
 export class SpaceInvaders {             // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
+  static displayName = 'Space Invaders V1'; // name to show on screen when fighting this AI
   moveDirection;
   constructor(playerId) {       // This method is called when the player code is called variables can be constructed here
     this.playerId = playerId;   // Do not edit

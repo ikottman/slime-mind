@@ -16,7 +16,7 @@
 <select bind:value={selected} on:change={reloadAI}>
   {#each options as option}
     <option value={option}>
-      {option.name}
+      {option.displayName}
     </option>
   {/each}
 </select>
