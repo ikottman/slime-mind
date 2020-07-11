@@ -21,6 +21,12 @@ export interface AI {
   displayName: string;
 }
 
+interface plantConfiguration {
+  seedChance: number;
+  maxLevel: number;
+}
+
 export interface Configuration {
   selectedAI: AI;
+  plant: plantConfiguration;
 }

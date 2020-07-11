@@ -1,5 +1,5 @@
 import { Map } from '../models/map'
-import { GRID_SIZE } from '../../ui/store';
+import { GRID_SIZE, configuration } from '../../ui/store';
 import { Plant } from "../models/plant";
 import { randomInt } from '../utils';
 
@@ -14,7 +14,7 @@ export class PlantHandler {
   private levelUp() {
     const levelUpChance = 20;
     this.map.plants
-      .filter(plant => plant.level < plant.max_level)
+      .filter(plant => plant.level < configuration.plant.maxLevel)
       .forEach(plant => {
         if (randomInt(0, 100) < levelUpChance) {
           plant.gainLevel();
@@ -24,11 +24,10 @@ export class PlantHandler {
 
   // max level plants have a chance to replicate
   private seed() {
-    const seedChance = 5;
     this.map.plants
-      .filter(plant => plant.level === plant.max_level)
+      .filter(plant => plant.level === configuration.plant.maxLevel)
       .forEach(plant => {
-        if (randomInt(0, 100) < seedChance) {
+        if (randomInt(0, 100) < configuration.plant.seedChance) {
           const options = this.map.emptyCells(plant);
           if (options.length > 0) {
             const [x, y] = options[randomInt(0, options.length - 1)];

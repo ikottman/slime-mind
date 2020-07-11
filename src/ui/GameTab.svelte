@@ -4,14 +4,13 @@
   import StartButton from './StartButton.svelte';
   import StopButton from './StopButton.svelte';
   import ResetButton from './ResetButton.svelte';
-  import FPS from './FPS.svelte';
   import Scoreboard from './Scoreboard.svelte';
   import PawnStats from './PawnStats.svelte';
-  import Configuration from './Configuration.svelte';
+  import Configuration from './configuration/Configuration.svelte';
 </script>
 
 <style>
-  .gameGrid {
+  .threeColumns {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
@@ -19,7 +18,7 @@
     margin-top: -5px;
   }
 
-  .controlGrid {
+  .leftColumn {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
@@ -27,20 +26,29 @@
     margin-top: 5px;
   }
 
+  .controls {
+    grid-column: 1 / span 3;
+  }
+
+  .configuration {
+    grid-column: 1 / span 3;
+  }
+
   .scoreboard {
     margin-top: 5px;
   }
 </style>
 
-<div class='gameGrid'>
-  <div class='controlGrid'>
-    <StartButton/>
-    <StopButton/>
-    <ResetButton/>
-    <FPS/>
-    <br/>
-    <span></span>
-    <Configuration/>
+<div class='threeColumns'>
+  <div class='leftColumn'>
+    <div class='controls'>
+      <StartButton/>
+      <StopButton/>
+      <ResetButton/>
+    </div>
+    <div class='configuration'>
+      <Configuration/>
+    </div>
   </div>
   <Game/>
   <div class="scoreboard">

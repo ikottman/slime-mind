@@ -13,8 +13,8 @@ div {
 <div>ID: {$hoveredPawnStore.id}</div>
 <div>Owner: {$hoveredPawnStore.owner}</div>
 <div>x,y: {$hoveredPawnStore.x},{$hoveredPawnStore.y}</div>
-<div>HP/Max HP: {$hoveredPawnStore.hp}/{$hoveredPawnStore.max_hp}</div>
-<div>Level/Max Level: {$hoveredPawnStore.level}/{$hoveredPawnStore.max_level}</div>
+<div>HP/Max HP: {$hoveredPawnStore.hp}/{$hoveredPawnStore.maxHp}</div>
+<div>Level/Max Level: {$hoveredPawnStore.level}/{$hoveredPawnStore.maxLevel}</div>
   {#if $hoveredPawnStore.type === 'SLIME'}
   <div>Attack: {$hoveredPawnStore.attack}</div>
   {/if}

@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler'; 
 import { Configuration } from '../game/schema';
+import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
 
 // turn
 export const turnStore = writable(0);
@@ -33,8 +34,16 @@ export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
 // configure aspects of the game like plant seed percentage
-export const configurationStore = writable({});
+export const defaultConfig = {
+  selectedAI: ExampleAI,
+  plant: {
+    seedChance: 5,
+    maxLevel: 12
+  }
+}
+export const configurationStore = writable(defaultConfig);
 export let configuration: Configuration;
+// @ts-ignore
 configurationStore.subscribe(value => configuration = { ...configuration, ...value });
 
 // game

@@ -8,15 +8,15 @@ export class Slime extends Pawn {
   hp: number;
   xp: number;
   readyToMerge: boolean;
-  max_level: number;
+  maxLevel: number;
 
   constructor(owner: number, x: number, y: number) {
     super(owner, x, y);
     this.type = PAWN_TYPE.SLIME;
     this.readyToMerge = false;
     this.xp = 1;
-    this.max_level = 12;
-    this.hp = this.max_hp;
+    this.maxLevel = 12;
+    this.hp = this.maxHp;
 
     if (owner === 1) {
       this.addSprite(PIXI.Sprite.from(redSlime));
@@ -38,18 +38,18 @@ export class Slime extends Pawn {
     // render an arc relative to how much health they have left
     bar.lineStyle(20, 0xDC143C);
     const halfPi = 3 * Math.PI / 2;
-    const hpRatio = this.hp / this.max_hp;
+    const hpRatio = this.hp / this.maxHp;
     bar.arc(100, 100, 100, halfPi - Math.PI * hpRatio, halfPi + Math.PI * hpRatio);
   }
 
   gainExperience(xp: number) {
-    if (this.level < this.max_level) {
+    if (this.level < this.maxLevel) {
       this.xp += xp;
     }
   }
 
   gainHp(hp: number) {
-    if (this.hp < this.max_hp) {
+    if (this.hp < this.maxHp) {
       this.hp += hp;
       this.updateHpBar();
     }
@@ -96,7 +96,7 @@ export class Slime extends Pawn {
     return attackByLevel[this.level - 1];
   }
 
-  get max_hp(): number {
+  get maxHp(): number {
     const hpByLevel = [
       11,
       13,
@@ -130,8 +130,8 @@ export class Slime extends Pawn {
       xp: this.xp,
       hp: this.hp,
       level: this.level,
-      max_level: this.max_level,
-      max_hp: this.max_hp,
+      maxLevel: this.maxLevel,
+      maxHp: this.maxHp,
       attack: this.attack,
     };
   }
