@@ -4,19 +4,15 @@
 
 <style>
 .oneScore {
-  color: red;
+  color: #e80000;
 }
 
 .twoScore {
-  color: blue;
-}
-
-lable {
-  padding: 5px;
+  color: #00838f;
 }
 </style>
 
 <br/>
-<lable class='oneScore'>You:</lable> <span>{$scoresStore[0]}</span>
+<label class='oneScore'>You:</label> <data>{$scoresStore[0]}</data>
 <br/>
-<lable class='twoScore'>{$configurationStore.selectedAI.displayName}:</lable> <span>{$scoresStore[1]}</span>
+<label class='twoScore'>{$configurationStore.selectedAI.displayName}:</label> <data>{$scoresStore[1]}</data>
