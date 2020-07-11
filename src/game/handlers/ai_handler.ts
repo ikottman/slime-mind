@@ -1,4 +1,4 @@
-import { code, textHandler, selectedAI, selectedAIStore } from '../../ui/store';
+import { code, textHandler, configuration, configurationStore } from '../../ui/store';
 import { ExampleAI } from '../ai/ArchiveOfGreatnesss/ExampleAI';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
@@ -180,11 +180,11 @@ export class AiHandler {
       const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
       if (ai) {
         this.playerOne = new Player(1, new ai(1));
-        if (!selectedAI.name) {
-          console.log('loading default AI for player number 2');
-          selectedAIStore.update(_ => ExampleAI);
+        const selectedAI = configuration?.selectedAI;
+        if (!selectedAI?.name) {
+          configurationStore.update(_ => ({ ...configuration, selectedAI: ExampleAI }));
         }
-        this.playerTwo = new Player(2, new selectedAI(2));
+        this.playerTwo = new Player(2, new configuration.selectedAI(2));
       }
     } catch (exception) {
       console.log(`can't parse player code, errored with: ${exception}`);

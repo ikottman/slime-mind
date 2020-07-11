@@ -15,5 +15,12 @@ export enum ACTIONS {
 }
 
 export interface AI {
+  new(playerId: number): AI;
+  constructor(playerId: number): void;
   takeAction(map: Array<Array<Pawn | null>>, id: number): Action;
+  displayName: string;
+}
+
+export interface Configuration {
+  selectedAI: AI;
 }

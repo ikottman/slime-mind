@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler'; 
-import { AI } from '../game/schema';
+import { Configuration } from '../game/schema';
 
 // turn
 export const turnStore = writable(0);
@@ -32,10 +32,10 @@ export const hoveredPawnStore = writable({});
 export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
-// select what AI to fight
-export const selectedAIStore = writable({});
-export let selectedAI: any;
-selectedAIStore.subscribe(value => selectedAI = value);
+// configure aspects of the game like plant seed percentage
+export const configurationStore = writable({});
+export let configuration: Configuration;
+configurationStore.subscribe(value => configuration = { ...configuration, ...value });
 
 // game
 const canvasSize = window.innerHeight - 25;

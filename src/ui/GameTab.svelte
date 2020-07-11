@@ -7,7 +7,7 @@
   import FPS from './FPS.svelte';
   import Scoreboard from './Scoreboard.svelte';
   import PawnStats from './PawnStats.svelte';
-  import AIDropdown from './AIDropdown.svelte';
+  import Configuration from './Configuration.svelte';
 </script>
 
 <style>
@@ -40,7 +40,7 @@
     <FPS/>
     <br/>
     <span></span>
-    <AIDropdown/>
+    <Configuration/>
   </div>
   <Game/>
   <div class="scoreboard">

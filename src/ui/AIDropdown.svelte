@@ -1,11 +1,11 @@
 <script>
   import { ExampleAI, SpaceInvaders, RedV1SimpleMove } from '../game/ai/ArchiveOfGreatnesss/';
-  import { game, selectedAIStore } from './store';
+  import { game, configuration, configurationStore } from './store';
 
   const options = [ExampleAI, SpaceInvaders, RedV1SimpleMove];
-  let selected;
+  let selectedAI;
   function reloadAI() {
-    selectedAIStore.update(ai => selected);
+    configurationStore.update(configuration => ({...configuration, selectedAI }));
     game.reset();
   }
 </script>
@@ -13,7 +13,7 @@
 <style>
 </style>
 
-<select bind:value={selected} on:change={reloadAI}>
+<select bind:value={selectedAI} on:change={reloadAI}>
   {#each options as option}
     <option value={option}>
       {option.displayName}
