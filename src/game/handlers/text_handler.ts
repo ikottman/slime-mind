@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { APP, turn } from '../../ui/store';
 import { Pawn } from '../models/pawn';
+import { LAYERS } from '../schema';
 
 interface RenderedText {
   text: PIXI.Text,
@@ -32,6 +33,7 @@ export class TextHandler {
     const renderedText = new PIXI.Text(text, style);
     renderedText.x = target.sprite.x;
     renderedText.y = target.sprite.y;
+    renderedText.zIndex = LAYERS.TEXT;
     APP.stage.addChild(renderedText);
     this.texts.push({
       text: renderedText,
