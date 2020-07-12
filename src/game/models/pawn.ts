@@ -22,7 +22,7 @@ export class Pawn {
    * show details of the pawn when it's hovered over
    */
   private handleMouseHover(): void {
-     // allow listening for events like onmouseover
+    // allow listening for events like onmouseover
     this.sprite.interactive = true;
     this.sprite.on("mouseover", _ => {
       hoveredPawnStore.update(pawn => pawn = this.json());
@@ -31,7 +31,7 @@ export class Pawn {
       hoveredPawnStore.update(_ => ({}));
     });
   }
-  
+
   move(x: number, y: number) {
     this.x = x;
     this.y = y;
@@ -55,7 +55,7 @@ export class Pawn {
     return false;
   }
 
-  json() : any {
+  json(): any {
     throw Error('Classes extending Pawn must implement a json method');
   }
 }
