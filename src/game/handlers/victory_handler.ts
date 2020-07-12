@@ -4,9 +4,11 @@ import { Fireworks } from '../../ui/fireworks';
 
 export class VictoryHandler {
   private map: Map;
+  private fireworks: Fireworks;
   
   constructor(map: Map) {
     this.map = map;
+    this.fireworks = new Fireworks();
   }
 
   private playerOutOfPawns(): boolean {
@@ -22,6 +24,10 @@ export class VictoryHandler {
   endGame() {
     APP.ticker.stop();
     textHandler.clearAllTexts();
-    new Fireworks(APP).start();
+    this.fireworks.start();
+  }
+
+  reset() {
+    this.fireworks.stop();
   }
 }
