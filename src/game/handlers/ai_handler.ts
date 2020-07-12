@@ -71,6 +71,7 @@ export class AiHandler {
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);
+      slime.gainHp(slime.maxHp); // set hp to max 
       this.map.clearCell(sacrifice.x, sacrifice.y);
       textHandler.addText('MERGE', slime, '#72fa78');
     } else {
@@ -89,7 +90,7 @@ export class AiHandler {
       console.log(`slime ${slime.id} for player ${slime.owner} can't split, it's lower than the minimum split level`);
       return;
     }
-    
+
     slime.split();
     const targetCell = cells[randomInt(0, cells.length - 1)];
     const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
