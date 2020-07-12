@@ -20,6 +20,11 @@ export class TextHandler {
     this.texts = this.texts.filter(text => turn - text.turnAdded < 5);
   }
 
+  clearAllTexts() {
+    this.texts.forEach(text => text.text.destroy());
+    this.texts = [];
+  }
+
   addText(text: string, target: Pawn, color: string) {
     const style = new PIXI.TextStyle({
       fill: color
