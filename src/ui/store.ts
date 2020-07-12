@@ -58,6 +58,7 @@ export const defaultConfig: Configuration = {
   },
   slime: {
     initialSlimes: 5,
+    minSplitLevel: 4
   }
 }
 export const configurationStore = writable(defaultConfig);

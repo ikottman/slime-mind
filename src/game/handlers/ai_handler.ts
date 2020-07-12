@@ -1,5 +1,4 @@
-import { code, textHandler, configuration, configurationStore } from '../../ui/store';
-import { ExampleAI } from '../ai/ArchiveOfGreatnesss/ExampleAI';
+import { code, textHandler, configuration } from '../../ui/store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
@@ -81,20 +80,21 @@ export class AiHandler {
 
   private attemptSplit(slime: Slime): void {
     const cells = this.map.emptyCells(slime);
-    if (cells.length > 0 && slime.level >= 4) {
-      slime.split();
-      const targetCell = cells[randomInt(0, cells.length - 1)];
-      const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
-      this.map.move(child, child.x, child.y);
-      textHandler.addText('SPLIT', slime, '#941651');
-    } else {
-      if (cells.length === 0) {
-        console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
-      }
-      if (slime.level < 4) {
-        console.log(`slime ${slime.id} for player ${slime.owner} can't split, it's lower than the minimum level 4`);
-      }
+    if (cells.length === 0) {
+      console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
+      return;
     }
+
+    if (slime.level < configuration.slime.minSplitLevel) {
+      console.log(`slime ${slime.id} for player ${slime.owner} can't split, it's lower than the minimum split level`);
+      return;
+    }
+    
+    slime.split();
+    const targetCell = cells[randomInt(0, cells.length - 1)];
+    const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
+    this.map.move(child, child.x, child.y);
+    textHandler.addText('SPLIT', slime, '#941651');
   }
 
   private executeAction(action: Action, source: Slime) {

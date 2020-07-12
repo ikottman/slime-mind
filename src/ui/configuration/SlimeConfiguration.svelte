@@ -1,11 +1,12 @@
 <script>
   import { game, defaultConfig, configuration, configurationStore, GRID_SIZE } from '../store';
 
-  let {initialSlimes} = defaultConfig.slime;
+  let {initialSlimes, minSplitLevel} = defaultConfig.slime;
 
   function reset() {
     const slime = {
-      initialSlimes
+      initialSlimes,
+      minSplitLevel
     }
     configurationStore.update(configuration => ({...configuration, slime }));
     game.reset();
@@ -40,5 +41,7 @@
 <div class='container'>
   <h4 class='header'>Slime Configuration</h4>
   <label>Initial Slimes</label>
-  <input type=number bind:value={initialSlimes} on:change={reset} min=0 max={GRID_SIZE}>
+  <input type=number bind:value={initialSlimes} on:change={reset} min=1 max={GRID_SIZE}>
+  <label>Min Level to Split</label>
+  <input type=number bind:value={minSplitLevel} on:change={reset} min=1 max=12>
 </div>

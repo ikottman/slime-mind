@@ -30,6 +30,7 @@ interface plantConfiguration {
 
 interface slimeConfiguration {
   initialSlimes: number;
+  minSplitLevel: number;
 }
 
 export interface Configuration {
