@@ -11,10 +11,30 @@ export class ScoreHandler {
   }
 
   private calculateScore(slimes: Array<Slime>) {
-    return slimes.reduce((score, slime) => {
-      // TODO: replace with logic from https://github.com/ikottman/slime_ai/wiki/Welcome-to-Slime-Mind!#victory-conditions
-      return score + slime.xp; 
-    }, 0);
+    const scorePerLevel = [
+      0.2,
+      0.4,
+      1.6,
+      5.2,
+      13.7,
+      29.9,
+      57.7,
+      101.7,
+      167.0,
+      259.7,
+      386.7,
+      555.3,
+    ]
+
+    let score = 0;
+
+    for(let i = 0; i <slimes.length; i++){
+      score = score + scorePerLevel[slimes[i].level-1]
+    }
+
+    score = Number( score.toPrecision(2) )
+
+    return score; 
   }
 
   updateScores() {
