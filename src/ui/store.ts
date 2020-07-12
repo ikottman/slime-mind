@@ -55,6 +55,9 @@ export const defaultConfig: Configuration = {
     maxLevel: 12,
     levelChance: 20,
     initialPlants: Math.floor(GRID_SIZE**2 / 10),
+  },
+  slime: {
+    initialSlimes: 5,
   }
 }
 export const configurationStore = writable(defaultConfig);

@@ -28,7 +28,12 @@ interface plantConfiguration {
   initialPlants: number;
 }
 
+interface slimeConfiguration {
+  initialSlimes: number;
+}
+
 export interface Configuration {
   selectedAI: AI;
   plant: plantConfiguration;
+  slime: slimeConfiguration;
 }
