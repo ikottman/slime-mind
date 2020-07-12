@@ -72,6 +72,7 @@ export class Game {
   private updateTurn() {
     turnStore.update(t => t + 1);
     if (turn >= 1000 || this.playerOutOfSlimes()) {
+      this.scoreHandler.win();
       APP.ticker.stop();
     }
   }

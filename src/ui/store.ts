@@ -36,13 +36,13 @@ export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
 // game
-const canvasSize = window.innerHeight - 25;
+export const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
 export const SPRITE_SIZE =  canvasSize / GRID_SIZE; // size each grid box should be
 export const APP = new PIXI.Application({
   width: canvasSize, // make square
   height: canvasSize,
-  backgroundColor: 0x668E86, // 0x778899
+  backgroundColor: 0x668E86,
   autoStart: false
 });
 APP.ticker.minFPS = 5;
