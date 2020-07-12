@@ -28,7 +28,7 @@ export class AiHandler {
       return true;
     }
 
-    const distance = ((action.x - source.x)**2+(action.y - source.y)**2)**(1/2)
+    const distance = ((action.x - source.x)**2+(action.y - source.y)**2)**(1/2);
     if (action.x < source.x - 1 || action.x > source.x + 1 || 
       action.y < source.y - 1 || action.y > source.y + 1) {
       console.log(`invalid MOVE, more than one square away: ${JSON.stringify(action)}`);
