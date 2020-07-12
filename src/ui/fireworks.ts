@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { canvasSize } from '../ui/store';
+import { LAYERS } from '../game/schema';
 
 const gravity = 0.03;
 
@@ -22,6 +23,7 @@ class Particle {
   constructor(texture: PIXI.Texture, scale: number, explode: any) {
     this.texture = texture;
     this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite.zIndex = LAYERS.TEXT;
     this.scale = scale;
     this.sprite.scale.x = this.scale;
     this.sprite.scale.y = this.scale;
@@ -147,15 +149,16 @@ export class Fireworks {
     // launch a new particle
     setTimeout(this.launchParticle.bind(this), 200 + Math.random() * 600);
   }
-
+  
   private fadeBackground() {
-    const layer = new PIXI.Container();
-    layer.width = this.app.stage.width;
-    layer.height = this.app.stage.height;
-    const alphaFilter = new PIXI.filters.AlphaFilter(.3);
-    layer.filters = [alphaFilter];
-    this.app.stage.addChild(layer);
-    this.app.render();
+    var graphics = new PIXI.Graphics();
+    graphics.name = 'fireworks';
+    graphics.beginFill(0x000000);
+    graphics.drawRect(0, 0, 10000, 10000);
+    graphics.zIndex = LAYERS.TEXT;
+    const alphaFilter = new PIXI.filters.AlphaFilter(.9);
+    graphics.filters = [alphaFilter];
+    this.app.stage.addChild(graphics);
   }
   
   loop() {
@@ -167,6 +170,7 @@ export class Fireworks {
     this.ticker.stop();
     this.particles.forEach(particle => particle.sprite.destroy());
     this.particles = [];
+    this.app.stage.getChildByName('fireworks').destroy();
     this.app.renderer.render(this.app.stage);
   }
 
@@ -176,6 +180,6 @@ export class Fireworks {
     this.launchParticle();
     this.ticker.add(this.loop.bind(this));
     this.ticker.start();
-    setTimeout(this.stop.bind(this), 10000);
+    setTimeout(this.stop.bind(this), 5000); // show for 5 seconds
   }
 }

@@ -15,6 +15,13 @@ export enum ACTIONS {
   SPLIT = 'SPLIT',
 }
 
+export enum LAYERS {
+  BACKGROUND = 0,
+  HPBAR = 1,
+  PAWN = 2,
+  TEXT = 3,
+}
+
 export interface AI {
   new(playerId: number): AI;
   constructor(playerId: number): void;

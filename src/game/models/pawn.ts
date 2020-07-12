@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { SPRITE_SIZE, APP, hoveredPawnStore } from "../../ui/store";
-import { PAWN_TYPE } from "../schema";
+import { PAWN_TYPE, LAYERS } from "../schema";
 
 export class Pawn {
   id: number;
@@ -43,6 +43,7 @@ export class Pawn {
     this.sprite = sprite;
     this.sprite.height = SPRITE_SIZE;
     this.sprite.width = SPRITE_SIZE;
+    this.sprite.zIndex = LAYERS.PAWN;
     this.handleMouseHover();
     APP.stage.addChild(this.sprite);
     // update sprite's location

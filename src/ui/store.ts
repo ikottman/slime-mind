@@ -43,11 +43,11 @@ export const APP = new PIXI.Application({
   width: canvasSize, // make square
   height: canvasSize,
   backgroundColor: 0x668E86,
-  autoStart: false
+  autoStart: false,
 });
 APP.ticker.minFPS = 5;
 APP.ticker.maxFPS = 6;
-
+APP.stage.sortableChildren = true;
 // configure aspects of the game like plant seed percentage
 export const defaultConfig: Configuration = {
   // @ts-ignore
