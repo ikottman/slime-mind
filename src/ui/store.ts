@@ -4,14 +4,16 @@ import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler'; 
 import { Configuration } from '../game/schema';
 import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
+import { readFileSync } from 'fs';
 
 // turn
 export const turnStore = writable(0);
 export let turn: number;
 turnStore.subscribe(value => turn = value);
 
+const defaultCode = window.localStorage.getItem('ai_code') || readFileSync('src/game/ai/starterAI', 'utf8');
 // code from the editor
-export const codeStore = writable(window.localStorage.getItem('ai_code'));
+export const codeStore = writable(defaultCode);
 export let code: string;
 codeStore.subscribe(value => {
   if (value) {
