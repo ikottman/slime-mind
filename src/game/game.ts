@@ -1,4 +1,4 @@
-import { turn, turnStore, scoresStore, APP, textHandler } from '../ui/store';
+import { turn, turnStore, scoresStore, APP, textHandler, configuration } from '../ui/store';
 import { Map } from './models/map';
 import { Slime} from "./models/slime";
 import { PlantHandler } from "./handlers/plant_handler";
@@ -44,22 +44,19 @@ export class Game {
   }
 
   private placeSlimes() {
-    // Randomly choose spots to place the slimes on the far left colomn then mirror them to the far right
-
-    const numSlimeStart = 5;
     let tries = 0;
     let numSlimes = 0;
 
     do {
       tries++
       const y = randomInt(0, GRID_SIZE-1);
-      if (!this.map.invalidMove(0, y)&&!this.map.invalidMove(GRID_SIZE-1, y)) {
+      if (!this.map.invalidMove(0, y) && !this.map.invalidMove(GRID_SIZE - 1, y)) {
         this.addSlime(0, y, 1);
         this.addSlime(GRID_SIZE-1, y, 2);
         numSlimes++
       }
     }
-    while (tries < 100000 && numSlimes < numSlimeStart);
+    while (tries < 100000 && numSlimes < configuration.slime.initialSlimes);
   }
 
   private playerOutOfSlimes(): boolean {

@@ -43,16 +43,26 @@ export class Slime extends Pawn {
   }
 
   gainExperience(xp: number) {
+    const currentLevel = this.level;
+    const currentHpPercentage = this.hp / this.maxHp;
     if (this.level < this.maxLevel) {
       this.xp += xp;
+    }
+
+    // set health to the same percentage you had before
+    // when the max hp increases
+    if (this.level > currentLevel) {
+      const hp = Math.ceil(currentHpPercentage * this.maxHp);
+      this.gainHp(hp - this.hp);
     }
   }
 
   gainHp(hp: number) {
-    if (this.hp < this.maxHp) {
-      this.hp += hp;
-      this.updateHpBar();
+    this.hp = this.hp + hp;
+    if (this.hp > this.maxHp) {
+      this.hp = this.maxHp;
     }
+    this.updateHpBar();
   }
 
   split(): void {
