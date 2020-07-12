@@ -44,9 +44,9 @@
   <h4 class='header'>Plant Configuration</h4>
   <label>Initial Plants</label>
   <input type=number bind:value={initialPlants} on:change={reset} min=0 max=100>
-  <label>Chance to Seed</label>
+  <label>Chance to Seed (%)</label>
   <input type=number bind:value={seedChance} on:change={reset} min=1 max=100>
-  <label>Chance to Level</label>
+  <label>Chance to Level (%)</label>
   <input type=number bind:value={levelChance} on:change={reset} min=1 max=100>
   <label>Max Level</label>
   <input type=number bind:value={maxLevel} on:change={reset} min=2 max=12> <!-- min is 2 so the plants can change texture at max -->
