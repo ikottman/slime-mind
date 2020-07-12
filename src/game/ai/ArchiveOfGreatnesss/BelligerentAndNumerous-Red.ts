@@ -9,6 +9,8 @@
 export class BelligerentAndNumerous {         // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
+  configuration;                // Do not edit - This is the configuration details for the current match passed to the player's code
+  turn;                         // Do not edit - This is the current turn passed to the player's code
   static displayName = 'Belligerent & Numerous V1'; // name to show on screen when fighting this AI
   constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
     this.playerId = playerId;
@@ -128,7 +130,7 @@ export class BelligerentAndNumerous {         // This line defines the user subm
   }
 
   // This is the method for the player code that the game code will call, all player code actions must come from this method to be useable in game
-  takeAction(gameMap, id) {         // Do not edit - Game code will pass the current slime pawn's id and a game map matrix
+  takeAction(gameMap, id, configuration, turn) {         // Do not edit - Game code will pass the current slime pawn's id and a game map matrix
     this.gameMap = gameMap;         // Loads the current game map for this turn
     // This is a custom section of code that is not required for this to be a valid player AI
 

@@ -1,4 +1,4 @@
-import { code, textHandler, configuration } from '../../ui/store';
+import { code, textHandler, configuration,turn } from '../../ui/store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
@@ -148,9 +148,9 @@ export class AiHandler {
     let playerAction;
     try {
       if (slime.owner === 1) {
-        playerAction = this.playerOne.ai.takeAction(this.map.readOnlyMap, slime.id);
+        playerAction = this.playerOne.ai.takeAction(this.map.readOnlyMap, slime.id,configuration,turn);
       } else {
-        playerAction = this.playerTwo.ai.takeAction(this.map.readOnlyMap, slime.id);
+        playerAction = this.playerTwo.ai.takeAction(this.map.readOnlyMap, slime.id,configuration,turn);
       }
     } catch (exception) {
       console.log(`player ${slime.owner} takeAction errored with: ${exception}`);
