@@ -75,6 +75,7 @@ class Particle {
 
 export class Fireworks {
   app: PIXI.Application;
+  ticker: PIXI.Ticker;
   particles: Array<Particle>;
   textures: Array<PIXI.Texture>;
   currentTexture: number = 0;
@@ -82,6 +83,7 @@ export class Fireworks {
 
   constructor(app: PIXI.Application) {
     this.app = app;
+    this.ticker = new PIXI.Ticker();
     this.particles = [];
     this.textures = [];
   }
@@ -145,27 +147,35 @@ export class Fireworks {
     // launch a new particle
     setTimeout(this.launchParticle.bind(this), 200 + Math.random() * 600);
   }
-  
-  loop(timestamp: number) {
-    if (this.loopStarted === 0) {
-      this.loopStarted = timestamp;
-    }
 
-    // render everything
+  private fadeBackground() {
+    const layer = new PIXI.Container();
+    layer.width = this.app.stage.width;
+    layer.height = this.app.stage.height;
+    const alphaFilter = new PIXI.filters.AlphaFilter(.3);
+    layer.filters = [alphaFilter];
+    this.app.stage.addChild(layer);
+    this.app.render();
+  }
+  
+  loop() {
     this.particles.forEach(particle => particle.update());
     this.app.renderer.render(this.app.stage);
+  }
 
-    if (timestamp - this.loopStarted < 20000) { // Stop the animation after 2 seconds
-      requestAnimationFrame(this.loop.bind(this));
-    } else {
-      this.particles.forEach(particle => particle.sprite.destroy());
-      this.app.renderer.render(this.app.stage);
-    }
+  stop() {
+    this.ticker.stop();
+    this.particles.forEach(particle => particle.sprite.destroy());
+    this.particles = [];
+    this.app.renderer.render(this.app.stage);
   }
 
   start() {
+    this.fadeBackground();
     this.initTextures();
     this.launchParticle();
-    this.loop(0);
+    this.ticker.add(this.loop.bind(this));
+    this.ticker.start();
+    setTimeout(this.stop.bind(this), 10000);
   }
 }
