@@ -24,6 +24,8 @@ export interface AI {
 interface plantConfiguration {
   seedChance: number;
   maxLevel: number;
+  levelChance: number;
+  initialPlants: number;
 }
 
 export interface Configuration {

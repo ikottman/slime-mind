@@ -33,19 +33,6 @@ export const hoveredPawnStore = writable({});
 export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
-// configure aspects of the game like plant seed percentage
-export const defaultConfig = {
-  selectedAI: ExampleAI,
-  plant: {
-    seedChance: 5,
-    maxLevel: 12
-  }
-}
-export const configurationStore = writable(defaultConfig);
-export let configuration: Configuration;
-// @ts-ignore
-configurationStore.subscribe(value => configuration = { ...configuration, ...value });
-
 // game
 const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
@@ -58,5 +45,21 @@ export const APP = new PIXI.Application({
 });
 APP.ticker.minFPS = 5;
 APP.ticker.maxFPS = 6;
+
+// configure aspects of the game like plant seed percentage
+export const defaultConfig: Configuration = {
+  // @ts-ignore
+  selectedAI: ExampleAI,
+  plant: {
+    seedChance: 5,
+    maxLevel: 12,
+    levelChance: 20,
+    initialPlants: Math.floor(GRID_SIZE**2 / 10),
+  }
+}
+export const configurationStore = writable(defaultConfig);
+export let configuration: Configuration;
+// @ts-ignore
+configurationStore.subscribe(value => configuration = { ...configuration, ...value });
 
 export const game = new Game();

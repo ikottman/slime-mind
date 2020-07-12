@@ -12,11 +12,10 @@ export class PlantHandler {
 
   // plants have a chance to level
   private levelUp() {
-    const levelUpChance = 20;
     this.map.plants
       .filter(plant => plant.level < configuration.plant.maxLevel)
       .forEach(plant => {
-        if (randomInt(0, 100) < levelUpChance) {
+        if (randomInt(0, 100) < configuration.plant.levelChance) {
           plant.gainLevel();
         }
       });
@@ -38,7 +37,6 @@ export class PlantHandler {
   }
 
   placeInitialPlants() {
-    // attempt to fill 10% of the map with plants
     let numPlants = 0;
     let tries = 0;
     do {
@@ -50,7 +48,7 @@ export class PlantHandler {
         numPlants++
       }
     }
-    while (tries < 100000 && numPlants < GRID_SIZE**2/10);
+    while (tries < 100000 && numPlants < configuration.plant.initialPlants);
   }
 
   takeTurn() {

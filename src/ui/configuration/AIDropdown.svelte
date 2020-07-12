@@ -15,6 +15,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+
+select {
+  font-size: .7em;
+}
 </style>
 
 <div class='container'>

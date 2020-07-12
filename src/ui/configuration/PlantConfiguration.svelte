@@ -1,12 +1,14 @@
 <script>
   import { game, defaultConfig, configuration, configurationStore } from '../store';
+  
+  let {initialPlants, maxLevel, levelChance, seedChance} = defaultConfig.plant;
 
-  let seedChance = defaultConfig.plant.seedChance;
-  let maxLevel = defaultConfig.plant.maxLevel;
   function reset() {
     const plant = {
+      initialPlants,
+      levelChance,
       seedChance,
-      maxLevel
+      maxLevel,
     }
     configurationStore.update(configuration => ({...configuration, plant }));
     game.reset();
@@ -22,14 +24,30 @@
 
   h4 {
     grid-column: 1 / span 2;
-    justify-self: center;
+    justify-self: end;
+    white-space: nowrap;
+  }
+
+  label {
+    grid-column: 1;
+    white-space: nowrap;
+  }
+
+  input {
+    grid-column-start: 3;
+    width: 4em;
+    font-size: .7em;
   }
 </style>
 
 <div class='container'>
   <h4 class='header'>Plant Configuration</h4>
-  <label>Seed Chance:</label>
+  <label>Initial Plants</label>
+  <input type=number bind:value={initialPlants} on:change={reset} min=0 max=100>
+  <label>Chance to Seed</label>
   <input type=number bind:value={seedChance} on:change={reset} min=1 max=100>
-  <label>Max Level:</label>
+  <label>Chance to Level</label>
+  <input type=number bind:value={levelChance} on:change={reset} min=1 max=100>
+  <label>Max Level</label>
   <input type=number bind:value={maxLevel} on:change={reset} min=2 max=12> <!-- min is 2 so the plants can change texture at max -->
 </div>
