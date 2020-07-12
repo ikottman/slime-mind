@@ -1,8 +1,8 @@
 <script>
-  import { ExampleAI, SpaceInvaders, RedV1SimpleMove } from '../../game/ai/ArchiveOfGreatnesss/';
+  import { ExampleAI, SpaceInvaders, BelligerentAndNumerous } from '../../game/ai/ArchiveOfGreatnesss/';
   import { game, configuration, configurationStore } from '../store';
 
-  const options = [ExampleAI, SpaceInvaders, RedV1SimpleMove];
+  const options = [ExampleAI, SpaceInvaders, BelligerentAndNumerous];
   let selectedAI;
   function reloadAI() {
     configurationStore.update(configuration => ({...configuration, selectedAI }));

@@ -6,7 +6,7 @@
  * during the given turn. 
 */
 
-export class RedV1SimpleMove {         // This line defines the user submited code, the name can be changed freely
+export class BelligerentAndNumerous {         // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
   static displayName = 'Belligerent & Numerous V1'; // name to show on screen when fighting this AI
@@ -85,7 +85,7 @@ export class RedV1SimpleMove {         // This line defines the user submited co
     const allPawns=[]
     for (let i = 0; i < this.gameMap.length; i++) {
       for (let j = 0; j < this.gameMap[0].length; j++) {
-        if (this.gameMap[i][j] && this.gameMap[i][j].owner) {
+        if (this.gameMap[i][j]) {
           allPawns.push(this.gameMap[i][j]);
         }
       }
@@ -140,7 +140,10 @@ export class RedV1SimpleMove {         // This line defines the user submited co
     // Look at the active pawn and its immedieate surroundings
     const activePawn = myPawns.find(p => p.id === id);              // Defines the slimes with the active turn as "pawn"
     const neighbors = this.neighbors(activePawn.x, activePawn.y);   // Define an array of all objects around this slime
-    const biteableNeighbors = neighbors.filter(pawn => pawn.owner !== this.playerId);   // Find nearby objects that have different playerID values
+    const biteableNeighbors = 
+    neighbors
+    .filter(pawn => !(pawn.owner === this.playerId))              // Find nearby pawns without the same player ID
+    .filter(pawn => !(pawn.type === 'ROCK'));                     // Remove rocks from this list
     const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
     
     // Decision Tree

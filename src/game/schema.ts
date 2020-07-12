@@ -3,7 +3,8 @@ import { Pawn } from './models/pawn';
 
 export enum PAWN_TYPE {
   PLANT = 'PLANT',
-  SLIME = 'SLIME'
+  SLIME = 'SLIME',
+  ROCK = 'ROCK'
 };
 
 export enum ACTIONS {

@@ -2,6 +2,7 @@ import { turn, turnStore, scoresStore, APP, textHandler, configuration } from '.
 import { Map } from './models/map';
 import { Slime} from "./models/slime";
 import { PlantHandler } from "./handlers/plant_handler";
+import { RockHandler } from "./handlers/rock_handler";
 import { AiHandler } from "./handlers/ai_handler";
 import { ScoreHandler } from "./handlers/score_handler";
 import { GRID_SIZE } from '../ui/store';
@@ -10,12 +11,14 @@ import { randomInt } from './utils';
 export class Game {
   map: Map;
   plantHandler: PlantHandler;
+  rockHandler: RockHandler;
   aiHandler: AiHandler;
   scoreHandler: ScoreHandler;
 
   constructor() {
     this.map = new Map();
     this.plantHandler = new PlantHandler(this.map);
+    this.rockHandler = new RockHandler(this.map);
     this.aiHandler = new AiHandler(this.map);
     this.scoreHandler = new ScoreHandler(this.map);
     this.reset();
@@ -30,6 +33,7 @@ export class Game {
     this.map.reset();
     this.placeSlimes();
     this.plantHandler.placeInitialPlants();
+    this.rockHandler.placeRocks();
     this.aiHandler.loadAis();
     // wait on GPU to receive all our assets before rendering the stage
     // prevents a weird glitches on first page load

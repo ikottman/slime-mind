@@ -21,13 +21,13 @@ export class ExampleAI {           // This line defines the user submited code, 
   
     // find all empty cells surrounding the given location
     emptyNeighbors(x, y) {
-      const options = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+      const options = [[-1, 0], [0, -1], [0, 1], [1, 0]];
       return options.filter(pt => !this.invalidMove(x + pt[0], y + pt[1])).map(pt => [x + pt[0], y + pt[1]]);
     }
   
     // find all surrounding cells from given location
     neighbors(x, y) {
-      const options = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+      const options = [[-1, 0], [0, -1], [0, 1], [1, 0]];
       return options
         .filter(pt => !this.outOfBounds(x + pt[0], y + pt[1]))
         .map(pt => this.gameMap[x + pt[0]][y + pt[1]])
@@ -45,13 +45,22 @@ export class ExampleAI {           // This line defines the user submited code, 
     }
   
     // This movement code randomly selects a delta x and delta y then checks if the corresponding cell is a valid move location
-      // random x, y both in range [-1, 1]
+    // random x, y both in range [-1, 1]
     
       randomMove() {
-      const x = this.randomInt(-1, 1);
-      const y = this.randomInt(-1, 1);
-      return [x, y];
-    }
+        const movementOptions = [-1,1];
+        const xOrY = this.randomInt(0, 1);
+        let x = 0;
+        let y = 0;
+        if(xOrY === 1){
+          x = movementOptions[this.randomInt(0, 1)];
+          y = 0;
+        } else{
+          y = movementOptions[this.randomInt(0, 1)];
+          x = 0;
+        }
+        return [x, y];
+      }
   
     findValidMove(pawn) {
       // brute force finding a valid move with max attempts
@@ -99,13 +108,16 @@ export class ExampleAI {           // This line defines the user submited code, 
   
       const pawn = myPawns.find(p => p.id === id);        // Defines the slimes with the active turn as "pawn"
       const neighbors = this.neighbors(pawn.x, pawn.y);   // Define an array of all objects around this slime
-      const biteableNeighbors = neighbors.filter(pawn => pawn.owner !== this.playerId);   // Find nearby objects that have different playerID values
+      const biteableNeighbors = 
+        neighbors
+        .filter(pawn => !(pawn.owner === this.playerId))      // Find nearby pawns without the same player ID
+        .filter(pawn => !(pawn.type === 'ROCK'));             // Remove rocks from this list
       const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
       if (friendlyNeighbors.length > 0) {                 // Merge with any nearby slimes
         return {
           action: 'MERGE'
         }
-      } else if (neighbors.length > 0) {                  // If there are any neighbors near by bite a random one
+      } else if (biteableNeighbors.length > 0) {                  // If there are any neighbors near by bite a random one
         const target = biteableNeighbors[this.randomInt(0, neighbors.length - 1)];
         return {
           action: 'BITE',

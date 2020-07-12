@@ -3,20 +3,20 @@
 // Code started 07/06/2020
 /** This AI code will be called for each slime on the players team. Each time the code is called it will call the "takeAction" method.
  * When "takeAction" method is called the game code will supply the slime's ID and a game map matrix which is a copy of the active gameboard 
- * during the given turn. 
+ * during the given turn. Now it handles rocks :)
 */
 
 export class SpaceInvaders {    // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
-  static displayName = 'Space Invaders V2'; // name to show on screen when fighting this AI
+  static displayName = 'Space Invaders V3'; // name to show on screen when fighting this AI
   moveDirection;
   constructor(playerId) {       // This method is called when the player code is called variables can be constructed here
     this.playerId = playerId;   // Do not edit
     this.moveDirection = {};
   }
 
-  // Generatea a random number in the given range, inclusive [min, max]
+  // Generate a random number in the given range, inclusive [min, max]
   randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -114,7 +114,14 @@ move(activePawn) {
   if (this.gameMap[x][y]) {
     if(this.gameMap[x][y].owner === activePawn.owner){
       action = 'MERGE';
-    } else {
+    } else if(this.gameMap[x][y].type === 'ROCK'){
+      action = 'NOTHING'
+      if (this.moveDirection[activePawn.id] === 'Move Up'){
+        this.moveDirection[activePawn.id] = 'Space Invade'
+      }else{
+        this.moveDirection[activePawn.id] = 'Move Up'
+      }
+    } else{
       action = 'BITE';
     }
   } else if (this.outOfBounds(x, y)){
@@ -142,7 +149,10 @@ takeAction(gameMap, id) {         // Do not edit - Game code will pass the curre
   const activePawn = myPawns.find(p => p.id === id);              // Defines the slimes with the active turn as "pawn"
   
   const neighbors = this.neighbors(activePawn.x, activePawn.y);   // Define an array of all objects around this slime
-  const biteableNeighbors = neighbors.filter(pawn => !(pawn.owner === this.playerId));   // Find nearby slimes with a player ID of 2
+  const biteableNeighbors = 
+    neighbors
+    .filter(pawn => !(pawn.owner === this.playerId))              // Find nearby pawns without the same player ID
+    .filter(pawn => !(pawn.type === 'ROCK'));                     // Remove rocks from this list
   const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
   
   // Decision Tree

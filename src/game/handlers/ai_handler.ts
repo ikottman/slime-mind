@@ -4,7 +4,7 @@ import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
-import { ACTIONS } from '../schema';
+import { ACTIONS, PAWN_TYPE } from '../schema';
 import { randomInt } from '../utils';
 
 export class AiHandler {
@@ -111,6 +111,13 @@ export class AiHandler {
       case ACTIONS.BITE:
         const target = this.map.get(action.x, action.y);
         if (this.invalidBite(action, source, target) || !source.attack || !target) {
+          return;
+        }
+        if (target.type === PAWN_TYPE.ROCK){
+          const killed = source?.takeDamage(1);
+          if (killed) {
+            this.map.clearCell(source.x, source.y);
+          }
           return;
         }
         const killed = target?.takeDamage(source.attack);
