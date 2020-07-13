@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { PAWN_TYPE } from '../schema';
+import { PAWN_TYPE, LAYERS } from '../schema';
 import redSlime from '../assets/red_slime.png';
 import blueSlime from '../assets/blue_slime.png';
 import redKing from '../assets/red_king.png';
@@ -37,11 +37,14 @@ export class Slime extends Pawn {
     bar = new PIXI.Graphics();
     bar.name = 'hpBar';
     this.sprite.addChild(bar);
+    // put the  bar under the pawn
+    bar.zIndex = LAYERS.HPBAR;
+    this.sprite.sortChildren();
     // render an arc relative to how much health they have left
-    bar.lineStyle(20, 0x00ff00);
+    bar.lineStyle(3.5, 0x00ff00);
     const halfPi = 3 * Math.PI / 2;
     const hpRatio = this.hp / this.maxHp;
-    bar.arc(100, 100, 110, halfPi - Math.PI * hpRatio, halfPi + Math.PI * hpRatio);
+    bar.arc(this.sprite.width / 2, this.sprite.height / 2, this.sprite.width / 1.8, halfPi - Math.PI * hpRatio, halfPi + Math.PI * hpRatio);
   }
 
   gainExperience(xp: number) {
@@ -57,9 +60,9 @@ export class Slime extends Pawn {
       const hp = Math.ceil(currentHpPercentage * this.maxHp);
       this.gainHp(hp - this.hp);
       //TODO make sprite creation more effcient
-      if(this.level >= 10){
+      if(this.level >= 2){
         this.sprite.destroy();
-        if (this.owner === 1){
+        if (this.owner === 1) {
           this.addSprite(PIXI.Sprite.from(redKing));
         } else{
           this.addSprite(PIXI.Sprite.from(blueKing));

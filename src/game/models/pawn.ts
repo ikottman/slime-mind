@@ -40,14 +40,20 @@ export class Pawn {
   }
 
   addSprite(sprite: PIXI.Sprite) {
-    this.sprite = sprite;
+    sprite.zIndex = LAYERS.PAWN;
+    sprite.height = SPRITE_SIZE;
+    sprite.width = SPRITE_SIZE;
+    // add a container so we have a layer behind the pawn
+    const spriteContainer = new PIXI.Container();
+    spriteContainer.addChild(sprite);
+    this.sprite = spriteContainer;
     this.sprite.height = SPRITE_SIZE;
     this.sprite.width = SPRITE_SIZE;
     this.sprite.zIndex = LAYERS.PAWN;
     this.handleMouseHover();
-    APP.stage.addChild(this.sprite);
     // update sprite's location
     this.move(this.x, this.y);
+    APP.stage.addChild(this.sprite);
   }
 
   // take damage and return true if this killed the pawn
