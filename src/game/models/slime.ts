@@ -60,7 +60,7 @@ export class Slime extends Pawn {
       const hp = Math.ceil(currentHpPercentage * this.maxHp);
       this.gainHp(hp - this.hp);
       //TODO make sprite creation more effcient
-      if(this.level >= 2){
+      if(this.level >= 10){
         this.sprite.destroy();
         if (this.owner === 1) {
           this.addSprite(PIXI.Sprite.from(redKing));

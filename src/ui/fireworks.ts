@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
-import { canvasSize, APP } from '../ui/store';
+import { canvasSize, APP, winnerStore } from '../ui/store';
 import { LAYERS } from '../game/schema';
+import { randomInt } from "../game/utils";
 
 const gravity = 0.04;
 
@@ -69,6 +70,7 @@ class Particle {
 export class Fireworks {
   ticker: PIXI.Ticker;
   particles: Array<Particle>;
+  winner!: number;
 
   constructor() {
     this.particles = [];
@@ -99,8 +101,16 @@ export class Fireworks {
   
   private launchParticle() {
     const particleScale = Math.random() * 0.9;
-    const color = Math.floor(Math.random() * 16777215);
-    const particle = this.getParticle(color, particleScale);
+    const colors = [0x0e80000, 0x02838f];
+    let color;
+    if (this.winner === 1) {
+      color = 0;
+    } else if (this.winner === 2) {
+      color = 1;
+    } else {
+      color = randomInt(0, 1);
+    }
+    const particle = this.getParticle(colors[color], particleScale);
     particle.setPosition({x: Math.random() * canvasSize, y: canvasSize});
     const speed = canvasSize * 0.02;
     particle.setVelocity({x: -speed / 2 + Math.random() * speed, y: -speed + Math.random() * -1});
@@ -131,10 +141,12 @@ export class Fireworks {
       this.particles = [];
       APP.stage.getChildByName('fireworks background')?.destroy();
       APP.renderer.render(APP.stage);
+      winnerStore.update(_ => '');
     }
   }
 
-  start() {
+  start(winner: number) {
+    this.winner = winner;
     this.fadeBackground();
     this.ticker.start();
     setTimeout(this.stop.bind(this), 5000); // show for 5 seconds

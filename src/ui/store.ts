@@ -35,6 +35,9 @@ export const hoveredPawnStore = writable({});
 export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
+// winner
+export const winnerStore = writable('');
+
 // game
 export const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
