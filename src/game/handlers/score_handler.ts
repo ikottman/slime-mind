@@ -1,7 +1,6 @@
-import { scoresStore, APP } from '../../ui/store';
+import { scoresStore } from '../../ui/store';
 import { Map } from '../models/map';
 import { Slime } from "../models/slime";
-import { Fireworks } from '../../ui/fireworks';
 
 export class ScoreHandler {
   private map: Map;
@@ -43,9 +42,5 @@ export class ScoreHandler {
     const oneScore = this.calculateScore(oneSlimes);
     const twoScore =  this.calculateScore(twoSlimes);
     scoresStore.update(_ => [oneScore, twoScore]);
-  }
-
-  win() {
-    new Fireworks(APP).start();
   }
 }

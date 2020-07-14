@@ -2,10 +2,10 @@
 
 // Code started 07/06/2020
 /** This AI code will be called for each slime on the players team. Each time the code is called it will call the "takeAction" method.
- * When "takeAction" method is called the game code will supply the slime's ID and a game map matrix which is a copy of the active gameboard 
+ * When "takeAction" method is called the game code will supply the slime's ID and a game map matrix which is a copy of the active gameboard
  * during the given turn. Now it handles rocks :)
 */
-
+// @ts-nocheck
 export class SpaceInvaders {    // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
@@ -86,12 +86,12 @@ moveToo(activePawn) {
       xDelta = -1;
       yDelta = 0;
   }
-     
+
   if (this.moveDirection[activePawn.id] === 'Move Up'){
       xDelta = 0;
       yDelta = -1;
   }
-  
+
   const x = activePawn.x + xDelta;
   const y = activePawn.y + yDelta;
 
@@ -149,14 +149,14 @@ takeAction(gameMap, id, configuration, turn) {         // Do not edit - Game cod
   const allPlants = allPawns.filter(pawn => pawn.owner !== this.playerId && pawn.type === 'PLANT');
   // Look at the active pawn and its immedieate surroundings
   const activePawn = myPawns.find(p => p.id === id);              // Defines the slimes with the active turn as "pawn"
-  
+
   const neighbors = this.neighbors(activePawn.x, activePawn.y);   // Define an array of all objects around this slime
-  const biteableNeighbors = 
+  const biteableNeighbors =
     neighbors
     .filter(pawn => !(pawn.owner === this.playerId))              // Find nearby pawns without the same player ID
     .filter(pawn => !(pawn.type === 'ROCK'));                     // Remove rocks from this list
   const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
-  
+
   // Decision Tree
   /**This AI will move to the left or right depending on if its y value is even or odd. Once it hits a wall it will move down and change
    * direction. It will only eat plants that are in its path but it will eat any near by enemys it can. */

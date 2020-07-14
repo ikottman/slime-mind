@@ -39,6 +39,7 @@ export class Game {
     this.plantHandler.placeInitialPlants();
     this.rockHandler.placeRocks();
     this.aiHandler.loadAis();
+    this.victoryHandler.reset();
     // wait on GPU to receive all our assets before rendering the stage
     // prevents a weird glitches on first page load
     APP.renderer.plugins.prepare.upload(APP.stage, () => {
