@@ -1,3 +1,9 @@
-export { ExampleAI } from "./ExampleAI";
-export { BelligerentAndNumerous } from "./BelligerentAndNumerous-Red";
-export { SpaceInvaders } from "./SpaceInvaders-Red";
+import { ExampleAI } from "./ExampleAI";
+import { BelligerentAndNumerous } from "./BelligerentAndNumerous-Red";
+import { SpaceInvaders } from "./SpaceInvaders-Red";
+
+export default [
+  ExampleAI,
+  BelligerentAndNumerous,
+  SpaceInvaders,
+];
