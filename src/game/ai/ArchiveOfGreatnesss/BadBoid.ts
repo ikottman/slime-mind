@@ -15,6 +15,7 @@ export class BadBoid {
   private nearbyEnemies;
   private nearbyCells;
   private flock;
+  private enemies;
 
   static displayName = 'Bad Boid';
   constructor(playerId) {
@@ -33,7 +34,7 @@ export class BadBoid {
 
   // manhattan distance between pawn or pt
   private distance(source, target) {
-    return Math.abs(target.x - source.x) + Math.abs(target.y - target.x);
+    return Math.abs(target.x - source.x) + Math.abs(target.y - source.y);
   }
 
   private neighbors(x, y) {
@@ -47,16 +48,19 @@ export class BadBoid {
     this.gameMap = gameMap;
     this.configuration = configuration;
     this.turn = turn;
-    // my pawns
     this.flock = [];
+    this.enemies = [];
     for (let i = 0; i < gameMap.length; i++) {
       for (let j = 0; j < gameMap.length; j++) {
         if (gameMap[i][j] && gameMap[i][j].owner === this.playerId) {
           this.flock.push(gameMap[i][j]);
+        } else if (gameMap[i][j] && gameMap[i][j].owner !== this.playerId) {
+          this.enemies.push(gameMap[i][j])
         }
       }
     }
     this.boid = this.flock.find(b => b.id === id);
+    this.flock = this.flock.filter(b => b.id !== id); // remove me from flock
 
     // possible targets
     const neighbors = this.neighbors(this.boid.x, this.boid.y);
@@ -100,14 +104,26 @@ export class BadBoid {
     return new pt(Math.floor(totalPoint.x / this.flock.length), Math.floor(totalPoint.y / this.flock.length));
   }
 
-  private moveTowardTarget(target) {
-    // naively find the move that is closest to the target
-    return this.nearbyCells.sort((a, b) => this.distance(a, target) - this.distance(b, target))[0];
+  private pointNearestTarget(options, target) {
+    // naively find the point that is closest to the target
+    return options.sort((a, b) => this.distance(a, target) - this.distance(b, target))[0];
+  }
+
+  private tooCloseToOtherBoid(point) {
+    const minCellsApart = 3;
+    return this.flock.some(b => this.distance(b, point) <= minCellsApart);
   }
 
   // boid movement
   private move() {
-    const point = this.moveTowardTarget(this.centerOfFlock());
+    let point = this.pointNearestTarget(this.nearbyCells, this.centerOfFlock());
+
+    // avoid other boids
+    if (this.tooCloseToOtherBoid(point)) {
+      const nearestEnemy = this.pointNearestTarget(this.enemies, this.boid);
+      point = this.pointNearestTarget(this.nearbyCells, nearestEnemy);
+    }
+
     return {
       action: 'MOVE',
       x: point.x,
