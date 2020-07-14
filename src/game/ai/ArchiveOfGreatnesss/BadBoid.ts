@@ -1,4 +1,10 @@
 // @ts-nocheck
+class pt {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
 export class BadBoid {
   private playerId;
   private gameMap = [];
@@ -8,6 +14,7 @@ export class BadBoid {
   private nearbyPlants;
   private nearbyEnemies;
   private nearbyCells;
+  private flock;
 
   static displayName = 'Bad Boid';
   constructor(playerId) {
@@ -24,22 +31,16 @@ export class BadBoid {
     return list[this.randomInt(0, list.length - 1)];
   }
 
-  private neighbors(x, y) {
-    return [[-1, 0], [0, -1], [0, 1], [1, 0]]
-      .map(pt => [x + pt[0], y + pt[1]])
-      .filter(pt => this.gameMap[pt[0]] !== undefined && this.gameMap[pt[0]][pt[1]] !== undefined) // remove out of bounds
-      .map(pt => this.gameMap[pt[0]][pt[1]] ?? pt); // return either the pawn or coords to an empty cell
+  // manhattan distance between pawn or pt
+  private distance(source, target) {
+    return Math.abs(target.x - source.x) + Math.abs(target.y - target.x);
   }
 
-  // TODO: boid
-  private move() {
-    const [x, y] = this.pick(this.nearbyCells);
-    console.log(this.boid.id, this.boid.x, this.boid.y, x, y);
-    return {
-      action: 'MOVE',
-      x,
-      y
-    }
+  private neighbors(x, y) {
+    return [new pt(-1, 0), new pt(0, -1), new pt(0, 1), new pt(1, 0)]
+      .map(cell => new pt(x + cell.x, y + cell.y))
+      .filter(cell => this.gameMap[cell.x] !== undefined && this.gameMap[cell.x][cell.y] !== undefined) // remove out of bounds
+      .map(cell => this.gameMap[cell.x][cell.y] || cell); // return either the pawn or coords to an empty cell
   }
 
   private setState(gameMap, id, configuration, turn) {
@@ -59,12 +60,13 @@ export class BadBoid {
 
     // possible targets
     const neighbors = this.neighbors(this.boid.x, this.boid.y);
-    this.nearbyPlants = neighbors.filter(p => p && p.type === 'PLANT');
-    this.nearbyBoids = neighbors.filter(p => p && p.type === 'SLIME' && p.owner === this.playerId);
-    this.nearbyEnemies = neighbors.filter(p => p && p.type === 'SLIME' && p.owner !== this.playerId);
+
+    this.nearbyPlants = neighbors.filter(p => p.type === 'PLANT');
+    this.nearbyBoids = neighbors.filter(p => p.type === 'SLIME' && p.owner === this.playerId);
+    this.nearbyEnemies = neighbors.filter(p => p.type === 'SLIME' && p.owner !== this.playerId);
 
     // possible moves
-    this.nearbyCells = neighbors.filter(n => Array.isArray(n));
+    this.nearbyCells = neighbors.filter(cell => cell instanceof pt);
   }
 
   private attack() {
@@ -90,9 +92,42 @@ export class BadBoid {
     return this.boid.level >= this.configuration.slime.minSplitLevel && this.nearbyCells.length && this.flock.length < desiredFlockSize;
   }
 
+  private centerOfFlock() {
+    // average cell in the flock
+    const totalPoint = this.flock.reduce((acc, boid) => {
+      return new pt(acc.x + boid.x, acc.y + boid.y);
+    }, new pt(0, 0));
+    return new pt(Math.floor(totalPoint.x / this.flock.length), Math.floor(totalPoint.y / this.flock.length));
+  }
+
+  private moveTowardTarget(target) {
+    // naively find the move that is closest to the target
+    return this.nearbyCells.sort((a, b) => this.distance(a, target) - this.distance(b, target))[0];
+  }
+
+  // boid movement
+  private move() {
+    const point = this.moveTowardTarget(this.centerOfFlock());
+    return {
+      action: 'MOVE',
+      x: point.x,
+      y: point.y
+    }
+  }
+
+  debug() {
+    console.group();
+    console.debug(`turn: ${this.turn}`)
+    console.debug(`id: ${this.boid.id}`)
+    console.debug(`nearbyCells: ${this.nearbyCells}`)
+    console.debug(`nearbyPlants: ${this.nearbyPlants}`)
+    console.debug(`nearbyEnemies: ${this.nearbyEnemies}`)
+    console.groupEnd();
+  }
+
   takeAction(gameMap, id, configuration, turn) {
     this.setState(gameMap, id, configuration, turn);
-
+    //this.debug();
     if (this.nearbyEnemies.length) {
       return this.attack();
     }
@@ -109,6 +144,6 @@ export class BadBoid {
       return this.move();
     }
 
-    return { action: 'NOTHING' };
+    return { action: 'NOTHING'};
   }
 }
