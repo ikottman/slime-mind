@@ -113,7 +113,6 @@ export class ExampleAI {  // This line defines the user submited code, the name 
       const biteableNeighbors = 
         neighbors
         .filter(pawn => !(pawn.owner === this.playerId))      // Find nearby pawns without the same player ID
-        .filter(pawn => !(pawn.type === 'ROCK'));             // Remove rocks from this list
       const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
       if (friendlyNeighbors.length > 0) {                 // Merge with any nearby slimes
         return {

@@ -114,9 +114,9 @@ export class AiHandler {
           return;
         }
         if (target.type === PAWN_TYPE.ROCK){
-          const killed = source?.takeDamage(1);
+          const killed = target?.takeDamage(source.attack);
           if (killed) {
-            this.map.clearCell(source.x, source.y);
+            this.map.clearCell(target.x, target.y);
           }
           return;
         }
