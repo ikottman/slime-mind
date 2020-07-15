@@ -65,12 +65,12 @@ export class AiHandler {
   }
 
   private attemptMerge(slime: Slime): void {
-    const mySlimes = this.map.neighbors(slime).filter(pawn => pawn.owner === slime.owner) as Array<Slime>; 
+    const mySlimes = this.map.neighbors(slime).filter(pawn => pawn.owner === slime.owner) as Array<Slime>;
     const mergeableSlimes = mySlimes.filter(slime => slime?.readyToMerge);
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
       slime.gainExperience(sacrifice.xp);
-      slime.gainHp(slime.maxHp); // set hp to max 
+      slime.gainHp(slime.maxHp); // set hp to max
       this.map.clearCell(sacrifice.x, sacrifice.y);
       textHandler.addText('MERGE', slime, '#72fa78');
     } else {
@@ -185,7 +185,8 @@ export class AiHandler {
   loadAis(): void {
     // load player's code
     try {
-      const ai = eval(`(${code})`); // https://stackoverflow.com/a/39299283
+      const withoutExport = code.replace("export class", "class"); // make it easier to paste pre-made AI in
+      const ai = eval(`(${withoutExport})`); // https://stackoverflow.com/a/39299283
       if (ai) {
         this.playerOne = new Player(1, new ai(1));
         this.playerTwo = new Player(2, new configuration.selectedAI(2));
