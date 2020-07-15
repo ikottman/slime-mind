@@ -200,6 +200,7 @@ export class AiHandler {
   takeTurn() {
     const slimes = this.getSlimes();
     // run AI alternating between each player's slimes
+    // TODO: stop running if at any point the game ends (if player runs out of slimes)
     slimes.forEach((slime) => this.runAi(slime));
 
     slimes.forEach((slime) => slime.readyToMerge = false);
