@@ -6,14 +6,16 @@ import { configuration } from "../../ui/store";
 
 export class Rock extends Pawn {
   hp: number;
+  maxHp: number;
 
   constructor(x: number, y: number) {
     super(-1, x, y);
     this.type = PAWN_TYPE.ROCK;
-    this.hp = 100;
+    this.hp = configuration.rock.maxHp;
+    this.maxHp = configuration.rock.maxHp;
     this.addSprite(PIXI.Sprite.from(rock));
   }
-  
+
   takeDamage(damage: number) {
     this.hp = this.hp - damage;
     return this.hp <= 0;
@@ -27,6 +29,7 @@ export class Rock extends Pawn {
       type: this.type,
       owner: this.owner,
       hp: this.hp,
+      maxHp: this.maxHp,
     }
   }
 }

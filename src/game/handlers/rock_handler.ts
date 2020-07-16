@@ -11,6 +11,10 @@ export class RockHandler {
   }
 
   placeRocks() {
+    if (configuration.rock.initialRocks === 0) {
+      return;
+    }
+
     let numRocks = 0;
     let tries = 0;
     do {
@@ -22,7 +26,6 @@ export class RockHandler {
         numRocks++
       }
     }
-    while (tries < 100000 && numRocks < 15);
+    while (tries < 100000 && numRocks < configuration.rock.initialRocks);
   }
-
 }

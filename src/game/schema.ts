@@ -41,8 +41,14 @@ interface slimeConfiguration {
   minSplitLevel: number;
 }
 
+interface rockConfiguration {
+  initialRocks: number;
+  maxHp: number;
+}
+
 export interface Configuration {
   selectedAI: AI;
   plant: plantConfiguration;
   slime: slimeConfiguration;
+  rock: rockConfiguration;
 }

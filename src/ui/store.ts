@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
-import { TextHandler } from '../game/handlers/text_handler'; 
+import { TextHandler } from '../game/handlers/text_handler';
 import { Configuration } from '../game/schema';
 import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
 import { readFileSync } from 'fs';
@@ -64,6 +64,10 @@ export const defaultConfig: Configuration = {
   slime: {
     initialSlimes: 5,
     minSplitLevel: 4
+  },
+  rock: {
+    initialRocks: 15,
+    maxHp: 100,
   }
 }
 export const configurationStore = writable(defaultConfig);
