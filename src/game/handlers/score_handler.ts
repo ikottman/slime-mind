@@ -31,7 +31,7 @@ export class ScoreHandler {
       score = score + scorePerLevel[slimes[i].level-1]
     }
 
-    score = Number( score.toPrecision(2) )
+    score = Number( score.toPrecision(4) )
 
     return score; 
   }
