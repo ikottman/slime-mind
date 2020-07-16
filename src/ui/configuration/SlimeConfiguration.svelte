@@ -1,12 +1,14 @@
 <script>
   import { game, defaultConfig, configuration, configurationStore, GRID_SIZE } from '../store';
 
-  let {initialSlimes, minSplitLevel} = defaultConfig.slime;
+  let {initialSlimes, minSplitLevel, splitXpPercentage, splitHpPercentage} = defaultConfig.slime;
 
   function reset() {
     const slime = {
       initialSlimes,
-      minSplitLevel
+      minSplitLevel,
+      splitXpPercentage,
+      splitHpPercentage,
     }
     configurationStore.update(configuration => ({...configuration, slime }));
     game.reset();
@@ -44,4 +46,8 @@
   <input type=number bind:value={initialSlimes} on:change={reset} min=1 max={GRID_SIZE}>
   <label>Min Level to Split</label>
   <input type=number bind:value={minSplitLevel} on:change={reset} min=1 max=12>
+  <label>XP Percentage on Split</label>
+  <input type=number bind:value={splitXpPercentage} on:change={reset} min=1 max=100>
+  <label>HP Percentage on Split</label>
+  <input type=number bind:value={splitHpPercentage} on:change={reset} min=1 max=100>
 </div>

@@ -39,6 +39,8 @@ interface plantConfiguration {
 interface slimeConfiguration {
   initialSlimes: number;
   minSplitLevel: number;
+  splitHpPercentage: number;
+  splitXpPercentage: number;
 }
 
 interface rockConfiguration {

@@ -25,11 +25,17 @@ data {
     {#if $hoveredPawnStore.hp !== undefined}
       <label>HP</label><data>{$hoveredPawnStore.hp}/{$hoveredPawnStore.maxHp}</data>
     {/if}
+    {#if $hoveredPawnStore.xp !== undefined}
+      <label>XP</label><data>{$hoveredPawnStore.xp}</data>
+    {/if}
     {#if $hoveredPawnStore.level !== undefined}
       <label>Level</label><data>{$hoveredPawnStore.level}/{$hoveredPawnStore.maxLevel}</data>
     {/if}
     {#if $hoveredPawnStore.attack !== undefined}
       <label>Attack</label><data>{$hoveredPawnStore.attack}</data>
+    {/if}
+    {#if $hoveredPawnStore.readyToMerge !== undefined}
+      <label>Ready to Merge</label><data>{$hoveredPawnStore.readyToMerge}</data>
     {/if}
   </div>
 {:else}

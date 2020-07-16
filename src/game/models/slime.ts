@@ -5,10 +5,12 @@ import blueSlime from '../assets/blue_slime.png';
 import redKing from '../assets/red_king.png';
 import blueKing from '../assets/blue_king.png';
 import { Pawn } from './pawn';
+import { configuration } from "../../ui/store";
 
 export class Slime extends Pawn {
   hp: number;
   xp: number;
+  level: number;
   readyToMerge: boolean;
   maxLevel: number;
 
@@ -17,6 +19,7 @@ export class Slime extends Pawn {
     this.type = PAWN_TYPE.SLIME;
     this.readyToMerge = false;
     this.xp = 1;
+    this.level = 1;
     this.maxLevel = 12;
     this.hp = this.maxHp;
 
@@ -48,69 +51,49 @@ export class Slime extends Pawn {
   }
 
   gainExperience(xp: number) {
-    const currentLevel = this.level;
-    const currentHpPercentage = this.hp / this.maxHp;
-    if (this.level < this.maxLevel) {
-      this.xp += xp;
+    if (this.level >= this.maxLevel) {
+      return;
     }
 
-    // set health to the same percentage you had before
-    // when the max hp increases
-    if (this.level > currentLevel) {
-      const hp = Math.ceil(currentHpPercentage * this.maxHp);
-      this.gainHp(hp - this.hp);
-      //TODO make sprite creation more effcient
-      if(this.level >= 10){
-        this.sprite.destroy();
-        if (this.owner === 1) {
-          this.addSprite(PIXI.Sprite.from(redKing));
-        } else{
-          this.addSprite(PIXI.Sprite.from(blueKing));
-        }
-      }
-    }
+    this.xp += xp;
+    this.resetLevel();
   }
 
   gainHp(hp: number) {
-    this.hp = this.hp + hp;
-    if (this.hp > this.maxHp) {
-      this.hp = this.maxHp;
-    }
+    this.hp = Math.min(this.hp + hp, this.maxHp);
     this.updateHpBar();
   }
 
   split(): void {
-    this.xp = Math.floor(this.xp / 4);
-    //TODO make sprite creation more efficient
-    if(this.level < 10){
-      this.sprite.destroy();
-      if (this.owner === 1){
-        this.addSprite(PIXI.Sprite.from(redSlime));
-        this.updateHpBar();
-      } else{
-        this.addSprite(PIXI.Sprite.from(blueSlime));
-        this.updateHpBar();
-      }
-    }
+    this.xp = Math.max(1, Math.floor(this.xp * (configuration.slime.splitXpPercentage / 100)));
+    this.resetLevel();
+    this.hp = Math.min(this.maxHp, Math.floor(this.hp * (configuration.slime.splitHpPercentage / 100)));
   }
 
-  get level(): number {
-    const xpRequired = [
-      1,
-      2,
-      6,
-      15,
-      33,
-      62,
-      106,
-      169,
-      254,
-      368,
-      513,
-      695
-    ];
-    const level = xpRequired.findIndex(required => required > this.xp);
-    return level === -1 ? xpRequired.length : level;
+  private resetLevel() {
+    const currentLevel = this.level;
+    const currentHpPercentage = this.hp / this.maxHp;
+
+    // sophisticated math
+    this.level = Math.floor(1.847 * this.xp**0.286);
+
+    // handle level up or down (down can happen in splits)
+    if (this.level > currentLevel) {
+      // retain the same ratio of hp
+      const hp = Math.ceil(currentHpPercentage * this.maxHp);
+      this.gainHp(hp - this.hp);
+
+      // we gained king level
+      if (currentLevel < 10 && this.level === 10){
+        this.sprite.destroy();
+        this.owner === 1 ? this.addSprite(PIXI.Sprite.from(redKing)) : this.addSprite(PIXI.Sprite.from(blueKing));
+      }
+    } else if (this.level < currentLevel && this.level < 10) {
+      // we lost king level
+      this.sprite.destroy();
+      this.owner === 1 ? this.addSprite(PIXI.Sprite.from(redSlime)) : this.addSprite(PIXI.Sprite.from(blueSlime));
+      this.updateHpBar();
+    }
   }
 
   get attack(): number {

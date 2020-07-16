@@ -63,7 +63,9 @@ export const defaultConfig: Configuration = {
   },
   slime: {
     initialSlimes: 5,
-    minSplitLevel: 4
+    minSplitLevel: 4,
+    splitXpPercentage: 25,
+    splitHpPercentage: 50,
   },
   rock: {
     initialRocks: 15,
