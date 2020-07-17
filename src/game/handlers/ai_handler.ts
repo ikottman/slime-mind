@@ -1,4 +1,4 @@
-import { code, textHandler, configuration,turn } from '../../ui/store';
+import { code, textHandler, configuration,turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
@@ -100,7 +100,18 @@ export class AiHandler {
     textHandler.addText('SPLIT', slime, '#941651');
   }
 
-  private executeAction(action: Action, source: Slime) {
+  private updatePawnStats() {
+    if (hoveredPawnId) {
+      const pawn = this.map.findById(hoveredPawnId);
+      if (pawn) {
+        hoveredPawnStore.update(_ => pawn.json());
+      }
+    } else if (hoveredPawn.id) {
+      hoveredPawnStore.update(_ => ({}));
+    }
+  }
+
+  private executeAction(action: Action, source: Slime): void {
     if (action?.action === ACTIONS.NOTHING || this.invalidAction(action)) {
       return;
     }
@@ -162,7 +173,8 @@ export class AiHandler {
     }
 
     const action = new Action(slime.id, playerAction.action, playerAction.x, playerAction.y);
-    return this.executeAction(action, slime);
+    this.executeAction(action, slime);
+    this.updatePawnStats();
   }
 
   // get array alternating each player's slimes

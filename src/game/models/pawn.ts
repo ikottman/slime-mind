@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { SPRITE_SIZE, APP, hoveredPawnStore } from "../../ui/store";
+import { SPRITE_SIZE, APP, hoveredPawnStore, hoveredPawnIdStore } from "../../ui/store";
 import { PAWN_TYPE, LAYERS } from "../schema";
 
 export class Pawn {
@@ -25,10 +25,10 @@ export class Pawn {
     // allow listening for events like onmouseover
     this.sprite.interactive = true;
     this.sprite.on("mouseover", _ => {
-      hoveredPawnStore.update(pawn => pawn = this.json());
+      hoveredPawnIdStore.update(_ => this.id);
     });
     this.sprite.on("mouseout", _ => {
-      hoveredPawnStore.update(_ => ({}));
+      hoveredPawnIdStore.update(_ => 0);
     });
   }
 

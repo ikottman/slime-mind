@@ -35,6 +35,10 @@ export const hoveredPawnStore = writable({});
 export let hoveredPawn: any;
 hoveredPawnStore.subscribe(value => hoveredPawn = value);
 
+export const hoveredPawnIdStore = writable(0);
+export let hoveredPawnId: number;
+hoveredPawnIdStore.subscribe(value => hoveredPawnId = value);
+
 // winner
 export const winnerStore = writable('');
 
