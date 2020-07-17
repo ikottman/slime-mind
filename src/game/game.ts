@@ -1,4 +1,5 @@
-import { turnStore, scoresStore, APP, textHandler } from '../ui/store';
+import { turnStore, turn, scoresStore, APP, textHandler } from '../ui/store';
+import { isGameOver } from './utils';
 import { Map } from './models/map';
 import { PlantHandler } from "./handlers/plant_handler";
 import { RockHandler } from "./handlers/rock_handler";
@@ -23,7 +24,7 @@ export class Game {
     this.rockHandler = new RockHandler(this.map);
     this.aiHandler = new AiHandler(this.map);
     this.scoreHandler = new ScoreHandler(this.map);
-    this.victoryHandler = new VictoryHandler(this.map);
+    this.victoryHandler = new VictoryHandler();
     this.reset();
     this.run();
   }
@@ -55,7 +56,7 @@ export class Game {
     // this is called once per turn
     APP.ticker.add(() => {
       this.updateTurn();
-      if (this.victoryHandler.isGameOver()) {
+      if (isGameOver(this.map, turn)) {
         this.victoryHandler.endGame();
         return;
       }

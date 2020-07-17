@@ -5,7 +5,7 @@ import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
 import { ACTIONS, PAWN_TYPE } from '../schema';
-import { randomInt } from '../utils';
+import { randomInt, isGameOver } from '../utils';
 
 export class AiHandler {
   map: Map;
@@ -144,7 +144,7 @@ export class AiHandler {
   private runAi(slime: Slime): void {
     // skip slimes that were eaten or merged away
     const currentCellOccupant = this.map.get(slime.x, slime.y);
-    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id) {
+    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id || isGameOver(this.map, turn)) {
       return;
     }
 
@@ -202,10 +202,7 @@ export class AiHandler {
 
   takeTurn() {
     const slimes = this.getSlimes();
-    // run AI alternating between each player's slimes
-    // TODO: stop running if at any point the game ends (if player runs out of slimes)
     slimes.forEach((slime) => this.runAi(slime));
-
     slimes.forEach((slime) => slime.readyToMerge = false);
   }
 }

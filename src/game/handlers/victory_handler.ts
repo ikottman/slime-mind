@@ -1,24 +1,11 @@
-import { APP, turn, textHandler, scores, winnerStore, configuration } from '../../ui/store';
-import { Map } from '../models/map';
+import { APP, textHandler, scores, winnerStore, configuration } from '../../ui/store';
 import { Fireworks } from '../../ui/fireworks';
 
 export class VictoryHandler {
-  private map: Map;
   private fireworks: Fireworks;
-  
-  constructor(map: Map) {
-    this.map = map;
+
+  constructor() {
     this.fireworks = new Fireworks();
-  }
-
-  private playerOutOfPawns(): boolean {
-    const one = this.map.pawns.filter(pawn => pawn.owner === 1);
-    const two = this.map.pawns.filter(pawn => pawn.owner === 2);
-    return one.length === 0 || two.length === 0;
-  }
-
-  isGameOver() {
-    return turn >= 1000 || this.playerOutOfPawns();
   }
 
   private winner() {
