@@ -13,6 +13,7 @@ export class EatNSeek {
   enemies;
   plants;
   target;
+  pawns;
 
   static displayName = "Eat n' Seek";
   constructor(playerId) {
@@ -55,10 +56,10 @@ export class EatNSeek {
     this.gameMap = gameMap;
     this.configuration = configuration;
     this.turn = turn;
-    const pawns = this.gameMap.flatMap(p => p).filter(p => p!== null);
-    this.flock = pawns.filter(p => p.type === 'SLIME' && p.owner === this.playerId);
-    this.enemies = pawns.filter(p => p.type === 'SLIME' && p.owner !== this.playerId);
-    this.plants = pawns.filter(p => p.type === 'PLANT');
+    this.pawns = this.gameMap.flatMap(p => p).filter(p => p!== null);
+    this.flock = this.pawns.filter(p => p.type === 'SLIME' && p.owner === this.playerId);
+    this.enemies = this.pawns.filter(p => p.type === 'SLIME' && p.owner !== this.playerId);
+    this.plants = this.pawns.filter(p => p.type === 'PLANT');
     this.boid = this.flock.find(b => b.id === id);
 
     // possible targets
@@ -73,17 +74,34 @@ export class EatNSeek {
     this.findTarget();
   }
 
+  eating() {
+    return this.flock.every(s => s.level < 8);
+  }
+
+  findEnemy() {
+    // find enemy with highest xp
+    return this.enemies.sort((a, b) => b.xp - a.xp)[0];
+  }
+
+  findPlant() {
+    // closest plant
+    return this.closestTo(this.plants, this.boid);
+  }
+
   findTarget() {
     // retain target between rounds until it's gone
-    const currentTarget = this.enemies.find(e => this.target && e.id === this.target.id);
+    const currentTarget = this.pawns.find(p => this.target && p.id === this.target.id);
     if (currentTarget) {
       // update target's position
       this.target = currentTarget;
       return;
     }
 
-    // find enemy with highest xp
-    this.target = this.enemies.sort((a, b) => b.xp - a.xp)[0];
+    if (this.eating()) {
+      this.target = this.findPlant();
+    } else {
+      this.target = this.findEnemy();
+    }
   }
 
   attack() {
@@ -143,7 +161,7 @@ export class EatNSeek {
     }
 
     // level up
-    if (this.boid.level < 8) {
+    if (this.eating()) {
       if (this.nearbyPlants.length) {
         return this.eat();
       }
