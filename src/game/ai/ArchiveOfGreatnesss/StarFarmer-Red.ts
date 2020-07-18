@@ -1,18 +1,19 @@
 // This is Red's first AI code it will move towards the nearest non-friendly object and attempt to eat it
 // Code started 07/06/2020
 /** This AI code will be called for each slime on the players team. Each time the code is called it will call the "takeAction" method.
- * When "takeAction" method is called the game code will supply the slime's ID and a game map matrix which is a copy of the active gameboard 
- * during the given turn. 
- * 
+ * When "takeAction" method is called the game code will supply the slime's ID and a game map matrix which is a copy of the active gameboard
+ * during the given turn.
+ *
  * This AI will use a sited A* to find and eat trees. Then it will split into a minimum number of slimes and collect as much xp as
  * possible. At the end of the game then it will try and combine as many kings as possible then attack enemies.
 */
 
-class StarFarmer {              // This line defines the user submited code, the name can be changed freely
+export class StarFarmer {              // This line defines the user submited code, the name can be changed freely
   playerId;                     // Do not edit - This is the player ID randomly chosen from 1 or 2
   gameMap = [];                 // Do not edit - This is the game map passed to the player's code
   configuration;                // Do not edit - This is the configuration details for the current match passed to the player's code
   turn;                         // Do not edit - This is the current turn passed to the player's code
+  static displayName = "Star Farmer";
   constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
     this.playerId = playerId;
   }
@@ -99,7 +100,7 @@ class StarFarmer {              // This line defines the user submited code, the
 
     // While there are still squares to check
     while(possible_squares.length>0){
-      
+
       iterations++
       //console.log('Iteration =',iterations)
 
@@ -126,7 +127,7 @@ class StarFarmer {              // This line defines the user submited code, the
         let square_return = this.retraceSteps(current_square)
         return [square_return['x'], square_return['y']]
       }
-            
+
       // Pop current off open list, add to closed list
       possible_squares.splice(current_index,1);
       checked_squares.push(current_square);
@@ -136,7 +137,7 @@ class StarFarmer {              // This line defines the user submited code, the
         let square_return = this.retraceSteps(current_square)
         return [square_return['x'], square_return['y']]
       }
-            
+
       // If the cost of the current square is over the max_steps exit
       if (current_square['cost'] > max_steps){
         let square_return = this.retraceSteps(current_square)
@@ -185,7 +186,7 @@ class StarFarmer {              // This line defines the user submited code, the
         for(let j = 0; j < possible_squares.length; j++){
           if(
             children[i]['x'] === possible_squares[j]['x'] &&
-            children[i]['y'] === possible_squares[j]['y'] && 
+            children[i]['y'] === possible_squares[j]['y'] &&
             children[i]['score'] > current_square['score']
             ){
             continue
@@ -209,7 +210,7 @@ class StarFarmer {              // This line defines the user submited code, the
     }
   }
 
-  /** This is the primary movment method it will take the active pawn 
+  /** This is the primary movment method it will take the active pawn
     * and target location and return the proper move command. */
   move(pawn,target) {
     //Find the step that follows the fastest un-obstructed path
@@ -288,7 +289,7 @@ class StarFarmer {              // This line defines the user submited code, the
 
     return target
   }
- 
+
 
   // This is the method for the player code that the game code will call, all player code actions must come from this method to be useable in game
   takeAction(gameMap, id, configuration, turn) {         // Do not edit - Game code will pass the current slime pawn's id and a game map matrix
@@ -307,16 +308,16 @@ class StarFarmer {              // This line defines the user submited code, the
     [neighbors, emptyNeighbors] = this.checkSurroundings(activePawn.x,activePawn.y);
     //console.log('neighbors')
     //console.log(neighbors)
-    const biteableNeighbors = 
+    const biteableNeighbors =
     neighbors
     .filter(pawn => !(pawn.owner === this.playerId))              // Find nearby pawns without the same player ID
     .filter(pawn => !(pawn.type === 'ROCK'));                     // Remove rocks from this list
     const friendlyNeighbors = neighbors.filter(pawn => pawn.owner === this.playerId);   // Find nearby objects that have the same playerID value
-    
+
     // Decision Tree
     /**This AI uses a basic move sideways then up/down motion. It will first bite surrounding plants or enemy slimes. Then it will
      * move to the nearest plant or enemy slime. If a slimes level reaches 4 it will split. */
-    
+
      if (biteableNeighbors.length > 0) {                     // If there are any neighbors near by bite a random one
       const target = biteableNeighbors[this.randomInt(0, biteableNeighbors.length - 1)];
       return {
@@ -329,7 +330,7 @@ class StarFarmer {              // This line defines the user submited code, the
         return {
           action: 'SPLIT'
         }
-      } else { 
+      } else {
         const target = this.findFood(activePawn,enemyPawns,allPlants)       // Move this pawn using the move method defined above
         return this.move(activePawn,target);
       }
@@ -348,8 +349,8 @@ class StarFarmer {              // This line defines the user submited code, the
           return this.move(activePawn,target);
         }
     }
-    
-    
+
+
 
 
 
