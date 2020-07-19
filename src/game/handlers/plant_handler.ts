@@ -37,6 +37,10 @@ export class PlantHandler {
   }
 
   placeInitialPlants() {
+    if (configuration.plant.initialPlants === 0) {
+      return;
+    }
+
     let numPlants = 0;
     let tries = 0;
     do {
