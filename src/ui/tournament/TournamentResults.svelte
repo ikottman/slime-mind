@@ -17,8 +17,16 @@
 .winner {
   font-weight: bold;
 }
+
+div {
+  display: grid;
+  grid-template-columns: 350px 1em;
+  grid-gap: 5px;
+}
 </style>
 
+<div>
 <label class='oneScore' class:winner="{winnerIndex === 0}">You:</label> <data>{$resultsStore[0]}</data>
 <label class='twoScore' class:winner="{winnerIndex === 1}">{$configurationStore.selectedAI.displayName}:</label> <data>{$resultsStore[1]}</data>
 <label class:winner="{winnerIndex === 2}">Ties:</label> <data>{$resultsStore[2]}</data>
+</div>

@@ -21,9 +21,6 @@
   }
 
   .results {
-    display: grid;
-    grid-gap: 5px;
-    grid-template-columns: 1fr 1fr;
   }
 
 </style>
