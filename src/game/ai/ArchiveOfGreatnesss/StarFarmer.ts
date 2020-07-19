@@ -14,6 +14,7 @@ export class StarFarmer {              // This line defines the user submited co
   configuration;                // Do not edit - This is the configuration details for the current match passed to the player's code
   turn;                         // Do not edit - This is the current turn passed to the player's code
   static displayName = "Star Farmer";
+  static author = 'Red';
   constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
     this.playerId = playerId;
   }

@@ -12,6 +12,7 @@ export class BelligerentAndNumerous {         // This line defines the user subm
   configuration;                // Do not edit - This is the configuration details for the current match passed to the player's code
   turn;                         // Do not edit - This is the current turn passed to the player's code
   static displayName = 'Belligerent & Numerous V1'; // name to show on screen when fighting this AI
+  static author = 'Red'; // your name or pseudonym
   constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
     this.playerId = playerId;
   }

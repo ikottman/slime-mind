@@ -12,6 +12,7 @@ export class SpaceInvaders {    // This line defines the user submited code, the
   configuration;                // Do not edit - This is the configuration details for the current match passed to the player's code
   turn;                         // Do not edit - This is the current turn passed to the player's code
   static displayName = 'Space Invaders V3'; // name to show on screen when fighting this AI
+  static author = 'Red'; // your name or pseudonym
   moveDirection;
   constructor(playerId) {       // This method is called when the player code is called variables can be constructed here
     this.playerId = playerId;   // Do not edit

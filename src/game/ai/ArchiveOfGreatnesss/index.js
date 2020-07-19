@@ -1,8 +1,8 @@
 import { ExampleAI } from "./ExampleAI";
-import { BelligerentAndNumerous } from "./BelligerentAndNumerous-Red";
-import { SpaceInvaders } from "./SpaceInvaders-Red";
+import { BelligerentAndNumerous } from "./BelligerentAndNumerous";
+import { SpaceInvaders } from "./SpaceInvaders";
 import { EatNSeek } from "./EatNSeek";
-import { StarFarmer } from "./StarFarmer-Red";
+import { StarFarmer } from "./StarFarmer";
 import { DoesNothing } from "./DoesNothing";
 
 export default [
