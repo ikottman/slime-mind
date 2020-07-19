@@ -11,7 +11,7 @@ class ExampleAI {  // This line defines the user submited code, the name can be 
     gameMap = [];         // Do not edit - This is the game map passed to the player's code
     configuration;        // Do not edit - This is the configuration details for the current match passed to the player's code
     turn;                 // Do not edit - This is the current turn passed to the player's code
-    static displayName = 'Change this name'; // name to show on screen when fighting this AI
+    static displayName = 'Click Code to edit this AI'; // name to show on screen when fighting this AI
     static author = 'Change this author'; // your name or pseudonym
     constructor(playerId) {       // Do not edit - This method is called when the player code is called, it will asign the player ID
       this.playerId = playerId;
