@@ -1,9 +1,10 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler';
 import { Configuration } from '../game/schema';
 import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
+import { DoesNothing } from '../game/ai/ArchiveOfGreatnesss/DoesNothing';
 import { readFileSync } from 'fs';
 
 // turn
@@ -21,6 +22,21 @@ codeStore.subscribe(value => {
     code = value;
   }
 });
+
+// evaluated player code
+export const playerAIStore = derived(codeStore, $codeStore => {
+  try {
+    const withoutExport = $codeStore.replace("export class", "class"); // make it easier to paste pre-made AI in
+    const ai = eval(`(${withoutExport})`); // https://stackoverflow.com/a/39299283
+    new ai(1); // make sure it has a constructor
+    return ai;
+  } catch (exception) {
+    console.error(`can't parse player code, errored with:\n${exception}`);
+    return DoesNothing;
+  }
+});
+export let playerAI: any;
+playerAIStore.subscribe(value => playerAI = value);
 
 // player scores
 export const scoresStore = writable([0, 0]);

@@ -1,4 +1,4 @@
-import { code, textHandler, configuration,turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
+import { playerAI, textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
@@ -198,18 +198,8 @@ export class AiHandler {
   }
 
   loadAis(): void {
-    // load player's code
-    try {
-      const withoutExport = code.replace("export class", "class"); // make it easier to paste pre-made AI in
-      const ai = eval(`(${withoutExport})`); // https://stackoverflow.com/a/39299283
-      if (ai) {
-        this.playerOne = new Player(1, new ai(1));
-        this.playerTwo = new Player(2, new configuration.selectedAI(2));
-      }
-    } catch (exception) {
-      console.log(`can't parse player code, errored with: ${exception}`);
-      return;
-    }
+    this.playerOne = new Player(1, new playerAI(1));
+    this.playerTwo = new Player(2, new configuration.selectedAI(2));
   }
 
   takeTurn() {
