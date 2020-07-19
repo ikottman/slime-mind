@@ -1,7 +1,10 @@
 <script>
+  import { APP } from './store';
   let selected = 'GAME';
   let hovered = '';
   function selectCodeTab() {
+    // pause the game
+    APP.ticker.stop();
     selected = 'CODE';
   }
 
@@ -16,7 +19,7 @@
   function hoverCodeTab() {
     hovered = 'CODE';
   }
-  
+
   function unhover() {
     hovered = '';
   }

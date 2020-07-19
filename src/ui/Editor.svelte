@@ -3,7 +3,7 @@
   import { withLineNumbers } from 'codejar/linenumbers';
   import { onMount } from 'svelte';
   import hljs from 'highlight.js';
-  import { codeStore } from './store';
+  import { codeStore, game } from './store';
 
   let codeEditor;
   const editorOptions = {
@@ -21,6 +21,7 @@
     const jar = CodeJar(codeEditor, withLineNumbers(highlight), editorOptions);
     jar.onUpdate(code => {
       codeStore.update(c => code);
+      game.reset();
     });
 
     // see if they have previously saved code and load it
