@@ -1,5 +1,5 @@
 <script>
-  import { playerTwoStore } from '../../stores/player_store';
+  import { playerOneStore, playerTwoStore } from '../../stores/player_store';
   import { resultsStore } from './tournament_store';
 
   $: winnerIndex = $resultsStore.every(r => r === 0) ? -1 : $resultsStore.indexOf(Math.max(...$resultsStore));
@@ -26,7 +26,7 @@ div {
 </style>
 
 <div>
-<label class='oneScore' class:winner="{winnerIndex === 0}">You:</label> <data>{$resultsStore[0]}</data>
+<label class='oneScore' class:winner="{winnerIndex === 0}">{$playerOneStore.displayName}:</label> <data>{$resultsStore[0]}</data>
 <label class='twoScore' class:winner="{winnerIndex === 1}">{$playerTwoStore.displayName}:</label> <data>{$resultsStore[1]}</data>
 <label class:winner="{winnerIndex === 2}">Ties:</label> <data>{$resultsStore[2]}</data>
 </div>

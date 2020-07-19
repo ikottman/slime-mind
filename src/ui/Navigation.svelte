@@ -1,5 +1,6 @@
 <script>
-  import { APP } from './store';
+  import { game } from './store';
+  import { playerAI, playerOneStore, playerTwoStore } from '../stores/player_store';
   import GamePage from './game/GamePage.svelte';
   import EditorPage from './editor/EditorPage.svelte';
   import TournamentPage from './tournament/TournamentPage.svelte';
@@ -7,16 +8,17 @@
   let selected = GamePage;
   let hovered = '';
   function selectCodeTab() {
-    APP.ticker.stop();
+    game.reset();
     selected = EditorPage;
   }
 
   function selectGameTab() {
+    game.reset();
     selected = GamePage;
   }
 
   function selectTournamentTab() {
-    APP.ticker.stop();
+    game.reset();
     selected = TournamentPage;
   }
 

@@ -1,5 +1,4 @@
 import { writable, derived } from 'svelte/store';
-import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
 import { DoesNothing } from '../game/ai/ArchiveOfGreatnesss/DoesNothing';
 import { readFileSync } from 'fs';
 
@@ -29,7 +28,12 @@ export const playerAIStore = derived(codeStore, $codeStore => {
 export let playerAI: any;
 playerAIStore.subscribe(value => playerAI = value);
 
-// opponent AI
-export const playerTwoStore = writable(ExampleAI);
+// player one AI
+export const playerOneStore = writable(playerAI);
+export let playerOne: any;
+playerOneStore.subscribe(value => playerOne = value);
+
+// player two AI
+export const playerTwoStore = writable(playerAI);
 export let playerTwo: any;
 playerTwoStore.subscribe(value => playerTwo = value);

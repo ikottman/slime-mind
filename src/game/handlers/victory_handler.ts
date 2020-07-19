@@ -1,5 +1,5 @@
 import { APP, textHandler, scores, winnerStore, tournamentMode } from '../../ui/store';
-import { playerTwo } from '../../stores/player_store';
+import { playerOne, playerTwo } from '../../stores/player_store';
 import { Fireworks } from '../../ui/game/fireworks';
 
 export class VictoryHandler {
@@ -11,7 +11,7 @@ export class VictoryHandler {
 
   private winner() {
     if (scores[0] > scores[1]) {
-      winnerStore.update(_ => 'You Win');
+      winnerStore.update(_ => `${playerOne.displayName} Wins`);
       return 1;
     } else if (scores[0] < scores[1]) {
       winnerStore.update(_ => `${playerTwo.displayName} Wins`);
