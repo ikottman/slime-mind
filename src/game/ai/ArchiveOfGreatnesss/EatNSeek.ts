@@ -16,6 +16,7 @@ export class EatNSeek {
   pawns;
 
   static displayName = "Eat n' Seek";
+  static author = 'ikottman';
   constructor(playerId) {
     this.playerId = playerId;
   }
