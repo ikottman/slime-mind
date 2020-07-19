@@ -49,7 +49,6 @@ interface rockConfiguration {
 }
 
 export interface Configuration {
-  selectedAI: AI;
   plant: plantConfiguration;
   slime: slimeConfiguration;
   rock: rockConfiguration;

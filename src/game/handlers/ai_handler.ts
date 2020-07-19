@@ -1,4 +1,5 @@
-import { playerAI, textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
+import { textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
+import { playerAI, playerTwo } from '../../stores/player_store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
@@ -199,7 +200,7 @@ export class AiHandler {
 
   loadAis(): void {
     this.playerOne = new Player(1, new playerAI(1));
-    this.playerTwo = new Player(2, new configuration.selectedAI(2));
+    this.playerTwo = new Player(2, new playerTwo(2));
   }
 
   takeTurn() {

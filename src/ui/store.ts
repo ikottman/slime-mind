@@ -1,42 +1,13 @@
-import { writable, derived } from 'svelte/store';
+import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler';
 import { Configuration } from '../game/schema';
-import { ExampleAI } from '../game/ai/ArchiveOfGreatnesss/ExampleAI';
-import { DoesNothing } from '../game/ai/ArchiveOfGreatnesss/DoesNothing';
-import { readFileSync } from 'fs';
 
 // turn
 export const turnStore = writable(0);
 export let turn: number;
 turnStore.subscribe(value => turn = value);
-
-const defaultCode = window.localStorage.getItem('ai_code') || readFileSync('src/game/ai/starterAI', 'utf8');
-// code from the editor
-export const codeStore = writable(defaultCode);
-export let code: string;
-codeStore.subscribe(value => {
-  if (value) {
-    window.localStorage.setItem('ai_code', value);
-    code = value;
-  }
-});
-
-// evaluated player code
-export const playerAIStore = derived(codeStore, $codeStore => {
-  try {
-    const withoutExport = $codeStore.replace("export class", "class"); // make it easier to paste pre-made AI in
-    const ai = eval(`(${withoutExport})`); // https://stackoverflow.com/a/39299283
-    new ai(1); // make sure it has a constructor
-    return ai;
-  } catch (exception) {
-    console.error(`can't parse player code, errored with:\n${exception}`);
-    return DoesNothing;
-  }
-});
-export let playerAI: any;
-playerAIStore.subscribe(value => playerAI = value);
 
 // player scores
 export const scoresStore = writable([0, 0]);
@@ -78,8 +49,6 @@ APP.ticker.maxFPS = 6;
 APP.stage.sortableChildren = true;
 // configure aspects of the game like plant seed percentage
 export const defaultConfig: Configuration = {
-  // @ts-ignore
-  selectedAI: ExampleAI,
   plant: {
     seedChance: 5,
     maxLevel: 12,

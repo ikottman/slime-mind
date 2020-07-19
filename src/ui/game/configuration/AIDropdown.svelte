@@ -1,10 +1,12 @@
 <script>
   import ai from '../../../game/ai/ArchiveOfGreatnesss/';
-  import { game, configuration, configurationStore } from '../../store';
+  import { game } from '../../store';
+  import { playerAI, playerTwoStore } from '../../../stores/player_store';
 
-  let selectedAI;
+  let options = [playerAI, ...ai];
+  let playerTwo;
   function reloadAI() {
-    configurationStore.update(configuration => ({...configuration, selectedAI }));
+    playerTwoStore.update(() => playerTwo);
     game.reset();
   }
 </script>
@@ -21,9 +23,9 @@ select {
 </style>
 
 <div class='container'>
-  <label>Opponent:</label>
-  <select bind:value={selectedAI} on:change={reloadAI}>
-    {#each ai as option}
+  <label>Player Two:</label>
+  <select bind:value={playerTwo} on:change={reloadAI}>
+    {#each options as option}
       <option value={option}>
         {option.displayName}
       </option>

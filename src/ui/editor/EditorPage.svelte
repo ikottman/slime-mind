@@ -3,7 +3,8 @@
   import { withLineNumbers } from 'codejar/linenumbers';
   import { onMount } from 'svelte';
   import hljs from 'highlight.js';
-  import { codeStore, game } from '../store';
+  import { game } from '../store';
+  import { codeStore } from '../../stores/player_store';
 
   let codeEditor;
   const editorOptions = {
