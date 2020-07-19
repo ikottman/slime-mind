@@ -1,8 +1,8 @@
 <script>
-  import { winnerStore } from './store';
+  import { winnerStore } from '../store';
   let winner;
   winnerStore.subscribe(value => {
-    winner = value; 
+    winner = value;
   });
 </script>
 

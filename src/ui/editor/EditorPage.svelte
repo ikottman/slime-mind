@@ -3,7 +3,7 @@
   import { withLineNumbers } from 'codejar/linenumbers';
   import { onMount } from 'svelte';
   import hljs from 'highlight.js';
-  import { codeStore, game } from './store';
+  import { codeStore, game } from '../store';
 
   let codeEditor;
   const editorOptions = {
@@ -48,7 +48,13 @@
     width: 80%;
     height: 100%;
   }
+  div {
+    display: grid;
+    place-items: center;
+  }
 </style>
-<pre>
-  <code class='language-js editor' bind:this={codeEditor}/>
-</pre>
+<div>
+  <pre>
+    <code class='language-js editor' bind:this={codeEditor}/>
+  </pre>
+</div>

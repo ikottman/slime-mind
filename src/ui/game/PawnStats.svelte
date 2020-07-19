@@ -1,5 +1,5 @@
 <script>
-  import { hoveredPawnStore } from './store';
+  import { hoveredPawnStore } from '../store';
 </script>
 
 <style>

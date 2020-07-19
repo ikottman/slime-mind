@@ -1,15 +1,18 @@
 <script>
   import { APP } from './store';
-  let selected = 'GAME';
+  import GamePage from './game/GamePage.svelte';
+  import EditorPage from './editor/EditorPage.svelte';
+
+  let selected = GamePage;
   let hovered = '';
   function selectCodeTab() {
     // pause the game
     APP.ticker.stop();
-    selected = 'CODE';
+    selected = EditorPage;
   }
 
   function selectGameTab() {
-    selected = 'GAME';
+    selected = GamePage;
   }
 
   function hoverGameTab() {

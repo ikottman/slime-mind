@@ -1,5 +1,5 @@
 import { APP, textHandler, scores, winnerStore, configuration } from '../../ui/store';
-import { Fireworks } from '../../ui/fireworks';
+import { Fireworks } from '../../ui/game/fireworks';
 
 export class VictoryHandler {
   private fireworks: Fireworks;

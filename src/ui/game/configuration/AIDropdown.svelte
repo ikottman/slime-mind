@@ -1,6 +1,6 @@
 <script>
-  import ai from '../../game/ai/ArchiveOfGreatnesss/';
-  import { game, configuration, configurationStore } from '../store';
+  import ai from '../../../game/ai/ArchiveOfGreatnesss/';
+  import { game, configuration, configurationStore } from '../../store';
 
   let selectedAI;
   function reloadAI() {

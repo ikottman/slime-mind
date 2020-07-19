@@ -1,5 +1,5 @@
 <script>
-  import { APP } from '../store';
+  import { APP } from '../../store';
   let fps = 1;
   APP.ticker.minFPS = 10;
   // transform the fps so there's more slow options

@@ -1,5 +1,5 @@
 <script>
-  import Game from './Game.svelte';
+  import Stage from './Stage.svelte';
   import Turn from './Turn.svelte';
   import StartButton from './StartButton.svelte';
   import StopButton from './StopButton.svelte';
@@ -36,7 +36,7 @@
     grid-column: 1 / span 3;
   }
 
-  .game {
+  .stage {
     grid-row: 1;
     grid-column-start: 2;
   }
@@ -71,8 +71,8 @@
       <Configuration/>
     </div>
   </div>
-  <div class='game'>
-    <Game/>
+  <div class='stage'>
+    <Stage/>
   </div>
   <div class="scoreboard">
     <Turn/>
@@ -81,4 +81,3 @@
     <PawnStats/>
   </div>
 </div>
-

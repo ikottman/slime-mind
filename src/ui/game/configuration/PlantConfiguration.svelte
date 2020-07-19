@@ -1,6 +1,6 @@
 <script>
-  import { game, defaultConfig, configuration, configurationStore } from '../store';
-  
+  import { game, defaultConfig, configuration, configurationStore } from '../../store';
+
   let {initialPlants, maxLevel, levelChance, seedChance} = defaultConfig.plant;
 
   function reset() {

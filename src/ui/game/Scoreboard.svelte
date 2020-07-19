@@ -1,5 +1,5 @@
 <script>
-  import { scoresStore, configurationStore } from './store';
+  import { scoresStore, configurationStore } from '../store';
 </script>
 
 <style>

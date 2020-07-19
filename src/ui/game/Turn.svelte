@@ -1,5 +1,5 @@
 <script>
-  import { turnStore } from './store';
+  import { turnStore } from '../store';
 </script>
 
 <style>

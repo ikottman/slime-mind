@@ -1,5 +1,5 @@
 <script>
-  import { game, defaultConfig, configuration, configurationStore, GRID_SIZE } from '../store';
+  import { game, defaultConfig, configuration, configurationStore, GRID_SIZE } from '../../store';
 
   let { initialRocks, maxHp } = defaultConfig.rock;
 

@@ -1,5 +1,5 @@
 <script>
-  import { APP } from './store';
+  import { APP } from '../store';
 
   function handleClick() {
     APP.ticker.stop();

@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
-import { canvasSize, APP, winnerStore } from '../ui/store';
-import { LAYERS } from '../game/schema';
-import { randomInt } from "../game/utils";
+import { canvasSize, APP, winnerStore } from '../../ui/store';
+import { LAYERS } from '../../game/schema';
+import { randomInt } from "../../game/utils";
 
 const gravity = 0.04;
 
@@ -38,16 +38,16 @@ class Particle {
     APP.stage.addChild(graphics);
     return graphics;
   }
-  
+
   setPosition(pos: Point) {
     this.circle.position.x = pos.x;
     this.circle.position.y = pos.y;
   }
-  
+
   setVelocity(vel: Point) {
     this.velocity = vel;
   }
-  
+
   update() {
     this.circle.position.x += this.velocity.x;
     this.circle.position.y += this.velocity.y;
@@ -60,7 +60,7 @@ class Particle {
         this.explode(this.circle);
       }
     }
-    
+
     if (this.fade) {
       this.circle.alpha -= 0.01;
     }
@@ -78,12 +78,12 @@ export class Fireworks {
     this.ticker.add(this.loop.bind(this));
   }
 
-  private getParticle(color: number, scale: number) {    
+  private getParticle(color: number, scale: number) {
     const particle = new Particle(color, scale, this.explode.bind(this));
     this.particles.push(particle);
     return particle;
   }
-  
+
   private explode(circle: PIXI.Graphics) {
     const steps = 8 + Math.round(Math.random() * 6);
     const radius = 2 + Math.random() * 4;
@@ -98,7 +98,7 @@ export class Fireworks {
       particle.setVelocity({x, y});
     }
   }
-  
+
   private launchParticle() {
     const particleScale = Math.random() * 0.9;
     const colors = [0x0e80000, 0x02838f];
@@ -116,7 +116,7 @@ export class Fireworks {
     particle.setVelocity({x: -speed / 2 + Math.random() * speed, y: -speed + Math.random() * -1});
     particle.toExplode = true;
   }
-  
+
   private fadeBackground() {
     const graphics = new PIXI.Graphics();
     graphics.name = 'fireworks background';
@@ -127,7 +127,7 @@ export class Fireworks {
     graphics.filters = [alphaFilter];
     APP.stage.addChild(graphics);
   }
-  
+
   loop() {
     this.launchParticle();
     this.particles.forEach(particle => particle.update());
