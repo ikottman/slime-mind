@@ -2,11 +2,11 @@
   import { APP } from './store';
   import GamePage from './game/GamePage.svelte';
   import EditorPage from './editor/EditorPage.svelte';
+  import TournamentPage from './tournament/TournamentPage.svelte';
 
   let selected = GamePage;
   let hovered = '';
   function selectCodeTab() {
-    // pause the game
     APP.ticker.stop();
     selected = EditorPage;
   }
@@ -15,12 +15,21 @@
     selected = GamePage;
   }
 
+  function selectTournamentTab() {
+    APP.ticker.stop();
+    selected = TournamentPage;
+  }
+
   function hoverGameTab() {
     hovered = 'GAME';
   }
 
   function hoverCodeTab() {
     hovered = 'CODE';
+  }
+
+  function hoverTournamentTab() {
+    hovered = 'TOURNAMENT';
   }
 
   function unhover() {
@@ -32,6 +41,7 @@
   .hovered {
     background-color: #eeeeee;
     color: #0088ee;
+    cursor: pointer;
   }
 
   div {
@@ -50,5 +60,6 @@
 <div>
   <span class:hovered="{hovered === 'GAME'}" on:click={selectGameTab} on:mouseenter={hoverGameTab} on:mouseleave={unhover}>Game</span>
   <span class:hovered="{hovered === 'CODE'}" on:click={selectCodeTab} on:mouseenter={hoverCodeTab} on:mouseleave={unhover}>Code</span>
+  <span class:hovered="{hovered === 'TOURNAMENT'}" on:click={selectTournamentTab} on:mouseenter={hoverTournamentTab} on:mouseleave={unhover}>Tournament</span>
 </div>
 <slot selected={selected}></slot>

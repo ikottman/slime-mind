@@ -48,22 +48,26 @@ export class Game {
     });
   }
 
-  private updateTurn() {
+  private updateTurn(): void {
     turnStore.update(t => t + 1);
   }
 
-  run() {
-    // this is called once per turn
-    APP.ticker.add(() => {
-      this.updateTurn();
-      if (isGameOver(this.map, turn)) {
-        this.victoryHandler.endGame();
-        return;
-      }
-      this.plantHandler.takeTurn();
-      this.aiHandler.takeTurn();
-      this.scoreHandler.updateScores();
-      textHandler.takeTurn();
-    });
+  // returns true if the game is over
+  gameLoop(): boolean {
+    this.updateTurn();
+    if (isGameOver(this.map, turn)) {
+      this.victoryHandler.endGame();
+      return true;
+    }
+    this.plantHandler.takeTurn();
+    this.aiHandler.takeTurn();
+    this.scoreHandler.updateScores();
+    textHandler.takeTurn();
+    return false;
+  }
+
+  run(): void {
+    // run gameLoop each turn and render results
+    APP.ticker.add(this.gameLoop.bind(this));
   }
 }

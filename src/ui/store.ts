@@ -42,6 +42,11 @@ hoveredPawnIdStore.subscribe(value => hoveredPawnId = value);
 // winner
 export const winnerStore = writable('');
 
+// don't render when running a tournament
+export const tournamentModeStore = writable(false);
+export let tournamentMode: boolean;
+tournamentModeStore.subscribe(value => tournamentMode = value);
+
 // game
 export const canvasSize = window.innerHeight - 25;
 export const GRID_SIZE = 25; // number of rows/columns in our grid
