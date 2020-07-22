@@ -28,8 +28,11 @@
 
     let matches = 0;
     do {
-      // time between matches for other browser stuff to run
-      setTimeout(runMatch, 1000);
+      // setTimeout, even without a delay, allows other actions to
+      // interleave with this loop. This allows the UI to update occasionally
+      // without this the browser will ask to kill the script if we run long matches
+      // I _think_ this is still in order, so matches run independently of each other
+      setTimeout(runMatch);
     } while (++matches < configuration.tournament.matches)
 
     tournamentModeStore.update(() => false);
