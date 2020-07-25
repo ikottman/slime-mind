@@ -34,8 +34,6 @@
       // I _think_ this is still in order, so matches run independently of each other
       setTimeout(runMatch);
     } while (++matches < configuration.tournament.matches)
-
-    tournamentModeStore.update(() => false);
   }
 </script>
 

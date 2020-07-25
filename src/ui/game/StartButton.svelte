@@ -1,7 +1,8 @@
 <script>
-  import { APP } from '../store';
+  import { APP, tournamentModeStore } from '../store';
 
   function handleClick() {
+    tournamentModeStore.update(() => false);
     APP.ticker.start();
   }
 </script>
