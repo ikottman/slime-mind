@@ -6,6 +6,7 @@ export class EatNSeek {
   configuration;
   turn;
   boid;
+  nearbyBoids;
   nearbyPlants;
   nearbyEnemies;
   nearbyCells;
@@ -47,6 +48,8 @@ export class EatNSeek {
     return `${point.x},${point.y}`;
   }
 
+  // returns point to move to on the shortest path to target
+  // or null if it exceeds the max search depth
   pathToTarget(source, target) {
     const nodes = [];
     const nodesMap = {}; // use a map so it's constant time to find a node
@@ -65,37 +68,43 @@ export class EatNSeek {
       nodes.sort((a, b) => a.distance - b.distance);
       current = nodes.shift();
 
-      // once we find the target we know we have at least one minimal path
+      // once we find the target we know we have at least one path
       if (current.id === targetId) {
         break;
       }
 
       // figure out how far each neighbor is from the source
-      this.neighborCells(current)
-        .forEach(neighbor => {
-          const neighborNode = nodesMap[this.nodeId(neighbor)];
-          if (!neighborNode) {
-            // skip nodes we've seen before
-            return;
-          }
+      this.neighborCells(current).forEach(neighbor => {
+        const neighborNode = nodesMap[this.nodeId(neighbor)];
+        if (!neighborNode) {
+          // skip nodes we've seen before
+          return;
+        }
 
-          let alt = current.distance + 1; // all neighbors are 1 away
-          // try to avoid high hp occupants
-          if (current.pawn) {
-            alt = alt + current.pawn.hp;
+        let cost = current.distance + 1; // all neighbors are 1 away
+        cost = cost + this.distance(neighbor, target); // penalize looking at nodes that are far from the target
+        if (neighborNode.pawn) {
+          // can never walk through rocks or myself
+          if (neighborNode.pawn.type === 'ROCK' || neighborNode.pawn.owner === this.playerId) {
+            cost = Infinity;
+          } else { // penalize trying to go through trees so we prefer empty cell
+            cost = cost + neighborNode.pawn.hp;
           }
-          if (alt < neighborNode.distance) {
-            neighborNode.distance = alt;
-            neighborNode.previous = current;
-          }
-        });
+        }
+        if (cost < neighborNode.distance) {
+          neighborNode.distance = cost;
+          neighborNode.previous = current;
+        }
+      });
     }
 
     // walk backwards from target until we find the first step in the shortest path
-    while (current.previous.id !== sourceId) {
+    while (current.previous !== undefined && current.previous.id !== sourceId) {
       current = current.previous
     }
-
+    if (current.previous === undefined) { // TODO: how can this happen???
+      return null;
+    }
     return current;
   }
 
@@ -210,17 +219,21 @@ export class EatNSeek {
   }
 
   move() {
-    const path = this.pathToTarget(this.boid, this.target);
+    // default to naive pathfinding if the pathToTarget fails
+    let {x, y} = this.closestTo(this.nearbyCells, this.target);
 
+    const path = this.pathToTarget(this.boid, this.target);
     if (path && !path.pawn) {
-      return {
-        action: 'MOVE',
-        x: path.x,
-        y: path.y
-      }
+      x = path.x;
+      y = path.y;
+    } else {
+      console.log('tried to move into pawn');
     }
+
     return {
-      action: 'NOTHING'
+      action: 'MOVE',
+      x,
+      y,
     };
   }
 
