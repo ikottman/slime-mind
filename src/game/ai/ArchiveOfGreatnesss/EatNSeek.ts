@@ -240,12 +240,22 @@ export class EatNSeek {
       return this.attack();
     }
 
-    // level up
-    if (this.nearbyPlants.length) {
-      return this.eat();
+    // leveling up
+    if (this.eating()) {
+      if (this.nearbyPlants.length) {
+        return this.eat();
+      }
+      if (this.nearbyCells.length) {
+        return this.move();
+      }
     }
+
+    // seek and destroy
     if (this.nearbyCells.length) {
       return this.move();
+    }
+    if (this.nearbyPlants.length) {
+      return this.eat();
     }
 
     return { action: 'NOTHING'};
