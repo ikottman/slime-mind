@@ -43,7 +43,7 @@ div {
   <h3>Slime Configuration</h3>
   <ul>
     <li>Initial Slimes: This will determine the number of slimes to be placed before the beginning of the match on each edge of the map. (These slimes are placed randomly on one of the far sides of the map, then an opponent slime is mirrored to the other side).</li>
-    <li>Min Level to Split: This will set the minimum level that a slime will be allowed to split. (A good AI will use this configuration setting for its split commands instead of hard coded values).</li>
+    <li>Min Level to Split: This will set the minimum level that a slime will be allowed to split. (A good AI will use this configuration setting for its split actions instead of hard coded values).</li>
   </ul>
 
   <h3>Rock Configuration</h3>
@@ -53,7 +53,7 @@ div {
   </ul>
 
   <h2>Players Code</h2>
-
+  TODO
   <h1>Game Mechanics</h1>
 
   <h2>Turns</h2>
@@ -68,49 +68,76 @@ div {
 
   <h2 id="Game Pieces">Game Pieces</h2>
   <p>
-    There are three types of game piece in this game. All of them are given the following attributes:
+    There are three types of game piece in this game.
   </p>
-  <pre>
-x - This is the column index of the game piece (starting from 0)
-y - This is the row index of the game piece (starting from 0)
-  </pre>
 
   <h3>Rocks</h3>
   <p>
-    Rocks are only meant to get in the way. They are placed at the beginning of the game and cannot be moved or destroyed.
+    Rocks are only meant to get in the way. They do not move. All rocks have the following attirubtes:
   </p>
+  <pre>
+{`
+  {
+    id 1, // unique identifier for this game piece
+    x: 0, // column the game piece is in
+    y: 0, // row the game piece is in
+    type: 'ROCK',
+    owner: -1, // owner of this game piece. -1 is reserved for rocks and plants, 1 is player one and 2 is player two
+    hp: 90, // current health points. If 0 the game piece dies
+    maxHp: 100 // max health this game piece can have at its current level
+  }
+  `}
+  </pre>
 
   <h3>Plants</h3>
   <p>
     Plants are the food source for the slimes. All plants have the following attributes:
   </p>
   <pre>
-max_level - This is the highest level a plant can reach.
-level - Used to calculate the maximum health of the plant.
-max_hp - This is the most health a plant can have.
-current_hp - This is the current health of a plant.
+{`
+  {
+    id 1, // unique identifier for this game piece
+    x: 0, // column the game piece is in
+    y: 0, // row the game piece is in
+    type: 'PLANT',
+    owner: -1, // owner of this game piece. -1 is reserved for rocks and plants, 1 is player one and 2 is player two
+    hp: 20, // current health points. If 0 the game piece dies
+    level: 4, // used to calculate the attack and maximum health of the slime
+    maxLevel: 12, // max level this game piece can reach
+    maxHp: 23 // max health this game piece can have at its current level
+  }
+  `}
   </pre>
   <p>
-    Plants are placed at the beginning of the game at level 1 with a set amount of health. Every round the plant has a % chance to level up, which increases maximum health and regains some lost health. Once a plant reaches its maximum level it will gain the ability to spread seeds. Every round a max level plant has a % chance to spread a seed to one of the 8 squares surrounding it. Successful seeding plants a new level 1 plant in the target square. Plants at maximum level will change color in the visualizer.
+    Plants are placed at the beginning of the game at level 1 with a set amount of hp. Every round the plant has a % chance to level up, which increases maxHp and regains some lost hp. Once a plant reaches its maxLevel it will gain the ability to spread seeds. Every round a max level plant has a % chance to spread a seed to one of the 8 squares surrounding it. Successful seeding plants a new level 1 plant in the target square. Plants at maximum level will change color.
   </p>
 
   <h3>Slimes</h3>
   <p>
-    Slimes are the gamepieces controlled by the submitted AI code and will be used to determine which AI wins a game. Each slime has the following attributes:
+    Slimes are the game pieces controlled by the submitted AI code and will be used to determine which AI wins a game. Each slime has the following attributes:
   </p>
   <pre>
-xp - Used to calculate the level of a slime.
-max_level - This is the highest level a slime can reach.
-level - Used to calculate the attack and maximum health of the slime.
-maximum_hp - This is the most health a slime can have.
-current_hp - This is the current health of a slime.
-attack - This is the amount of health a slime or plant will lose when this slime bites it.
+  {`
+  {
+    id 1, // unique identifier for this game piece
+    x: 0, // column the game piece is in
+    y: 0, // row the game piece is in
+    type: 'SLIME',
+    owner: 1, // owner of this game piece. -1 is reserved for rocks and plants, 1 is player one and 2 is player two
+    xp: 23, // current experience. Used to calculate level
+    hp: 20, // current health points. If 0 the game piece dies
+    level: 4, // used to calculate the attack and maximum health of the slime
+    maxLevel: 12, // max level this game piece can reach
+    maxHp: 23, // max health this game piece can have at its current level
+    attack: 10, // amount of health an opponent loses when this slime bites it
+  }
+  `}
   </pre>
   <p>
-    Slimes are placed at the beginning of the game at level 1. A slime's attack and maximum HP increase as they level up. The table below shows the minimum XP for a slime to become each level and the other attributes for that level.
+    Slimes are placed at the beginning of the game at level 1. A slime's attack and maxHp increase as they level up. The table below shows the minimum xp for a slime to become each level and the other attributes for that level.
   </p>
   <pre>
-xp	level	attack	max_hp
+xp	level	attack	maxHp
 1	1	3	11
 2	2	4	13
 6	3	7	18
@@ -125,67 +152,93 @@ xp	level	attack	max_hp
 695	12	43	122
   </pre>
   <p>
-    Every turn each slime is given a round to take a single action determined by the submitted AI. Invalid commands, errors, and AI that exceed a set timeout are ignored, skipping that slime's round. Valid commands are applied immediately, before the next slime's round begins. Note that the game state given to the AI is immutable, so changes are not reflected in the game engine.
+    Every turn each slime is given a round to take a single action determined by the submitted AI. Invalid actions and exceptions are ignored, skipping that slime's round. Valid actions are applied immediately, before the next slime's round begins. Note that the game state given to the AI is immutable, so changes are not reflected in the game engine.
   </p>
 
-  <h1>Commands</h1>
+  <h1>Actions</h1>
   <p>
-    There are only 4 acceptable commands that a slime can accept. They are:
-  </p>
-  <pre>
-[MOVE, X, Y]
-[BITE, X, Y]
-SPLIT
-MERGE
-  </pre>
-
-  <h3>Move Command</h3>
-  <p>
-    The move command:
-  </p>
-  <pre>
-  [MOVE, X, Y]
-  </pre>
-  <p>
-    Move commands attempt to move the slime to the given (X,Y) cell on the map. If the target cell is occupied by another gamepiece or if the cell is outside of the movement range of the slime then the command will fail. A slime can only move a distance of one cell in a cardinal direction (UP, DOWN, LEFT, RIGHT).
+    A Slime can take one of 5 actions each turn: MOVE, BITE, SPLIT, MERGE, or NOTHING.
   </p>
 
-  <h3>Bite Commands</h3>
+  <h3>Move</h3>
   <p>
-    The bite command:
+    Move the slime to a nearby cell.
   </p>
   <pre>
-    [BITE, X, Y]
+  {`
+  {
+    action: 'MOVE',
+    x: 1,
+    y: 2
+  }
+  `}
   </pre>
   <p>
-    Bite commands attempt to attack nearby gamepieces in a particular (X,Y) cell on the map. If there is not a valid gamepiece in the target cell or if the target cell is outside the slime's attack range then the slime will do nothing for its round. If there is a gamepiece in the target cell then that gamepiece will have its `current_health` reduced by the biting slime's `attack`. If the biting slime attacks an enemy slime or plant the attacking slime will also have its `current_hp` increased by 1 and its `xp` increased by 1.
+    If the target cell is occupied by another game piece or if the cell is outside of the movement range of the slime then the slime does nothing for its round. A slime can only move a distance of one cell in a cardinal direction (UP, DOWN, LEFT, RIGHT).
   </p>
 
-  <h3>Split Command</h3>
+  <h3>Bite</h3>
   <p>
-    The split command available to slimes is:
+    Bite a nearby cell.
   </p>
   <pre>
-  SPLIT
+  {`
+  {
+    action: 'BITE',
+    x: 1,
+    y: 2
+  }
+  `}
   </pre>
   <p>
-    To split a slime must be at a level higher than the "Minimum Split Level" defined in the game settings. Splitting creates a new level slime in a random empty adjacent square. The `xp` of the splitting slime is divided by 4 (rounding down) and given to each slime.
+    If there is not a valid game piece in the target cell or if the target cell is outside the slime's attack range then the slime will do nothing for its round. If there is a game piece in the target cell then that game piece will have its hp reduced by the biting slime's attack. If the target was valie the slime gains 1 xp and 1 hp. A slime can only bite a distance of one cell in a cardinal direction (UP, DOWN, LEFT, RIGHT).
   </p>
 
-  <h3>Merge Commands</h3>
+  <h3>Split</h3>
   <p>
-    The merge command available to slimes is:
+    Sacrifice xp to split this slime into two.
   </p>
   <pre>
-    MERGE
+  {`
+  {
+    action: 'SPLIT'
+  }
+  `}
   </pre>
   <p>
-    This sets a slime as ready to merge. If an adjacent friendly slime is ready to merge it will be destroyed and the initiating slime will gain its `xp`. Every turn all slimes are set to no longer ready to merge, so you must coordinate merging within a single turn.
+    To split a slime must be at or above the "Min Level to Split" defined in the game settings. Splitting creates a new slime in a random empty adjacent square. The xp of the original slime is divided by 4 (rounding down) and given to each slime. Both slimes will have one quarter of the original slimes xp and retain the same percentage of health.
   </p>
+
+  <h3>Merge</h3>
+  <p>
+    Merge two slimes together into one more powerful slime.
+  </p>
+  <pre>
+  {`
+  {
+    action: 'MERGE'
+  }
+  `}
+  </pre>
+  <p>
+    This sets a slime as ready to merge. If an adjacent friendly slime is ready to merge it will be destroyed and the initiating slime will gain its xp. At the end of each turn all slimes are set to no longer ready to merge, so you must coordinate merging within a single turn.
+  </p>
+
+  <h3>Nothing</h3>
+  <p>
+    A slime can skip its round by taking the NOTHING action.
+  </p>
+  <pre>
+  {`
+  {
+    action: 'NOTHING'
+  }
+  `}
+  </pre>
 
   <h1>Victory conditions</h1>
   <p>
-    The game will continue until turn 1000 or until one team has 0 slimes. Scores for each team are calculated based on the remaining slimes. This score calculation is based solely on the slimes level _not_ on its total xp. The table below shows a simplified level to score ratio.
+    The game will continue until turn 1000 or until one team has 0 slimes. Scores for each team are calculated based on the remaining slimes. This score calculation is based solely on the slimes level not on its total xp. The table below shows a simplified level to score ratio.
   </p>
   <pre>
 level	points
@@ -204,10 +257,5 @@ level	points
   </pre>
   <p>
     The team with the most total points at the end of the game wins.
-  </p>
-
-  <h1>Writing a Custom AI</h1>
-  <p>
-    Your AI must inherit the `PlayerBase` class and override the `command_slime` method. See the `player_code` folder for examples.
   </p>
 </div>
