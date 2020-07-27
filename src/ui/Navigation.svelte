@@ -4,6 +4,7 @@
   import GamePage from './game/GamePage.svelte';
   import EditorPage from './editor/EditorPage.svelte';
   import TournamentPage from './tournament/TournamentPage.svelte';
+  import DocumentationPage from './DocumentationPage.svelte';
 
   let selected = GamePage;
   let hovered = '';
@@ -22,6 +23,11 @@
     selected = TournamentPage;
   }
 
+  function selectDocumentationTab() {
+    game.reset();
+    selected = DocumentationPage;
+  }
+
   function hoverGameTab() {
     hovered = 'GAME';
   }
@@ -32,6 +38,10 @@
 
   function hoverTournamentTab() {
     hovered = 'TOURNAMENT';
+  }
+
+  function hoverDocumentationTab() {
+    hovered = 'DOCUMENTATION';
   }
 
   function unhover() {
@@ -63,5 +73,6 @@
   <span class:hovered="{hovered === 'GAME'}" on:click={selectGameTab} on:mouseenter={hoverGameTab} on:mouseleave={unhover}>Game</span>
   <span class:hovered="{hovered === 'CODE'}" on:click={selectCodeTab} on:mouseenter={hoverCodeTab} on:mouseleave={unhover}>Code</span>
   <span class:hovered="{hovered === 'TOURNAMENT'}" on:click={selectTournamentTab} on:mouseenter={hoverTournamentTab} on:mouseleave={unhover}>Tournament</span>
+  <span class:hovered="{hovered === 'DOCUMENTATION'}" on:click={selectDocumentationTab} on:mouseenter={hoverDocumentationTab} on:mouseleave={unhover}>Documentation</span>
 </div>
 <slot selected={selected}></slot>
