@@ -26,6 +26,7 @@
 </style>
 
 <div class='container'>
+  <p>Run multiple matches between two AI to see which is better! Note: may slow down your browser if one of the AIs is slow.</p>
   <div class='buttons'>
     <StartButton/>
     <ResetButton/>
