@@ -20,10 +20,10 @@
     grid-gap: 5px;
   }
 
-  h4 {
-    grid-column: 1 / span 2;
-    justify-self: end;
-    white-space: nowrap;
+  .header {
+    display: grid;
+    justify-content: center;
+    align-content: center;
   }
 
   label {
@@ -38,8 +38,10 @@
   }
 </style>
 
+<div class='header'>
+  <h4>Rock Configuration</h4>
+</div>
 <div class='container'>
-  <h4 class='header'>Rock Configuration</h4>
   <label>Number of Rocks</label>
   <input type=number bind:value={initialRocks} on:change={reset} min=0 max={GRID_SIZE * GRID_SIZE}>
   <label>Initial HP</label>

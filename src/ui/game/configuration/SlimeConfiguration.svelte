@@ -22,10 +22,10 @@
     grid-gap: 5px;
   }
 
-  h4 {
-    grid-column: 1 / span 2;
-    justify-self: end;
-    white-space: nowrap;
+  .header {
+    display: grid;
+    justify-content: center;
+    align-content: center;
   }
 
   label {
@@ -40,8 +40,10 @@
   }
 </style>
 
+<div class='header'>
+  <h4>Slime Configuration</h4>
+</div>
 <div class='container'>
-  <h4 class='header'>Slime Configuration</h4>
   <label>Initial Slimes</label>
   <input type=number bind:value={initialSlimes} on:change={reset} min=1 max={GRID_SIZE}>
   <label>Min Level to Split</label>
