@@ -4,6 +4,7 @@
   import StartButton from './StartButton.svelte';
   import StopButton from './StopButton.svelte';
   import ResetButton from './ResetButton.svelte';
+  import StepButton from './StepButton.svelte';
   import Scoreboard from './Scoreboard.svelte';
   import PawnStats from './PawnStats.svelte';
   import Winner from './Winner.svelte';
@@ -66,6 +67,7 @@
       <StartButton/>
       <StopButton/>
       <ResetButton/>
+      <StepButton/>
     </div>
     <div class='configuration'>
       <Configuration/>
