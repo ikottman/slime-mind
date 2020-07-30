@@ -52,7 +52,7 @@ export class EatNSeek {
   usePathfinding(target) {
     const cellsAroundTarget = this.neighbors(target).filter(cell => cell.owner !== this.playerId && cell.type !== 'ROCK');
     return this.nearbyCells.length > 1 && // only pathfind if there's multiple choices
-           this.distance(this.boid, this.target) < 15 && // avoid long searches by being naive for far targets
+           this.distance(this.boid, this.target) <= 10 && // avoid long searches by being naive for far targets
            cellsAroundTarget.length > 0; // if the target is surrounded by rocks or allies, don't pathfind
   }
 
@@ -169,10 +169,11 @@ export class EatNSeek {
   }
 
   findTarget() {
+    const retainTarget = false; // turned off for now
     // retain target between rounds until it's gone
     const currentTarget = this.pawns.find(p => this.target && p.id === this.target.id);
 
-    if (currentTarget) {
+    if (currentTarget && retainTarget) {
       // update target's position
       this.target = currentTarget;
       return;
