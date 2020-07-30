@@ -24,7 +24,7 @@ export class AiHandler {
     }
 
     if (this.map.cellOccupied(action.x, action.y)) {
-      console.log(`invalid MOVE, target square occupied: ${JSON.stringify(action)}`);
+      console.log(`invalid MOVE, ${source.x},${source.y} tried to move to occupied square: ${JSON.stringify(action)}`);
       return true;
     }
 

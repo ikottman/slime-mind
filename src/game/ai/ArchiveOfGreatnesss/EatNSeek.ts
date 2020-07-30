@@ -48,6 +48,13 @@ export class EatNSeek {
     return `${point.x},${point.y}`;
   }
 
+  usePathfinding(target) {
+    const cellsAroundTarget = this.neighbors(target).filter(cell => cell.owner !== this.playerId && cell.type !== 'ROCK');
+    return this.nearbyCells.length > 1 && // only pathfind if there's multiple choices
+           this.distance(this.boid, this.target) < 15 && // avoid long searches by being naive for far targets
+           cellsAroundTarget.length > 0; // if the target is surrounded by rocks or allies, don't pathfind
+  }
+
   // returns point to move to on the shortest path to target
   // or null if it exceeds the max search depth
   pathToTarget(source, target) {
@@ -98,11 +105,6 @@ export class EatNSeek {
   // [min, max]
   randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  // select random from list, undefined if list is empty
-  pick(list) {
-    return list[this.randomInt(0, list.length - 1)];
   }
 
   // sort by property
@@ -205,21 +207,33 @@ export class EatNSeek {
     return options.sort((a, b) => this.distance(a, target) - this.distance(b, target))[0];
   }
 
+  validMove(path) {
+    // if staying still is the closest option then don't move.
+    // NOTE: this is an optimization, it is important for the naive pathfinding so we don't get stuck
+    // vibrating left and right when our path is blocked, but it reduces the effectiveness of our real
+    // pathfinding since we will never take paths that require backtracking.
+    return path && !path.pawn && !(this.boid.x === path.x && this.boid.y === path.y);
+  }
+
   move() {
+    let path;
     // default to naive pathfinding if the pathToTarget fails or its too far
-    let {x, y} = this.closestTo(this.nearbyCells, this.target);
-    if (this.nearbyCells.length > 1 && this.distance(this.boid, this.target) < 15) {
-      const path = this.pathToTarget(this.boid, this.target);
-      if (path && !path.pawn) {
-        x = path.x;
-        y = path.y;
-      }
+    if (this.usePathfinding(this.target)) {
+      path = this.pathToTarget(this.boid, this.target);
+    } else {
+      // include ourselves to make sure moving is actually closer
+      path = this.closestTo([this.pt(this.boid.x, this.boid.y), ...this.nearbyCells], this.target);
+    }
+
+    // if we want to stay in our current spot or pathfinding fail
+    if (!this.validMove(path)) {
+      return { action: 'NOTHING' };
     }
 
     return {
       action: 'MOVE',
-      x,
-      y,
+      x: path.x,
+      y: path.y,
     };
   }
 
