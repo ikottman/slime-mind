@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // author: ikottman
 export class EatNSeek {
   playerId;
@@ -15,6 +15,7 @@ export class EatNSeek {
   plants;
   target;
   pawns;
+  targets;
 
   static displayName = "Eat n' Seek";
   static author = 'ikottman';
@@ -30,7 +31,7 @@ export class EatNSeek {
     const id = this.nodeId(point);
     const {x, y} = point;
     const pawn = point.type ? point : undefined;
-    return {id, x, y, pawn, distance};
+    return {id, x, y, pawn, distance, previous: undefined };
   }
 
   flattenMap() {
@@ -119,9 +120,9 @@ export class EatNSeek {
   }
 
   // return point or pawn that is one cardinal direction away from the given point
-  neighbors(x, y) {
+  neighbors(point) {
     // return either the pawn or coords to an empty cell
-    return this.neighborCells(this.pt(x, y)).map(cell => this.gameMap[cell.x][cell.y] || cell);
+    return this.neighborCells(point).map(cell => this.gameMap[cell.x][cell.y] || cell);
   }
 
   neighborCells(point) {
@@ -141,7 +142,7 @@ export class EatNSeek {
     this.boid = this.flock.find(b => b.id === id);
 
     // possible targets
-    const neighbors = this.neighbors(this.boid.x, this.boid.y);
+    const neighbors = this.neighbors(this.boid);
     this.nearbyPlants = neighbors.filter(p => p.type === 'PLANT');
     this.nearbyBoids = neighbors.filter(p => p.type === 'SLIME' && p.owner === this.playerId);
     this.nearbyEnemies = neighbors.filter(p => p.type === 'SLIME' && p.owner !== this.playerId);
@@ -170,6 +171,7 @@ export class EatNSeek {
   findTarget() {
     // retain target between rounds until it's gone
     const currentTarget = this.pawns.find(p => this.target && p.id === this.target.id);
+
     if (currentTarget) {
       // update target's position
       this.target = currentTarget;
@@ -238,13 +240,13 @@ export class EatNSeek {
   }
 
   debug() {
-    console.group(`turn: ${this.turn}`)
-    console.debug(`id: ${this.boid.id}`)
-    console.debug(`nearbyCells: ${JSON.stringify(this.nearbyCells, null, 2)}`)
-    console.debug(`nearbyPlants: ${JSON.stringify(this.nearbyPlants, null, 2)}`)
-    console.debug(`nearbyEnemies: ${JSON.stringify(this.nearbyEnemies, null, 2)}`)
-    console.debug(`target: ${JSON.stringify(this.target, null, 2)}`)
-    console.groupEnd(`turn: ${this.turn}`)
+    console.group(`turn: ${this.turn}`);
+    console.debug(`id: ${this.boid.id}`);
+    console.debug(`nearbyCells: ${JSON.stringify(this.nearbyCells, null, 2)}`);
+    console.debug(`nearbyPlants: ${JSON.stringify(this.nearbyPlants, null, 2)}`);
+    console.debug(`nearbyEnemies: ${JSON.stringify(this.nearbyEnemies, null, 2)}`);
+    console.debug(`target: ${JSON.stringify(this.target, null, 2)}`);
+    console.groupEnd();
   }
 
   takeAction(gameMap, id, configuration, turn) {
@@ -255,21 +257,11 @@ export class EatNSeek {
     }
 
     // leveling up
-    if (this.eating()) {
-      if (this.nearbyPlants.length) {
-        return this.eat();
-      }
-      if (this.nearbyCells.length) {
-        return this.move();
-      }
-    }
-
-    // seek and destroy
-    if (this.nearbyCells.length) {
-      return this.move();
-    }
     if (this.nearbyPlants.length) {
       return this.eat();
+    }
+    if (this.nearbyCells.length) {
+      return this.move();
     }
 
     return { action: 'NOTHING'};
