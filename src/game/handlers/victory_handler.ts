@@ -1,4 +1,4 @@
-import { APP, textHandler, scores, winnerStore, tournamentMode } from '../../ui/store';
+import { APP, scores, winnerStore, tournamentMode } from '../../ui/store';
 import { playerOne, playerTwo } from '../../stores/player_store';
 import { Fireworks } from '../../ui/game/fireworks';
 
@@ -25,7 +25,6 @@ export class VictoryHandler {
     // don't show fireworks when doing a tournament
     if (!tournamentMode) {
       APP.ticker.stop();
-      textHandler.clearAllTexts();
       this.fireworks.start(this.winner());
     }
   }

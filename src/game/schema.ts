@@ -2,8 +2,13 @@ import { Action } from './models/action';
 import { Pawn } from './models/pawn';
 
 export enum EVENT_KEY {
+  // game events
+  END_TURN,
+  END_GAME,
+  RESET,
+  // slime events
   SPLIT,
-  MERGE
+  MERGE,
 }
 
 export enum PAWN_TYPE {

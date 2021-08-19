@@ -1,4 +1,4 @@
-import { textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore, bus } from '../../ui/store';
+import { configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore, bus } from '../../ui/store';
 import { playerOne, playerTwo } from '../../stores/player_store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
@@ -73,7 +73,7 @@ export class AiHandler {
       slime.gainExperience(sacrifice.xp);
       slime.gainHp(slime.maxHp); // set hp to max
       this.map.clearCell(sacrifice.x, sacrifice.y);
-      textHandler.addText('MERGE', slime, '#72fa78');
+      bus.emit(EVENT_KEY.MERGE, slime);
     } else {
       slime.readyToMerge = true;
     }

@@ -1,4 +1,4 @@
-import { turnStore, turn, scoresStore, APP, textHandler, bus } from '../ui/store';
+import { turnStore, turn, scoresStore, APP, bus, tournamentMode } from '../ui/store';
 import { isGameOver } from './utils';
 import { Map } from './models/map';
 import { PlantHandler } from "./handlers/plant_handler";
@@ -7,6 +7,8 @@ import { AiHandler } from "./handlers/ai_handler";
 import { ScoreHandler } from "./handlers/score_handler";
 import { VictoryHandler } from "./handlers/victory_handler";
 import { SlimeHandler } from "./handlers/slime_handler";
+import { TextHandler } from "./handlers/text_handler";
+import { EVENT_KEY } from './schema';
 
 export class Game {
   map: Map;
@@ -16,6 +18,7 @@ export class Game {
   aiHandler: AiHandler;
   scoreHandler: ScoreHandler;
   victoryHandler: VictoryHandler;
+  textHandler?: TextHandler;
 
   constructor() {
     this.map = new Map();
@@ -30,9 +33,9 @@ export class Game {
   }
 
   reset(): void {
+    bus.emit(EVENT_KEY.RESET);
     APP.ticker.stop();
     APP.stage.removeChildren();
-    textHandler.clearAllTexts();
     turnStore.update(_ => 0);
     scoresStore.update(_ => [0, 0])
     this.map.reset();
@@ -57,17 +60,22 @@ export class Game {
     this.updateTurn();
     if (isGameOver(this.map, turn)) {
       this.victoryHandler.endGame();
+      bus.emit(EVENT_KEY.END_GAME)
       return true;
     }
     this.plantHandler.takeTurn();
     this.aiHandler.takeTurn();
+    bus.emit(EVENT_KEY.END_TURN)
     bus.process();
     this.scoreHandler.updateScores();
-    textHandler.takeTurn();
     return false;
   }
 
   run(): void {
+    if (!tournamentMode) {
+      // render text when slimes do stuff like split or merge
+      this.textHandler = new TextHandler();
+    }
     // run gameLoop each turn and render results
     APP.ticker.add(this.gameLoop.bind(this));
   }

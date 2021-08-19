@@ -14,6 +14,10 @@ export class TextHandler {
   constructor() {
     this.texts = [];
     bus.subscribe(EVENT_KEY.SPLIT, this.handleSplit.bind(this));
+    bus.subscribe(EVENT_KEY.MERGE, this.handleMerge.bind(this));
+    bus.subscribe(EVENT_KEY.END_TURN, this.clearOldTexts.bind(this));
+    bus.subscribe(EVENT_KEY.END_GAME, this.clearAllTexts.bind(this));
+    bus.subscribe(EVENT_KEY.RESET, this.clearAllTexts.bind(this));
   }
 
   private clearOldTexts() {
@@ -27,12 +31,16 @@ export class TextHandler {
     this.addText('SPLIT', target, '#941651');
   }
 
-  clearAllTexts() {
+  private handleMerge(target: Pawn) {
+    this.addText('MERGE', target, '#72fa78');
+  }
+
+  private clearAllTexts() {
     this.texts.forEach(text => text.text.destroy());
     this.texts = [];
   }
 
-  addText(text: string, target: Pawn, color: string) {
+  private addText(text: string, target: Pawn, color: string) {
     const style = new PIXI.TextStyle({
       fill: color
     });
@@ -45,9 +53,5 @@ export class TextHandler {
       text: renderedText,
       turnAdded: turn,
     })
-  }
-
-  takeTurn() {
-    this.clearOldTexts();
   }
 }
