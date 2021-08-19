@@ -1,5 +1,6 @@
 import { Action } from './models/action';
 import { Pawn } from './models/pawn';
+import { Slime } from './models/slime';
 
 export enum EVENT_KEY {
   // game events
@@ -9,6 +10,11 @@ export enum EVENT_KEY {
   // slime events
   SPLIT,
   MERGE,
+}
+
+export interface MergeEvent {
+  slime: Slime,
+  sacrifice: Slime
 }
 
 export enum PAWN_TYPE {

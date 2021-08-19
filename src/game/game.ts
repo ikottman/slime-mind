@@ -33,19 +33,19 @@ export class Game {
   }
 
   reset(): void {
-    bus.emit(EVENT_KEY.RESET);
     APP.ticker.stop();
     APP.stage.removeChildren();
     turnStore.update(_ => 0);
     scoresStore.update(_ => [0, 0])
     this.map.reset();
-    this.slimeHandler.placeSlimes();
     this.plantHandler.placeInitialPlants();
     this.rockHandler.placeRocks();
     this.aiHandler.loadAis();
     this.victoryHandler.reset();
+    bus.emit(EVENT_KEY.RESET);
+    bus.process();
     // wait on GPU to receive all our assets before rendering the stage
-    // prevents a weird glitches on first page load
+    // prevents weird glitches on first page load
     APP.renderer.plugins.prepare.upload(APP.stage, () => {
       APP.renderer.render(APP.stage);
     });

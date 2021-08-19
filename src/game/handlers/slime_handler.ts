@@ -1,6 +1,7 @@
-import { configuration, GRID_SIZE } from '../../ui/store';
+import { configuration, GRID_SIZE, bus } from '../../ui/store';
 import { Map } from '../models/map';
 import { Slime} from "../models/slime";
+import { EVENT_KEY, MergeEvent } from '../schema';
 import { randomInt } from '../utils';
 
 export class SlimeHandler {
@@ -8,6 +9,8 @@ export class SlimeHandler {
 
   constructor(map: Map) {
     this.map = map;
+    bus.subscribe(EVENT_KEY.RESET, this.placeSlimes.bind(this));
+    bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
   }
 
   private addSlime(x: number, y: number, owner: number) {
@@ -15,7 +18,7 @@ export class SlimeHandler {
     this.map.move(slime, x, y);
   }
 
-  placeSlimes() {
+  private placeSlimes() {
     let tries = 0;
     let numSlimes = 0;
 
@@ -31,4 +34,9 @@ export class SlimeHandler {
     while (tries < 100000 && numSlimes < configuration.slime.initialSlimes);
   }
 
+  private merge(event: MergeEvent) {
+    const { slime, sacrifice } = event;
+    slime.gainExperience(sacrifice.xp);
+    slime.gainHp(slime.maxHp); // set hp to max
+  }
 }

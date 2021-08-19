@@ -70,10 +70,8 @@ export class AiHandler {
     const mergeableSlimes = mySlimes.filter(slime => slime?.readyToMerge);
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
-      slime.gainExperience(sacrifice.xp);
-      slime.gainHp(slime.maxHp); // set hp to max
       this.map.clearCell(sacrifice.x, sacrifice.y);
-      bus.emit(EVENT_KEY.MERGE, slime);
+      bus.emit(EVENT_KEY.MERGE, { slime, sacrifice });
     } else {
       slime.readyToMerge = true;
     }

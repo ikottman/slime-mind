@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { APP, turn, bus } from '../../ui/store';
 import { Pawn } from '../models/pawn';
-import { LAYERS, EVENT_KEY } from '../schema';
+import { LAYERS, EVENT_KEY, MergeEvent } from '../schema';
 
 interface RenderedText {
   text: PIXI.Text,
@@ -31,8 +31,8 @@ export class TextHandler {
     this.addText('SPLIT', target, '#941651');
   }
 
-  private handleMerge(target: Pawn) {
-    this.addText('MERGE', target, '#72fa78');
+  private handleMerge(event: MergeEvent) {
+    this.addText('MERGE', event.slime, '#72fa78');
   }
 
   private clearAllTexts() {
