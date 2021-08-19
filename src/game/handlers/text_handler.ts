@@ -45,7 +45,7 @@ export class TextHandler {
       fill: color
     });
     const renderedText = new PIXI.Text(text, style);
-    renderedText.x = target.sprite.x;
+    renderedText.x = target.sprite.x; // TODO: this fails
     renderedText.y = target.sprite.y;
     renderedText.zIndex = LAYERS.TEXT;
     APP.stage.addChild(renderedText);

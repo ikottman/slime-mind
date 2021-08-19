@@ -20,18 +20,6 @@ export interface MergeEvent {
   sacrifice: Slime
 }
 
-export interface AddSlimeEvent {
-  owner: number,
-  id: number,
-  x: number,
-  y: number
-}
-
-export interface ChangeHpEvent {
-  id: number,
-  ratio: number
-}
-
 export enum PAWN_TYPE {
   PLANT = 'PLANT',
   SLIME = 'SLIME',

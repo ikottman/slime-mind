@@ -1,4 +1,4 @@
-import { PAWN_TYPE, EVENT_KEY, AddSlimeEvent, ChangeHpEvent } from '../schema';
+import { PAWN_TYPE, EVENT_KEY } from '../schema';
 import { Pawn } from './pawn';
 import { configuration, bus } from "../../ui/store";
 
@@ -18,23 +18,8 @@ export class Slime extends Pawn {
     this.maxLevel = 12;
     this.hp = this.maxHp;
 
-    const event: AddSlimeEvent = {
-      owner: owner,
-      x,
-      y,
-      id: this.id
-    }
-    bus.emit(EVENT_KEY.ADD_SLIME, event);
-
-    this.emitChangeHpEvent();
-  }
-
-  private emitChangeHpEvent() {
-    const event: ChangeHpEvent = {
-      id: this.id,
-      ratio: this.hp / this.maxHp
-    }
-    bus.emit(EVENT_KEY.CHANGE_HP, event);
+    bus.emit(EVENT_KEY.ADD_SLIME, this.id);
+    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
   }
 
   gainExperience(xp: number) {
@@ -48,7 +33,13 @@ export class Slime extends Pawn {
 
   gainHp(hp: number) {
     this.hp = Math.min(this.hp + hp, this.maxHp);
-    this.emitChangeHpEvent();
+    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
+  }
+
+  takeDamage(damage: number) {
+    this.hp = this.hp - damage;
+    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
+    return this.hp <= 0;
   }
 
   split(): void {
@@ -71,22 +62,10 @@ export class Slime extends Pawn {
       this.gainHp(hp - this.hp);
 
       if (currentLevel < 10 && this.level === 10){
-        const event: AddSlimeEvent = { // TODO: if we made a global list of pawns the renderer wouldn't need all this
-          owner: this.owner,
-          x: this.x,
-          y: this.y,
-          id: this.id
-        }
-        bus.emit(EVENT_KEY.KING, event);
+        bus.emit(EVENT_KEY.KING, this.id);
       }
     } else if (this.level < currentLevel && this.level < 10) {
-      const event: AddSlimeEvent = { // TODO: if we made a global list of pawns the renderer wouldn't need all this
-        owner: this.owner,
-        x: this.x,
-        y: this.y,
-        id: this.id
-      }
-      bus.emit(EVENT_KEY.ADD_SLIME, event);
+      bus.emit(EVENT_KEY.ADD_SLIME, this.id);
     }
   }
 
@@ -124,12 +103,6 @@ export class Slime extends Pawn {
       122
     ];
     return hpByLevel[this.level - 1];
-  }
-
-  takeDamage(damage: number) {
-    this.hp = this.hp - damage;
-    this.emitChangeHpEvent();
-    return this.hp <= 0;
   }
 
   json() {
