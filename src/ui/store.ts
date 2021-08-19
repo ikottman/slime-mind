@@ -2,7 +2,11 @@ import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { TextHandler } from '../game/handlers/text_handler';
+import { Bus } from '../game/handlers/bus';
 import { Configuration } from '../game/schema';
+
+// event bus
+export const bus = new Bus();
 
 // turn
 export const turnStore = writable(0);
@@ -14,6 +18,8 @@ export const scoresStore = writable([0, 0]);
 export let scores: Array<number>;
 scoresStore.subscribe(value => scores = value);
 
+// TODO: should be able to remove from store and create in game.ts
+// which lets us not create it when we are in tournament
 // handles rendered text (like SPLIT and MERGE)
 export const textHandler = new TextHandler();
 

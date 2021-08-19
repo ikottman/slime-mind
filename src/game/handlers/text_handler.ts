@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { APP, turn } from '../../ui/store';
+import { APP, turn, bus } from '../../ui/store';
 import { Pawn } from '../models/pawn';
-import { LAYERS } from '../schema';
+import { LAYERS, EVENT_KEY } from '../schema';
 
 interface RenderedText {
   text: PIXI.Text,
@@ -10,8 +10,10 @@ interface RenderedText {
 
 export class TextHandler {
   texts: Array<RenderedText>;
+
   constructor() {
     this.texts = [];
+    bus.subscribe(EVENT_KEY.SPLIT, this.handleSplit.bind(this));
   }
 
   private clearOldTexts() {
@@ -19,6 +21,10 @@ export class TextHandler {
     this.texts.filter(text => turn - text.turnAdded >= 5).forEach(text => text.text.destroy());
     // stop tracking texts we destroyed
     this.texts = this.texts.filter(text => turn - text.turnAdded < 5);
+  }
+
+  private handleSplit(target: Pawn) {
+    this.addText('SPLIT', target, '#941651');
   }
 
   clearAllTexts() {

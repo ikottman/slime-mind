@@ -1,6 +1,11 @@
 import { Action } from './models/action';
 import { Pawn } from './models/pawn';
 
+export enum EVENT_KEY {
+  SPLIT,
+  MERGE
+}
+
 export enum PAWN_TYPE {
   PLANT = 'PLANT',
   SLIME = 'SLIME',

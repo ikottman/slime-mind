@@ -1,11 +1,11 @@
-import { textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
+import { textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore, bus } from '../../ui/store';
 import { playerOne, playerTwo } from '../../stores/player_store';
 import { Map } from '../models/map';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
-import { ACTIONS, PAWN_TYPE } from '../schema';
+import { ACTIONS, EVENT_KEY, PAWN_TYPE } from '../schema';
 import { randomInt, isGameOver } from '../utils';
 
 export class AiHandler {
@@ -91,6 +91,8 @@ export class AiHandler {
       return;
     }
 
+    bus.emit(EVENT_KEY.SPLIT, slime);
+
     slime.split();
     const targetCell = cells[randomInt(0, cells.length - 1)];
     const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
@@ -98,7 +100,6 @@ export class AiHandler {
     child.gainExperience(slime.xp - 1); // -1 to offset the 1 you start with
     child.hp = slime.hp
     this.map.move(child, child.x, child.y);
-    textHandler.addText('SPLIT', slime, '#941651');
   }
 
   private updatePawnStats() {

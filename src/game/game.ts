@@ -1,4 +1,4 @@
-import { turnStore, turn, scoresStore, APP, textHandler } from '../ui/store';
+import { turnStore, turn, scoresStore, APP, textHandler, bus } from '../ui/store';
 import { isGameOver } from './utils';
 import { Map } from './models/map';
 import { PlantHandler } from "./handlers/plant_handler";
@@ -61,6 +61,7 @@ export class Game {
     }
     this.plantHandler.takeTurn();
     this.aiHandler.takeTurn();
+    bus.process();
     this.scoreHandler.updateScores();
     textHandler.takeTurn();
     return false;
