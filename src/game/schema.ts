@@ -11,7 +11,8 @@ export enum EVENT_KEY {
   ADD_SLIME = 'ADD SLIME',
   SPLIT = 'SPLIT',
   MERGE = 'MERGE',
-  CHANGE_HP = 'CHANGE HP'
+  CHANGE_HP = 'CHANGE HP',
+  KING = 'KING',
 }
 
 export interface MergeEvent {

@@ -1,13 +1,11 @@
-import { Map } from '../models/map'
+import { map } from '../../ui/store';
 import { GRID_SIZE, configuration } from '../../ui/store';
 import { Rock } from "../models/rock";
 import { randomInt } from '../utils';
 
 export class RockHandler {
-  map: Map;
 
-  constructor(map: Map) {
-    this.map = map;
+  constructor() {
   }
 
   placeRocks() {
@@ -21,8 +19,8 @@ export class RockHandler {
       tries++
       const x = randomInt(0, GRID_SIZE-1);
       const y = randomInt(0, GRID_SIZE-1);
-      if (!this.map.invalidMove(x, y)) {
-        this.map.move(new Rock(x, y), x, y);
+      if (!map.invalidMove(x, y)) {
+        map.move(new Rock(x, y), x, y);
         numRocks++
       }
     }

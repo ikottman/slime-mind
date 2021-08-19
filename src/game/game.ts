@@ -1,6 +1,5 @@
-import { turnStore, turn, scoresStore, APP, bus, tournamentMode } from '../ui/store';
+import { turnStore, turn, scoresStore, APP, bus, map, tournamentMode } from '../ui/store';
 import { isGameOver } from './utils';
-import { Map } from './models/map';
 import { PlantHandler } from "./handlers/plant_handler";
 import { RockHandler } from "./handlers/rock_handler";
 import { AiHandler } from "./handlers/ai_handler";
@@ -12,7 +11,6 @@ import { SlimeRenderer } from "./handlers/slime_renderer";
 import { EVENT_KEY } from './schema';
 
 export class Game {
-  map: Map;
   plantHandler: PlantHandler;
   rockHandler: RockHandler;
   slimeHandler: SlimeHandler;
@@ -25,12 +23,11 @@ export class Game {
   slimeRenderer?: SlimeRenderer;
 
   constructor() {
-    this.map = new Map();
-    this.slimeHandler = new SlimeHandler(this.map);
-    this.plantHandler = new PlantHandler(this.map);
-    this.rockHandler = new RockHandler(this.map);
-    this.aiHandler = new AiHandler(this.map);
-    this.scoreHandler = new ScoreHandler(this.map);
+    this.slimeHandler = new SlimeHandler();
+    this.plantHandler = new PlantHandler();
+    this.rockHandler = new RockHandler();
+    this.aiHandler = new AiHandler();
+    this.scoreHandler = new ScoreHandler();
     this.victoryHandler = new VictoryHandler();
     if (!tournamentMode) {
       // render text when slimes do stuff like split or merge
@@ -46,7 +43,7 @@ export class Game {
     APP.stage.removeChildren();
     turnStore.update(_ => 0);
     scoresStore.update(_ => [0, 0])
-    this.map.reset();
+    map.reset();
     this.plantHandler.placeInitialPlants();
     this.rockHandler.placeRocks();
     this.aiHandler.loadAis();
@@ -67,7 +64,7 @@ export class Game {
   // returns true if the game is over
   gameLoop(): boolean {
     this.updateTurn();
-    if (isGameOver(this.map, turn)) {
+    if (isGameOver(turn)) {
       this.victoryHandler.endGame();
       bus.emit(EVENT_KEY.END_GAME)
       return true;

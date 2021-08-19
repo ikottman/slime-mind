@@ -1,12 +1,10 @@
 import { scoresStore } from '../../ui/store';
-import { Map } from '../models/map';
+import { map } from '../../ui/store';
 import { Slime } from "../models/slime";
 
 export class ScoreHandler {
-  private map: Map;
-  
-  constructor(map: Map) {
-    this.map = map;
+
+  constructor() {
   }
 
   private calculateScore(slimes: Array<Slime>) {
@@ -33,12 +31,12 @@ export class ScoreHandler {
 
     score = Number( score.toPrecision(4) )
 
-    return score; 
+    return score;
   }
 
   updateScores() {
-    const oneSlimes = this.map.pawns.filter(p => p && p.owner === 1) as Array<Slime>;
-    const twoSlimes = this.map.pawns.filter(p => p && p.owner === 2) as Array<Slime>;
+    const oneSlimes = map.pawns.filter(p => p && p.owner === 1) as Array<Slime>;
+    const twoSlimes = map.pawns.filter(p => p && p.owner === 2) as Array<Slime>;
     const oneScore = this.calculateScore(oneSlimes);
     const twoScore =  this.calculateScore(twoSlimes);
     scoresStore.update(_ => [oneScore, twoScore]);

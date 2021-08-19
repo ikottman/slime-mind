@@ -1,9 +1,4 @@
-import * as PIXI from "pixi.js";
-import { PAWN_TYPE, LAYERS, EVENT_KEY, AddSlimeEvent, ChangeHpEvent } from '../schema';
-import redSlime from '../assets/red_slime.png';
-import blueSlime from '../assets/blue_slime.png';
-import redKing from '../assets/red_king.png';
-import blueKing from '../assets/blue_king.png';
+import { PAWN_TYPE, EVENT_KEY, AddSlimeEvent, ChangeHpEvent } from '../schema';
 import { Pawn } from './pawn';
 import { configuration, bus } from "../../ui/store";
 
@@ -75,16 +70,23 @@ export class Slime extends Pawn {
       const hp = Math.ceil(currentHpPercentage * this.maxHp);
       this.gainHp(hp - this.hp);
 
-      // we gained king level
       if (currentLevel < 10 && this.level === 10){
-        this.sprite.destroy();
-        this.owner === 1 ? this.addSprite(PIXI.Sprite.from(redKing)) : this.addSprite(PIXI.Sprite.from(blueKing));
+        const event: AddSlimeEvent = { // TODO: if we made a global list of pawns the renderer wouldn't need all this
+          owner: this.owner,
+          x: this.x,
+          y: this.y,
+          id: this.id
+        }
+        bus.emit(EVENT_KEY.KING, event);
       }
     } else if (this.level < currentLevel && this.level < 10) {
-      // we lost king level
-      this.sprite.destroy();
-      this.owner === 1 ? this.addSprite(PIXI.Sprite.from(redSlime)) : this.addSprite(PIXI.Sprite.from(blueSlime));
-      this.emitChangeHpEvent();
+      const event: AddSlimeEvent = { // TODO: if we made a global list of pawns the renderer wouldn't need all this
+        owner: this.owner,
+        x: this.x,
+        y: this.y,
+        id: this.id
+      }
+      bus.emit(EVENT_KEY.ADD_SLIME, event);
     }
   }
 
