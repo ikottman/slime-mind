@@ -9,7 +9,7 @@ export class Pawn {
   owner: number;
   // provided by extending classes like Slime
   type!: PAWN_TYPE;
-  sprite!: PIXI.Container;
+  sprite?: PIXI.Container;
 
   constructor(owner: number, x: number, y: number) {
     this.id = PIXI.utils.uid();
@@ -23,22 +23,26 @@ export class Pawn {
    */
   private handleMouseHover(): void {
     // allow listening for events like onmouseover
-    this.sprite.interactive = true;
-    this.sprite.on("mouseover", () => {
-      hoveredPawnIdStore.update(() => this.id);
-      hoveredPawnStore.update(() => this.json());
-    });
-    this.sprite.on("mouseout", () => {
-      hoveredPawnIdStore.update(() => 0);
-      hoveredPawnStore.update(() => ({}));
-    });
+    if (this.sprite) {
+      this.sprite.interactive = true;
+      this.sprite?.on("mouseover", () => {
+        hoveredPawnIdStore.update(() => this.id);
+        hoveredPawnStore.update(() => this.json());
+      });
+      this.sprite.on("mouseout", () => {
+        hoveredPawnIdStore.update(() => 0);
+        hoveredPawnStore.update(() => ({}));
+      });
+    }
   }
 
   move(x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.sprite.x = x * SPRITE_SIZE;
-    this.sprite.y = y * SPRITE_SIZE;
+    if (this.sprite) {
+      this.sprite.x = x * SPRITE_SIZE;
+      this.sprite.y = y * SPRITE_SIZE;
+    }
   }
 
   addSprite(sprite: PIXI.Sprite) {

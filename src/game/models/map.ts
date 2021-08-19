@@ -26,7 +26,7 @@ export class Map {
 
   // true if it is valid to move to given cell
   invalidMove(x?: number, y?: number): boolean {
-    return x == null || x == undefined || 
+    return x == null || x == undefined ||
         y == null || y == undefined ||
         !this.inBounds(x, y) ||
         this.cellOccupied(x, y);
@@ -93,7 +93,7 @@ export class Map {
 
   // remove pawn (if any) from the map
   clearCell(x: number, y: number): void {
-    this.grid[x][y]?.sprite.destroy();
+    this.grid[x][y]?.sprite?.destroy();
     this.grid[x][y] = null;
   }
 

@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
-import { PAWN_TYPE, LAYERS } from '../schema';
+import { PAWN_TYPE, LAYERS, EVENT_KEY, AddSlimeEvent } from '../schema';
 import redSlime from '../assets/red_slime.png';
 import blueSlime from '../assets/blue_slime.png';
 import redKing from '../assets/red_king.png';
 import blueKing from '../assets/blue_king.png';
 import { Pawn } from './pawn';
-import { configuration } from "../../ui/store";
+import { configuration, bus } from "../../ui/store";
 
 export class Slime extends Pawn {
   hp: number;
@@ -23,13 +23,15 @@ export class Slime extends Pawn {
     this.maxLevel = 12;
     this.hp = this.maxHp;
 
-    if (owner === 1) {
-      this.addSprite(PIXI.Sprite.from(redSlime));
-    } else {
-      this.addSprite(PIXI.Sprite.from(blueSlime));
+    const event: AddSlimeEvent = {
+      owner: owner,
+      x,
+      y,
+      id: this.id
     }
+    bus.emit(EVENT_KEY.ADD_SLIME, event);
 
-    this.updateHpBar();
+    //this.updateHpBar();
   }
 
   private updateHpBar(): void {

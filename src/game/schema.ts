@@ -4,17 +4,25 @@ import { Slime } from './models/slime';
 
 export enum EVENT_KEY {
   // game events
-  END_TURN,
-  END_GAME,
-  RESET,
+  END_TURN = 'END TURN',
+  END_GAME = 'END GAME',
+  RESET = 'RESET',
   // slime events
-  SPLIT,
-  MERGE,
+  ADD_SLIME = 'ADD SLIME',
+  SPLIT = 'SPLIT',
+  MERGE = 'MERGE',
 }
 
 export interface MergeEvent {
   slime: Slime,
   sacrifice: Slime
+}
+
+export interface AddSlimeEvent {
+  owner: number,
+  id: number,
+  x: number,
+  y: number
 }
 
 export enum PAWN_TYPE {

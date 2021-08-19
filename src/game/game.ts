@@ -8,6 +8,7 @@ import { ScoreHandler } from "./handlers/score_handler";
 import { VictoryHandler } from "./handlers/victory_handler";
 import { SlimeHandler } from "./handlers/slime_handler";
 import { TextHandler } from "./handlers/text_handler";
+import { SlimeRenderer } from "./handlers/slime_renderer";
 import { EVENT_KEY } from './schema';
 
 export class Game {
@@ -18,7 +19,10 @@ export class Game {
   aiHandler: AiHandler;
   scoreHandler: ScoreHandler;
   victoryHandler: VictoryHandler;
+
+  // only used in interactive mode
   textHandler?: TextHandler;
+  slimeRenderer?: SlimeRenderer;
 
   constructor() {
     this.map = new Map();
@@ -28,6 +32,11 @@ export class Game {
     this.aiHandler = new AiHandler(this.map);
     this.scoreHandler = new ScoreHandler(this.map);
     this.victoryHandler = new VictoryHandler();
+    if (!tournamentMode) {
+      // render text when slimes do stuff like split or merge
+      this.textHandler = new TextHandler();
+      this.slimeRenderer = new SlimeRenderer();
+    }
     this.reset();
     this.run();
   }
@@ -72,10 +81,6 @@ export class Game {
   }
 
   run(): void {
-    if (!tournamentMode) {
-      // render text when slimes do stuff like split or merge
-      this.textHandler = new TextHandler();
-    }
     // run gameLoop each turn and render results
     APP.ticker.add(this.gameLoop.bind(this));
   }
