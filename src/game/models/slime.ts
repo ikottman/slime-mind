@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { PAWN_TYPE, LAYERS, EVENT_KEY, AddSlimeEvent } from '../schema';
+import { PAWN_TYPE, LAYERS, EVENT_KEY, AddSlimeEvent, ChangeHpEvent } from '../schema';
 import redSlime from '../assets/red_slime.png';
 import blueSlime from '../assets/blue_slime.png';
 import redKing from '../assets/red_king.png';
@@ -31,25 +31,15 @@ export class Slime extends Pawn {
     }
     bus.emit(EVENT_KEY.ADD_SLIME, event);
 
-    //this.updateHpBar();
+    this.emitChangeHpEvent();
   }
 
-  private updateHpBar(): void {
-    let bar = this.sprite.getChildByName('hpBar') as PIXI.Graphics;
-    if (bar) {
-      bar.destroy();
+  private emitChangeHpEvent() {
+    const event: ChangeHpEvent = {
+      id: this.id,
+      ratio: this.hp / this.maxHp
     }
-    bar = new PIXI.Graphics();
-    bar.name = 'hpBar';
-    this.sprite.addChild(bar);
-    // put the  bar under the pawn
-    bar.zIndex = LAYERS.HPBAR;
-    this.sprite.sortChildren();
-    // render an arc relative to how much health they have left
-    bar.lineStyle(3.5, 0x00ff00);
-    const halfPi = 3 * Math.PI / 2;
-    const hpRatio = this.hp / this.maxHp;
-    bar.arc(this.sprite.width / 2, this.sprite.height / 2, this.sprite.width / 1.8, halfPi - Math.PI * hpRatio, halfPi + Math.PI * hpRatio);
+    bus.emit(EVENT_KEY.CHANGE_HP, event);
   }
 
   gainExperience(xp: number) {
@@ -63,7 +53,7 @@ export class Slime extends Pawn {
 
   gainHp(hp: number) {
     this.hp = Math.min(this.hp + hp, this.maxHp);
-    this.updateHpBar();
+    this.emitChangeHpEvent();
   }
 
   split(): void {
@@ -94,7 +84,7 @@ export class Slime extends Pawn {
       // we lost king level
       this.sprite.destroy();
       this.owner === 1 ? this.addSprite(PIXI.Sprite.from(redSlime)) : this.addSprite(PIXI.Sprite.from(blueSlime));
-      this.updateHpBar();
+      this.emitChangeHpEvent();
     }
   }
 
@@ -136,7 +126,7 @@ export class Slime extends Pawn {
 
   takeDamage(damage: number) {
     this.hp = this.hp - damage;
-    this.updateHpBar();
+    this.emitChangeHpEvent();
     return this.hp <= 0;
   }
 

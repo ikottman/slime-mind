@@ -11,6 +11,7 @@ export enum EVENT_KEY {
   ADD_SLIME = 'ADD SLIME',
   SPLIT = 'SPLIT',
   MERGE = 'MERGE',
+  CHANGE_HP = 'CHANGE HP'
 }
 
 export interface MergeEvent {
@@ -23,6 +24,11 @@ export interface AddSlimeEvent {
   id: number,
   x: number,
   y: number
+}
+
+export interface ChangeHpEvent {
+  id: number,
+  ratio: number
 }
 
 export enum PAWN_TYPE {
