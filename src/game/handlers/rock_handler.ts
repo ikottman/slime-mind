@@ -6,10 +6,11 @@ import { randomInt } from '../utils';
 
 export class RockHandler {
   constructor() {
+    bus.subscribe(EVENT_KEY.RESET, this.placeRocks.bind(this))
     bus.subscribe(EVENT_KEY.BITE, this.bite.bind(this))
   }
 
-  placeRocks() {
+  private placeRocks() {
     if (configuration.rock.initialRocks === 0) {
       return;
     }

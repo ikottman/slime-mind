@@ -8,6 +8,7 @@ export class SlimeHandler {
 
   constructor() {
     bus.subscribe(EVENT_KEY.RESET, this.placeSlimes.bind(this));
+    bus.subscribe(EVENT_KEY.END_TURN, this.disableMerge.bind(this));
     bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
     bus.subscribe(EVENT_KEY.SPLIT, this.split.bind(this));
     bus.subscribe(EVENT_KEY.BITE, this.bite.bind(this));
@@ -16,6 +17,10 @@ export class SlimeHandler {
 
   private addSlime(x: number, y: number, owner: number) {
     new Slime(owner, x, y); // TODO: move the event out of the constructor
+  }
+
+  private disableMerge() {
+    map.slimes.forEach(slime => slime.readyToMerge = false);
   }
 
   private resetLevel(slime: Slime) {

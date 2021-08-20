@@ -7,7 +7,9 @@ import { randomInt } from '../utils';
 export class PlantHandler {
 
   constructor() {
-    bus.subscribe(EVENT_KEY.BITE, this.bite);
+    bus.subscribe(EVENT_KEY.BITE, this.bite.bind(this));
+    bus.subscribe(EVENT_KEY.RESET, this.placeInitialPlants.bind(this));
+    bus.subscribe(EVENT_KEY.START_TURN, this.takeTurn.bind(this));
   }
 
   // plants have a chance to level
@@ -52,7 +54,7 @@ export class PlantHandler {
     }
   }
 
-  placeInitialPlants() {
+  private placeInitialPlants() {
     if (configuration.plant.initialPlants === 0) {
       return;
     }
@@ -71,7 +73,7 @@ export class PlantHandler {
     while (tries < 100000 && numPlants < configuration.plant.initialPlants);
   }
 
-  takeTurn() {
+  private takeTurn() {
     this.levelUp();
     this.seed();
   }

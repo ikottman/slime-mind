@@ -5,15 +5,17 @@ import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
-import { ACTIONS, EVENT_KEY, PAWN_TYPE } from '../schema';
+import { ACTIONS, EVENT_KEY } from '../schema';
 import { randomInt, isGameOver } from '../utils';
 
 export class AiHandler {
-  playerOne!: Player;
-  playerTwo!: Player;
+  private playerOne!: Player;
+  private playerTwo!: Player;
 
   constructor() {
     this.loadAis();
+    bus.subscribe(EVENT_KEY.RESET, this.loadAis.bind(this))
+    bus.subscribe(EVENT_KEY.START_TURN, this.takeTurn.bind(this))
   }
 
   private invalidMove(action: Action, source: Pawn): boolean {
@@ -154,7 +156,7 @@ export class AiHandler {
       } else {
         playerAction = this.playerTwo.ai.takeAction(map.readOnlyMap, slime.id,configuration,turn);
       }
-    } catch (exception) {
+    } catch (exception: any) {
       console.log(`player ${slime.owner} takeAction errored with: ${exception}`);
       console.log(exception.stack);
       return;
@@ -193,6 +195,5 @@ export class AiHandler {
   takeTurn() {
     const slimes = this.getSlimes();
     slimes.forEach((slime) => this.runAi(slime));
-    slimes.forEach((slime) => slime.readyToMerge = false);
   }
 }

@@ -1,17 +1,10 @@
 import { EVENT_KEY } from '../schema';
 
-interface EmittedEvent {
-  key: EVENT_KEY;
-  data?: any;
-}
-
 // Event bus
 export class Bus {
-  private bus: EmittedEvent[];
   private subscriptions: Map<EVENT_KEY, Array<Function>>;
 
   constructor() {
-    this.bus = [];
     this.subscriptions = new Map();
   }
 

@@ -6,6 +6,7 @@ import { Slime } from './models/slime';
 
 export enum EVENT_KEY {
   // game events
+  START_TURN = 'START TURN',
   END_TURN = 'END TURN',
   END_GAME = 'END GAME',
   RESET = 'RESET',

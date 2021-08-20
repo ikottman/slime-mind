@@ -4,12 +4,17 @@ import { EVENT_KEY, MergeEvent, MoveEvent, KilledEvent, AddSlime, AddPlant } fro
 
 export class MapHandler {
   constructor() {
+    bus.subscribe(EVENT_KEY.RESET, this.reset.bind(this));
     bus.subscribe(EVENT_KEY.ADD_SLIME, this.place.bind(this));
     bus.subscribe(EVENT_KEY.ADD_PLANT, this.place.bind(this));
     bus.subscribe(EVENT_KEY.ADD_ROCK, this.place.bind(this));
     bus.subscribe(EVENT_KEY.MOVE, this.move.bind(this));
     bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
     bus.subscribe(EVENT_KEY.KILLED, this.killed.bind(this));
+  }
+
+  private reset() {
+    map.reset();
   }
 
   private place(event: AddSlime | AddPlant) {

@@ -6,7 +6,7 @@ import { PAWN_TYPE } from '../schema';
 
 export class Map {
   // the game map. An empty space is null
-  grid!: Array<Array< Pawn | null>>;
+  private grid!: Array<Array< Pawn | null>>;
 
   constructor() {
     this.reset();

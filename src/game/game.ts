@@ -12,30 +12,22 @@ import { SlimeRenderer } from "./handlers/slime_renderer";
 import { EVENT_KEY } from './schema';
 
 export class Game {
-  plantHandler: PlantHandler;
-  rockHandler: RockHandler;
-  slimeHandler: SlimeHandler;
-  aiHandler: AiHandler;
-  scoreHandler: ScoreHandler;
-  victoryHandler: VictoryHandler;
-  mapHandler: MapHandler;
-  // only used in interactive mode
-  textHandler?: TextHandler;
-  slimeRenderer?: SlimeRenderer;
-
   constructor() {
+    // handlers do all the game logic based on events like START_TUNE, MERGE, KILLED...
     if (!tournamentMode) {
       // render text when slimes do stuff like split or merge
-      this.textHandler = new TextHandler();
-      this.slimeRenderer = new SlimeRenderer();
+      new TextHandler();
+      new SlimeRenderer();
     }
-    this.slimeHandler = new SlimeHandler();
-    this.plantHandler = new PlantHandler();
-    this.rockHandler = new RockHandler();
-    this.aiHandler = new AiHandler();
-    this.scoreHandler = new ScoreHandler();
-    this.victoryHandler = new VictoryHandler();
-    this.mapHandler = new MapHandler();
+    // order somewhat matters, each handler subscribes to events when created
+    // so the PlantHandler logic _always_ runs before SlimeHandler for the same event
+    new MapHandler();
+    new PlantHandler();
+    new SlimeHandler();
+    new RockHandler();
+    new AiHandler();
+    new ScoreHandler();
+    new VictoryHandler();
     this.reset();
     this.run();
   }
@@ -45,11 +37,6 @@ export class Game {
     APP.stage.removeChildren();
     turnStore.update(_ => 0);
     scoresStore.update(_ => [0, 0])
-    map.reset();
-    this.plantHandler.placeInitialPlants();
-    this.rockHandler.placeRocks();
-    this.aiHandler.loadAis();
-    this.victoryHandler.reset();
     bus.emit(EVENT_KEY.RESET);
     // wait on GPU to receive all our assets before rendering the stage
     // prevents weird glitches on first page load
@@ -58,22 +45,15 @@ export class Game {
     });
   }
 
-  private updateTurn(): void {
-    turnStore.update(t => t + 1);
-  }
-
   // returns true if the game is over
   gameLoop(): boolean {
-    this.updateTurn();
+    turnStore.update(t => t + 1);
+    bus.emit(EVENT_KEY.START_TURN);
+    bus.emit(EVENT_KEY.END_TURN);
     if (isGameOver(turn)) {
-      this.victoryHandler.endGame();
-      bus.emit(EVENT_KEY.END_GAME)
+      bus.emit(EVENT_KEY.END_GAME);
       return true;
     }
-    this.plantHandler.takeTurn();
-    this.aiHandler.takeTurn();
-    bus.emit(EVENT_KEY.END_TURN)
-    this.scoreHandler.updateScores();
     return false;
   }
 

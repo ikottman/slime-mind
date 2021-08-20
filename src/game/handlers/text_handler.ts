@@ -8,7 +8,7 @@ interface RenderedText {
 };
 
 export class TextHandler {
-  texts: Array<RenderedText>;
+  private texts: Array<RenderedText>;
 
   constructor() {
     this.texts = [];
