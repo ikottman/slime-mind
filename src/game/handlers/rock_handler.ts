@@ -1,10 +1,10 @@
-import { map } from '../../ui/store';
+import { bus, map } from '../../ui/store';
 import { GRID_SIZE, configuration } from '../../ui/store';
 import { Rock } from "../models/rock";
+import { EVENT_KEY } from '../schema';
 import { randomInt } from '../utils';
 
 export class RockHandler {
-
   constructor() {
   }
 
@@ -20,7 +20,7 @@ export class RockHandler {
       const x = randomInt(0, GRID_SIZE-1);
       const y = randomInt(0, GRID_SIZE-1);
       if (!map.invalidMove(x, y)) {
-        map.move(new Rock(x, y), x, y);
+        bus.emit(EVENT_KEY.ADD_ROCK, { pawn: new Rock(x, y) });
         numRocks++
       }
     }

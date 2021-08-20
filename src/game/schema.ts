@@ -1,5 +1,7 @@
 import { Action } from './models/action';
 import { Pawn } from './models/pawn';
+import { Plant } from './models/plant';
+import { Rock } from './models/rock';
 import { Slime } from './models/slime';
 
 export enum EVENT_KEY {
@@ -7,14 +9,20 @@ export enum EVENT_KEY {
   END_TURN = 'END TURN',
   END_GAME = 'END GAME',
   RESET = 'RESET',
+  // pawn events
+  MOVE = 'MOVE',
+  KILLED = 'KILLED',
   // slime events
   ADD_SLIME = 'ADD SLIME',
   SPLIT = 'SPLIT',
   MERGE = 'MERGE',
   CHANGE_HP = 'CHANGE HP',
   KING = 'KING',
-  MOVE = 'MOVE',
-  KILLED = 'KILLED'
+  // plant events
+  ADD_PLANT = 'ADD PLANT',
+  MAX_PLANT = 'MAX PLANT',
+  // rock events
+  ADD_ROCK = 'ADD ROCK',
 }
 
 export interface MergeEvent {
@@ -30,6 +38,18 @@ export interface MoveEvent {
 
 export interface KilledEvent {
   victim: Pawn
+}
+
+export interface AddSlime {
+  pawn: Slime
+}
+
+export interface AddPlant {
+  pawn: Plant
+}
+
+export interface AddRock {
+  pawn: Rock
 }
 
 export enum PAWN_TYPE {

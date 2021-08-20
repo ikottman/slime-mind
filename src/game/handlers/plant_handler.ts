@@ -1,6 +1,7 @@
-import { map } from '../../ui/store';
+import { bus, map } from '../../ui/store';
 import { GRID_SIZE, configuration } from '../../ui/store';
 import { Plant } from "../models/plant";
+import { EVENT_KEY } from '../schema';
 import { randomInt } from '../utils';
 
 export class PlantHandler {
@@ -13,7 +14,13 @@ export class PlantHandler {
       .filter(plant => plant.level < configuration.plant.maxLevel)
       .forEach(plant => {
         if (randomInt(0, 100) < configuration.plant.levelChance) {
-          plant.gainLevel();
+          plant.level = plant.level + 1;
+          // regain lost HP
+          plant.hp = plant.hp + (Math.floor(plant.maxHp / 2));
+          // swap out sprite to show we hit max level
+          if (plant.level === configuration.plant.maxLevel) {
+            bus.emit(EVENT_KEY.MAX_PLANT, { pawn: plant });
+          }
         }
       });
   }
@@ -27,7 +34,7 @@ export class PlantHandler {
           const options = map.emptyCells(plant);
           if (options.length > 0) {
             const [x, y] = options[randomInt(0, options.length - 1)];
-            map.move(new Plant(x, y), x, y);
+            bus.emit(EVENT_KEY.ADD_PLANT, { pawn: new Plant(x, y) });
           }
         }
       });
@@ -45,7 +52,7 @@ export class PlantHandler {
       const x = randomInt(0, GRID_SIZE-1);
       const y = randomInt(0, GRID_SIZE-1);
       if (!map.invalidMove(x, y)) {
-        map.move(new Plant(x, y), x, y);
+        bus.emit(EVENT_KEY.ADD_PLANT, { pawn: new Plant(x, y) });
         numPlants++
       }
     }

@@ -17,10 +17,8 @@ export class Slime extends Pawn {
     this.level = 1;
     this.maxLevel = 12;
     this.hp = this.maxHp;
-    this.x = x;
-    this.y = y;
 
-    bus.emit(EVENT_KEY.ADD_SLIME, this);
+    bus.emit(EVENT_KEY.ADD_SLIME, { pawn: this });
   }
 
   gainExperience(xp: number) {
@@ -69,7 +67,7 @@ export class Slime extends Pawn {
         bus.emit(EVENT_KEY.KING, this);
       }
     } else if (this.level < currentLevel && this.level < 10) {
-      bus.emit(EVENT_KEY.ADD_SLIME, this);
+      bus.emit(EVENT_KEY.ADD_SLIME, { pawn: this });
     }
   }
 
