@@ -153,7 +153,7 @@ export class AiHandler {
   private runAi(slime: Slime): void {
     // skip slimes that were eaten or merged away
     const currentCellOccupant = map.get(slime.x, slime.y);
-    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id || isGameOver(map, turn)) {
+    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id || isGameOver(turn)) {
       return;
     }
 

@@ -18,8 +18,7 @@ export class Slime extends Pawn {
     this.maxLevel = 12;
     this.hp = this.maxHp;
 
-    bus.emit(EVENT_KEY.ADD_SLIME, this.id);
-    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
+    bus.emit(EVENT_KEY.ADD_SLIME, this);
   }
 
   gainExperience(xp: number) {

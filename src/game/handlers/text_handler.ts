@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { APP, turn, bus } from '../../ui/store';
-import { Pawn } from '../models/pawn';
+import { APP, turn, bus, sprites } from '../../ui/store';
 import { LAYERS, EVENT_KEY, MergeEvent } from '../schema';
+import { Slime } from '../models/slime';
 
 interface RenderedText {
   text: PIXI.Text,
@@ -27,12 +27,12 @@ export class TextHandler {
     this.texts = this.texts.filter(text => turn - text.turnAdded < 5);
   }
 
-  private handleSplit(target: Pawn) {
-    this.addText('SPLIT', target, '#941651');
+  private handleSplit(slime: Slime) {
+    this.addText('SPLIT', slime.id, '#941651');
   }
 
   private handleMerge(event: MergeEvent) {
-    this.addText('MERGE', event.slime, '#72fa78');
+    this.addText('MERGE', event.slime.id, '#72fa78');
   }
 
   private clearAllTexts() {
@@ -40,13 +40,14 @@ export class TextHandler {
     this.texts = [];
   }
 
-  private addText(text: string, target: Pawn, color: string) {
+  private addText(text: string, id: number, color: string) {
+    const target = sprites.get(id)!;
     const style = new PIXI.TextStyle({
       fill: color
     });
     const renderedText = new PIXI.Text(text, style);
-    renderedText.x = target.sprite.x; // TODO: this fails
-    renderedText.y = target.sprite.y;
+    renderedText.x = target.x;
+    renderedText.y = target.y;
     renderedText.zIndex = LAYERS.TEXT;
     APP.stage.addChild(renderedText);
     this.texts.push({

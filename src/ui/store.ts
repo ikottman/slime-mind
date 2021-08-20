@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
 import { Bus } from '../game/handlers/bus';
-import { Map } from '../game/models/map';
+import { Map as GameMap } from '../game/models/map';
 import { Configuration } from '../game/schema';
 
 // turn
@@ -72,5 +72,7 @@ configurationStore.subscribe(value => configuration = { ...configuration, ...val
 
 // game state
 export const bus = new Bus();
-export const map = new Map();
+export const map = new GameMap();
+export const sprites = new Map<number, PIXI.Container>(); // keyed by id
+// TODO: move pawns up here out of the map
 export const game = new Game();
