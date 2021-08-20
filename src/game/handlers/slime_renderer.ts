@@ -75,7 +75,7 @@ export class SlimeRenderer {
   private maxPlant(event: AddPlant) {
     const { pawn } = event;
     const sprite = PIXI.Sprite.from(maxPlantPng);
-    this.addSprite(sprite, pawn.id, pawn.x, .pawn.y);
+    this.addSprite(sprite, pawn.id, pawn.x, pawn.y);
   }
 
   private updateHpBar(slime: Slime): void {
@@ -99,14 +99,9 @@ export class SlimeRenderer {
   }
 
   private move(event: MoveEvent) {
-    const sprite = sprites.get(event.pawn.id);
-    if (sprite) {
-      sprite.x = event.x * SPRITE_SIZE;
-      sprite.y = event.y * SPRITE_SIZE;
-    } else {
-      // TODO: see if we can remove the conditional once we have plants and rocks evented
-      console.log('we moved without a sprite?', event);
-    }
+    const sprite = sprites.get(event.pawn.id)!;
+    sprite.x = event.x * SPRITE_SIZE;
+    sprite.y = event.y * SPRITE_SIZE;
   }
 
   private merge(event: MergeEvent) {

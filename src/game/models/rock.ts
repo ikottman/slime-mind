@@ -1,7 +1,5 @@
-import * as PIXI from "pixi.js";
 import { PAWN_TYPE } from '../schema';
 import { Pawn } from './pawn';
-import rock from '../assets/rock.png'
 import { configuration } from "../../ui/store";
 
 export class Rock extends Pawn {
@@ -13,7 +11,6 @@ export class Rock extends Pawn {
     this.type = PAWN_TYPE.ROCK;
     this.hp = configuration.rock.maxHp;
     this.maxHp = configuration.rock.maxHp;
-    this.addSprite(PIXI.Sprite.from(rock));
   }
 
   takeDamage(damage: number) {
