@@ -124,12 +124,7 @@ export class AiHandler {
         if (this.invalidBite(action, source, target) || !source.attack || !target) {
           return;
         }
-        target?.takeDamage(source.attack);
-        if (target.type !== PAWN_TYPE.ROCK) {
-          source.gainExperience(1);
-          source.gainHp(1);
-        }
-
+        bus.emit(EVENT_KEY.BITE, { source, target })
         break;
       case ACTIONS.MERGE:
         this.attemptMerge(source as Slime);

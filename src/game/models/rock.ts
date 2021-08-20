@@ -13,11 +13,6 @@ export class Rock extends Pawn {
     this.maxHp = configuration.rock.maxHp;
   }
 
-  takeDamage(damage: number) {
-    this.hp = this.hp - damage;
-    return this.hp <= 0;
-  }
-
   json() {
     return {
       id: this.id,

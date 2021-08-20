@@ -1,12 +1,14 @@
 import { bus, map } from '../../ui/store';
 import { GRID_SIZE, configuration } from '../../ui/store';
 import { Plant } from "../models/plant";
-import { EVENT_KEY } from '../schema';
+import { BiteEvent, EVENT_KEY, PAWN_TYPE } from '../schema';
 import { randomInt } from '../utils';
 
 export class PlantHandler {
 
-  constructor() {}
+  constructor() {
+    bus.subscribe(EVENT_KEY.BITE, this.bite);
+  }
 
   // plants have a chance to level
   private levelUp() {
@@ -38,6 +40,19 @@ export class PlantHandler {
           }
         }
       });
+  }
+
+  private bite(event: BiteEvent) {
+    const { source, target } = event;
+    if (target.type === PAWN_TYPE.PLANT) {
+      source.gainExperience(1);
+      source.gainHp(1);
+
+      target.hp = target.hp - source.attack;
+      if (target.hp <= 0) {
+        bus.emit(EVENT_KEY.KILLED, { victim: target });
+      }
+    }
   }
 
   placeInitialPlants() {

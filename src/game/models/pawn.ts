@@ -42,11 +42,6 @@ export class Pawn {
     this.y = y;
   }
 
-  // take damage and return true if this killed the pawn
-  takeDamage(damage: number) {
-    return false;
-  }
-
   json(): any {
     throw Error('Classes extending Pawn must implement a json method');
   }

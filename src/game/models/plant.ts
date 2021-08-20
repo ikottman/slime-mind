@@ -28,11 +28,6 @@ export class Plant extends Pawn {
     return this.current_hp;
   }
 
-  takeDamage(damage: number) {
-    this.hp = this.hp - damage;
-    return this.hp <= 0;
-  }
-
   json() {
     return {
       id: this.id,

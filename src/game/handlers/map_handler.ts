@@ -10,6 +10,7 @@ export class MapHandler {
     bus.subscribe(EVENT_KEY.ADD_ROCK, this.place.bind(this));
     bus.subscribe(EVENT_KEY.MOVE, this.move.bind(this));
     bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
+    bus.subscribe(EVENT_KEY.KILLED, this.killed.bind(this));
   }
 
   private place(event: AddSlime | AddPlant) {

@@ -22,6 +22,7 @@ export class SlimeRenderer {
     bus.subscribe(EVENT_KEY.ADD_PLANT, this.addPlant.bind(this));
     bus.subscribe(EVENT_KEY.MAX_PLANT, this.maxPlant.bind(this));
     bus.subscribe(EVENT_KEY.ADD_ROCK, this.addRock.bind(this));
+    bus.subscribe(EVENT_KEY.KILLED, this.killed.bind(this));
   }
 
   private addSprite(sprite: PIXI.Sprite, id: number, x: number, y: number) {

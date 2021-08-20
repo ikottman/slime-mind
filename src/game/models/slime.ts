@@ -35,15 +35,6 @@ export class Slime extends Pawn {
     bus.emit(EVENT_KEY.CHANGE_HP, this);
   }
 
-  takeDamage(damage: number) {
-    this.hp = this.hp - damage;
-    bus.emit(EVENT_KEY.CHANGE_HP, this);
-
-    if (this.hp <= 0) {
-      bus.emit(EVENT_KEY.KILLED, { victim: this });
-    }
-  }
-
   split(): void {
     this.xp = Math.max(1, Math.floor(this.xp * (configuration.slime.splitXpPercentage / 100)));
     this.resetLevel();

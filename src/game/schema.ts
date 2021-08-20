@@ -18,6 +18,7 @@ export enum EVENT_KEY {
   MERGE = 'MERGE',
   CHANGE_HP = 'CHANGE HP',
   KING = 'KING',
+  BITE = 'BITE',
   // plant events
   ADD_PLANT = 'ADD PLANT',
   MAX_PLANT = 'MAX PLANT',
@@ -50,6 +51,11 @@ export interface AddPlant {
 
 export interface AddRock {
   pawn: Rock
+}
+
+export interface BiteEvent {
+  source: Slime,
+  target: Slime | Rock | Plant
 }
 
 export enum PAWN_TYPE {

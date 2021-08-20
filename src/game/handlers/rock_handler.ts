@@ -1,11 +1,12 @@
 import { bus, map } from '../../ui/store';
 import { GRID_SIZE, configuration } from '../../ui/store';
 import { Rock } from "../models/rock";
-import { EVENT_KEY } from '../schema';
+import { BiteEvent, EVENT_KEY, PAWN_TYPE } from '../schema';
 import { randomInt } from '../utils';
 
 export class RockHandler {
   constructor() {
+    bus.subscribe(EVENT_KEY.BITE, this.bite.bind(this))
   }
 
   placeRocks() {
@@ -25,5 +26,15 @@ export class RockHandler {
       }
     }
     while (tries < 100000 && numRocks < configuration.rock.initialRocks);
+  }
+
+  private bite(event: BiteEvent) {
+    const { source, target } = event;
+    if (target.type === PAWN_TYPE.ROCK) {
+      target.hp = target.hp - source.attack;
+      if (target.hp <= 0) {
+        bus.emit(EVENT_KEY.KILLED, { victim: target });
+      }
+    }
   }
 }
