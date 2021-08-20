@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { APP, turn, bus, sprites } from '../../ui/store';
 import { LAYERS, EVENT_KEY, MergeEvent, SplitEvent } from '../schema';
-import { Slime } from '../models/slime';
 
 interface RenderedText {
   text: PIXI.Text,
