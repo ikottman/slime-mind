@@ -25,19 +25,8 @@ export class Bus {
     }
   }
 
-  // emit an event
+  // process the emitted event
   emit(key: EVENT_KEY, data?: any) {
-    //this.bus.push({ key, data });
     this.subscriptions.get(key)?.forEach(handler => handler(data));
-  }
-
-  // process all events in bus, including those emitted along the way
-  process() {
-    // using traditional for loop so we process events emitted by handlers
-    for (let i = 0; i < this.bus.length; i++) {
-      const { key, data } = this.bus[i];
-      this.subscriptions.get(key)?.forEach(handler => handler(data));
-    }
-    this.bus = [];
   }
 }
