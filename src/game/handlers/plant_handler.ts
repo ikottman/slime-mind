@@ -45,9 +45,6 @@ export class PlantHandler {
   private bite(event: BiteEvent) {
     const { source, target } = event;
     if (target.type === PAWN_TYPE.PLANT) {
-      source.gainExperience(1);
-      source.gainHp(1);
-
       target.hp = target.hp - source.attack;
       if (target.hp <= 0) {
         bus.emit(EVENT_KEY.KILLED, { victim: target });

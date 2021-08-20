@@ -31,6 +31,10 @@ export interface MergeEvent {
   sacrifice: Slime
 }
 
+export interface SplitEvent {
+  slime: Slime
+}
+
 export interface MoveEvent {
   pawn: Pawn,
   x: number,

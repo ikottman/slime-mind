@@ -16,7 +16,6 @@ export class SlimeRenderer {
     bus.subscribe(EVENT_KEY.ADD_SLIME, this.addSlime.bind(this));
     bus.subscribe(EVENT_KEY.KING, this.addKing.bind(this));
     bus.subscribe(EVENT_KEY.CHANGE_HP, this.updateHpBar.bind(this));
-    bus.subscribe(EVENT_KEY.SPLIT, this.updateHpBar.bind(this));
     bus.subscribe(EVENT_KEY.MOVE, this.move.bind(this));
     bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
     bus.subscribe(EVENT_KEY.ADD_PLANT, this.addPlant.bind(this));

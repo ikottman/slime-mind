@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { APP, turn, bus, sprites } from '../../ui/store';
-import { LAYERS, EVENT_KEY, MergeEvent } from '../schema';
+import { LAYERS, EVENT_KEY, MergeEvent, SplitEvent } from '../schema';
 import { Slime } from '../models/slime';
 
 interface RenderedText {
@@ -27,8 +27,8 @@ export class TextHandler {
     this.texts = this.texts.filter(text => turn - text.turnAdded < 5);
   }
 
-  private handleSplit(slime: Slime) {
-    this.addText('SPLIT', slime.id, '#941651');
+  private handleSplit(event: SplitEvent) {
+  this.addText('SPLIT', event.slime.id, '#941651');
   }
 
   private handleMerge(event: MergeEvent) {

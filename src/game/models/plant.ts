@@ -1,4 +1,3 @@
-import * as PIXI from "pixi.js";
 import { PAWN_TYPE } from '../schema';
 import { Pawn } from './pawn';
 import { configuration } from "../../ui/store";

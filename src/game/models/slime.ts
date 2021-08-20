@@ -21,47 +21,6 @@ export class Slime extends Pawn {
     bus.emit(EVENT_KEY.ADD_SLIME, { pawn: this });
   }
 
-  gainExperience(xp: number) {
-    if (this.level >= this.maxLevel) {
-      return;
-    }
-
-    this.xp += xp;
-    this.resetLevel();
-  }
-
-  gainHp(hp: number) {
-    this.hp = Math.min(this.hp + hp, this.maxHp);
-    bus.emit(EVENT_KEY.CHANGE_HP, this);
-  }
-
-  split(): void {
-    this.xp = Math.max(1, Math.floor(this.xp * (configuration.slime.splitXpPercentage / 100)));
-    this.resetLevel();
-    this.hp = Math.min(this.maxHp, Math.floor(this.hp * (configuration.slime.splitHpPercentage / 100)));
-  }
-
-  private resetLevel() {
-    const currentLevel = this.level;
-    const currentHpPercentage = this.hp / this.maxHp;
-
-    // sophisticated math
-    this.level = Math.floor(1.847 * this.xp**0.286);
-
-    // handle level up or down (down can happen in splits)
-    if (this.level > currentLevel) {
-      // retain the same ratio of hp
-      const hp = Math.ceil(currentHpPercentage * this.maxHp);
-      this.gainHp(hp - this.hp);
-
-      if (currentLevel < 10 && this.level === 10){
-        bus.emit(EVENT_KEY.KING, this);
-      }
-    } else if (this.level < currentLevel && this.level < 10) {
-      bus.emit(EVENT_KEY.ADD_SLIME, { pawn: this });
-    }
-  }
-
   get attack(): number {
     const attackByLevel = [
       3,

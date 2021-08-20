@@ -86,15 +86,7 @@ export class AiHandler {
       return;
     }
 
-    bus.emit(EVENT_KEY.SPLIT, slime);
-
-    slime.split();
-    const targetCell = cells[randomInt(0, cells.length - 1)];
-    const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
-    // set the child stats based on the split initiator
-    child.gainExperience(slime.xp - 1); // -1 to offset the 1 you start with
-    child.hp = slime.hp
-    map.move(child, child.x, child.y);
+    bus.emit(EVENT_KEY.SPLIT, { slime });
   }
 
   private updatePawnStats() {
