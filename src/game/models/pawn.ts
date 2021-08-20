@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
-import { SPRITE_SIZE, APP, hoveredPawnIdStore, hoveredPawnStore } from "../../ui/store";
-import { PAWN_TYPE, LAYERS } from "../schema";
+import { SPRITE_SIZE, APP, hoveredPawnIdStore, hoveredPawnStore, bus } from "../../ui/store";
+import { PAWN_TYPE, LAYERS, EVENT_KEY } from "../schema";
 
 export class Pawn {
   id: number;
@@ -37,14 +37,12 @@ export class Pawn {
   }
 
   move(x: number, y: number) {
+    bus.emit(EVENT_KEY.MOVE, { pawn: this, x, y });
     this.x = x;
     this.y = y;
-    if (this.sprite) {
-      this.sprite.x = x * SPRITE_SIZE;
-      this.sprite.y = y * SPRITE_SIZE;
-    }
   }
 
+  // TODO: remove from plant and rock, then delete this
   addSprite(sprite: PIXI.Sprite) {
     sprite.zIndex = LAYERS.PAWN;
     sprite.height = SPRITE_SIZE;

@@ -12,8 +12,7 @@ export class SlimeHandler {
   }
 
   private addSlime(x: number, y: number, owner: number) {
-    const slime = new Slime(owner, x, y);
-    map.move(slime, x, y);
+    new Slime(owner, x, y); // TODO: move the event out of the constructor
   }
 
   private placeSlimes() {

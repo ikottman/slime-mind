@@ -17,6 +17,8 @@ export class Slime extends Pawn {
     this.level = 1;
     this.maxLevel = 12;
     this.hp = this.maxHp;
+    this.x = x;
+    this.y = y;
 
     bus.emit(EVENT_KEY.ADD_SLIME, this);
   }
@@ -32,12 +34,12 @@ export class Slime extends Pawn {
 
   gainHp(hp: number) {
     this.hp = Math.min(this.hp + hp, this.maxHp);
-    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
+    bus.emit(EVENT_KEY.CHANGE_HP, this);
   }
 
   takeDamage(damage: number) {
     this.hp = this.hp - damage;
-    bus.emit(EVENT_KEY.CHANGE_HP, this.id);
+    bus.emit(EVENT_KEY.CHANGE_HP, this);
     return this.hp <= 0;
   }
 
@@ -61,10 +63,10 @@ export class Slime extends Pawn {
       this.gainHp(hp - this.hp);
 
       if (currentLevel < 10 && this.level === 10){
-        bus.emit(EVENT_KEY.KING, this.id);
+        bus.emit(EVENT_KEY.KING, this);
       }
     } else if (this.level < currentLevel && this.level < 10) {
-      bus.emit(EVENT_KEY.ADD_SLIME, this.id);
+      bus.emit(EVENT_KEY.ADD_SLIME, this);
     }
   }
 

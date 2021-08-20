@@ -5,7 +5,8 @@ import redKing from '../assets/red_king.png';
 import blueKing from '../assets/blue_king.png';
 import { bus, sprites, SPRITE_SIZE, APP } from "../../ui/store";
 import { Slime } from "../models/slime";
-import { EVENT_KEY, LAYERS } from '../schema';
+import { Pawn } from "../models/pawn";
+import { EVENT_KEY, LAYERS, MoveEvent } from '../schema';
 
 export class SlimeRenderer {
 
@@ -14,6 +15,7 @@ export class SlimeRenderer {
     bus.subscribe(EVENT_KEY.KING, this.addKing.bind(this));
     bus.subscribe(EVENT_KEY.CHANGE_HP, this.updateHpBar.bind(this));
     bus.subscribe(EVENT_KEY.SPLIT, this.updateHpBar.bind(this));
+    bus.subscribe(EVENT_KEY.MOVE, this.move.bind(this));
   }
 
   private addSprite(sprite: PIXI.Sprite, id: number, x: number, y: number) {
@@ -69,5 +71,16 @@ export class SlimeRenderer {
     const halfPi = 3 * Math.PI / 2;
     const ratio = slime.hp / slime.maxHp;
     bar.arc(sprite.width / 2, sprite.height / 2, sprite.width / 1.8, halfPi - Math.PI * ratio, halfPi + Math.PI * ratio);
+  }
+
+  private move(event: MoveEvent) {
+    const sprite = sprites.get(event.pawn.id);
+    if (sprite) {
+      sprite.x = event.x * SPRITE_SIZE;
+      sprite.y = event.y * SPRITE_SIZE;
+    } else {
+      // TODO: see if we can remove the conditional once we have plants and rocks evented
+      console.log('we moved without a sprite?', event);
+    }
   }
 }

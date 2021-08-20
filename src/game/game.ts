@@ -7,6 +7,7 @@ import { ScoreHandler } from "./handlers/score_handler";
 import { VictoryHandler } from "./handlers/victory_handler";
 import { SlimeHandler } from "./handlers/slime_handler";
 import { TextHandler } from "./handlers/text_handler";
+import { MapHandler } from "./handlers/map_handler";
 import { SlimeRenderer } from "./handlers/slime_renderer";
 import { EVENT_KEY } from './schema';
 
@@ -17,23 +18,24 @@ export class Game {
   aiHandler: AiHandler;
   scoreHandler: ScoreHandler;
   victoryHandler: VictoryHandler;
-
+  mapHandler: MapHandler;
   // only used in interactive mode
   textHandler?: TextHandler;
   slimeRenderer?: SlimeRenderer;
 
   constructor() {
+    if (!tournamentMode) {
+      // render text when slimes do stuff like split or merge
+      this.textHandler = new TextHandler();
+      this.slimeRenderer = new SlimeRenderer();
+    }
     this.slimeHandler = new SlimeHandler();
     this.plantHandler = new PlantHandler();
     this.rockHandler = new RockHandler();
     this.aiHandler = new AiHandler();
     this.scoreHandler = new ScoreHandler();
     this.victoryHandler = new VictoryHandler();
-    if (!tournamentMode) {
-      // render text when slimes do stuff like split or merge
-      this.textHandler = new TextHandler();
-      this.slimeRenderer = new SlimeRenderer();
-    }
+    this.mapHandler = new MapHandler();
     this.reset();
     this.run();
   }
@@ -49,7 +51,6 @@ export class Game {
     this.aiHandler.loadAis();
     this.victoryHandler.reset();
     bus.emit(EVENT_KEY.RESET);
-    bus.process();
     // wait on GPU to receive all our assets before rendering the stage
     // prevents weird glitches on first page load
     APP.renderer.plugins.prepare.upload(APP.stage, () => {
@@ -72,7 +73,6 @@ export class Game {
     this.plantHandler.takeTurn();
     this.aiHandler.takeTurn();
     bus.emit(EVENT_KEY.END_TURN)
-    bus.process();
     this.scoreHandler.updateScores();
     return false;
   }

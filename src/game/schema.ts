@@ -13,11 +13,18 @@ export enum EVENT_KEY {
   MERGE = 'MERGE',
   CHANGE_HP = 'CHANGE HP',
   KING = 'KING',
+  MOVE = 'MOVE',
 }
 
 export interface MergeEvent {
   slime: Slime,
   sacrifice: Slime
+}
+
+export interface MoveEvent {
+  pawn: Pawn,
+  x: number,
+  y: number
 }
 
 export enum PAWN_TYPE {

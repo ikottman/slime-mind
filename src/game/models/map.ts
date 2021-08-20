@@ -97,6 +97,7 @@ export class Map {
     this.grid[x][y] = null;
   }
 
+  // TODO: move this entirely into the handler
   // put target in new position, setting previous cell to null
   move(target: Pawn, x: number, y: number): void {
     this.grid[target.x][target.y] = null;
@@ -116,5 +117,9 @@ export class Map {
       return null;
     }
     return this.grid[x][y];
+  }
+
+  set(x: number, y: number, pawn: Pawn | null) {
+    this.grid[x][y] = pawn;
   }
 }

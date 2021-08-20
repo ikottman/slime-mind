@@ -27,7 +27,8 @@ export class Bus {
 
   // emit an event
   emit(key: EVENT_KEY, data?: any) {
-    this.bus.push({ key, data });
+    //this.bus.push({ key, data });
+    this.subscriptions.get(key)?.forEach(handler => handler(data));
   }
 
   // process all events in bus, including those emitted along the way
