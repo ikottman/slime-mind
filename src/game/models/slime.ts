@@ -1,6 +1,6 @@
 import { PAWN_TYPE, EVENT_KEY } from '../schema';
 import { Pawn } from './pawn';
-import { configuration, bus } from "../../ui/store";
+import { bus } from "../../ui/store";
 
 export class Slime extends Pawn {
   hp: number;

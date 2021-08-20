@@ -100,8 +100,8 @@ export class SlimeRenderer {
 
   private move(event: MoveEvent) {
     const sprite = sprites.get(event.pawn.id)!;
-    sprite.x = event.x * SPRITE_SIZE;
-    sprite.y = event.y * SPRITE_SIZE;
+    sprite.x = event.to.x * SPRITE_SIZE;
+    sprite.y = event.to.y * SPRITE_SIZE;
   }
 
   private merge(event: MergeEvent) {

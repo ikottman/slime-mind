@@ -109,7 +109,18 @@ export class AiHandler {
         if (this.invalidMove(action, source)) {
           return;
         }
-        map.move(source, action.x, action.y);
+        const event = {
+          pawn: source,
+          from: {
+            x: source.x,
+            y: source.y
+          },
+          to: {
+            x: action.x,
+            y: action.y
+          }
+        };
+        bus.emit(EVENT_KEY.MOVE, event);
         break;
       case ACTIONS.BITE:
         const target = map.get(action.x, action.y);

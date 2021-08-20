@@ -6,18 +6,14 @@ import { PAWN_TYPE } from '../schema';
 
 export class Map {
   // the game map. An empty space is null
-  grid: Array<Array< Pawn | null>>;
+  grid!: Array<Array< Pawn | null>>;
 
   constructor() {
-    this.grid = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
+    this.reset();
   }
 
   reset() {
-    for (let i  = 0; i < this.grid.length; i++) {
-      for (let j = 0; j < this.grid.length; j++) {
-        this.clearCell(i, j);
-      }
-    }
+    this.grid = Array(GRID_SIZE).fill(0).map(() => Array(GRID_SIZE).fill(null));
   }
 
   cellOccupied(x: number, y: number): boolean {
@@ -89,21 +85,6 @@ export class Map {
 
   get slimes(): Array<Slime> {
     return this.pawns.filter(p => p.type === PAWN_TYPE.SLIME) as Array<Slime>;
-  }
-
-  // remove pawn (if any) from the map
-  clearCell(x: number, y: number): void {
-    this.grid[x][y]?.sprite?.destroy();
-    this.grid[x][y] = null;
-  }
-
-  // TODO: move this entirely into the handler
-  // put target in new position, setting previous cell to null
-  move(target: Pawn, x: number, y: number): void {
-    this.grid[target.x][target.y] = null;
-    this.grid[x][y] = target;
-    // update pawn and rendered sprite's position
-    target.move(x, y);
   }
 
   // return pawn with given id, or null if it isn't in the map

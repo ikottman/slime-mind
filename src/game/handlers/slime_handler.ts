@@ -1,7 +1,7 @@
 import { configuration, GRID_SIZE, bus } from '../../ui/store';
 import { map } from '../../ui/store';
 import { Slime} from "../models/slime";
-import { BiteEvent, EVENT_KEY, MergeEvent, PAWN_TYPE, SplitEvent } from '../schema';
+import { BiteEvent, EVENT_KEY, MergeEvent, MoveEvent, PAWN_TYPE, SplitEvent } from '../schema';
 import { randomInt } from '../utils';
 
 export class SlimeHandler {
@@ -11,6 +11,7 @@ export class SlimeHandler {
     bus.subscribe(EVENT_KEY.MERGE, this.merge.bind(this));
     bus.subscribe(EVENT_KEY.SPLIT, this.split.bind(this));
     bus.subscribe(EVENT_KEY.BITE, this.bite.bind(this));
+    bus.subscribe(EVENT_KEY.MOVE, this.move.bind(this));
   }
 
   private addSlime(x: number, y: number, owner: number) {
@@ -107,5 +108,11 @@ export class SlimeHandler {
         bus.emit(EVENT_KEY.KILLED, { victim: target });
       }
     }
+  }
+
+  private move(event: MoveEvent) {
+    const { pawn, from, to } = event;
+    pawn.x = to.x;
+    pawn.y = to.y;
   }
 }

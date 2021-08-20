@@ -1,6 +1,5 @@
 import { bus } from '../../ui/store';
 import { map } from '../../ui/store';
-import { Pawn } from "../models/pawn";
 import { EVENT_KEY, MergeEvent, MoveEvent, KilledEvent, AddSlime, AddPlant } from '../schema';
 
 export class MapHandler {
@@ -19,9 +18,9 @@ export class MapHandler {
   }
 
   private move(event: MoveEvent) {
-    const { x, y, pawn } = event;
-    map.set(x, y, pawn);
-    map.set(pawn.x, pawn.y, null);
+    const { from, to, pawn } = event;
+    map.set(from.x, from.y, null);
+    map.set(to.x, to.y, pawn);
   }
 
   private merge(event: MergeEvent) {

@@ -37,8 +37,14 @@ export interface SplitEvent {
 
 export interface MoveEvent {
   pawn: Pawn,
-  x: number,
-  y: number
+  from: {
+    x: number,
+    y: number
+  },
+  to: {
+    x: number,
+    y: number
+  }
 }
 
 export interface KilledEvent {
