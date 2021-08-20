@@ -1,7 +1,7 @@
 import { bus } from '../../ui/store';
 import { map } from '../../ui/store';
 import { Pawn } from "../models/pawn";
-import { EVENT_KEY, MergeEvent, MoveEvent } from '../schema';
+import { EVENT_KEY, MergeEvent, MoveEvent, KilledEvent } from '../schema';
 
 export class MapHandler {
   constructor() {
@@ -23,5 +23,10 @@ export class MapHandler {
   private merge(event: MergeEvent) {
     const { sacrifice } = event;
     map.set(sacrifice.x, sacrifice.y, null);
+  }
+
+  private killed(event: KilledEvent) {
+    const { victim } = event;
+    map.set(victim.x, victim.y, null);
   }
 }

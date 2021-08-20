@@ -5,8 +5,7 @@ import redKing from '../assets/red_king.png';
 import blueKing from '../assets/blue_king.png';
 import { bus, sprites, SPRITE_SIZE, APP } from "../../ui/store";
 import { Slime } from "../models/slime";
-import { Pawn } from "../models/pawn";
-import { EVENT_KEY, LAYERS, MergeEvent, MoveEvent } from '../schema';
+import { EVENT_KEY, KilledEvent, LAYERS, MergeEvent, MoveEvent } from '../schema';
 
 export class SlimeRenderer {
 
@@ -87,6 +86,11 @@ export class SlimeRenderer {
 
   private merge(event: MergeEvent) {
     const sprite = sprites.get(event.sacrifice.id)!;
+    sprite.destroy();
+  }
+
+  private killed(event: KilledEvent) {
+    const sprite = sprites.get(event.victim.id)!;
     sprite.destroy();
   }
 }

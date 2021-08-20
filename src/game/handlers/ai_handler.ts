@@ -68,7 +68,6 @@ export class AiHandler {
     const mergeableSlimes = mySlimes.filter(slime => slime?.readyToMerge);
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
-      map.clearCell(sacrifice.x, sacrifice.y);
       bus.emit(EVENT_KEY.MERGE, { slime, sacrifice });
     } else {
       slime.readyToMerge = true;
@@ -125,19 +124,12 @@ export class AiHandler {
         if (this.invalidBite(action, source, target) || !source.attack || !target) {
           return;
         }
-        if (target.type === PAWN_TYPE.ROCK){
-          const killed = target?.takeDamage(source.attack);
-          if (killed) {
-            map.clearCell(target.x, target.y);
-          }
-          return;
+        target?.takeDamage(source.attack);
+        if (target.type !== PAWN_TYPE.ROCK) {
+          source.gainExperience(1);
+          source.gainHp(1);
         }
-        const killed = target?.takeDamage(source.attack);
-        if (killed) {
-          map.clearCell(target.x, target.y);
-        }
-        source.gainExperience(1);
-        source.gainHp(1);
+
         break;
       case ACTIONS.MERGE:
         this.attemptMerge(source as Slime);

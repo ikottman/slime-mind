@@ -14,6 +14,7 @@ export enum EVENT_KEY {
   CHANGE_HP = 'CHANGE HP',
   KING = 'KING',
   MOVE = 'MOVE',
+  KILLED = 'KILLED'
 }
 
 export interface MergeEvent {
@@ -25,6 +26,10 @@ export interface MoveEvent {
   pawn: Pawn,
   x: number,
   y: number
+}
+
+export interface KilledEvent {
+  victim: Pawn
 }
 
 export enum PAWN_TYPE {

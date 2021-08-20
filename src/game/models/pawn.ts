@@ -61,7 +61,7 @@ export class Pawn {
   }
 
   // take damage and return true if this killed the pawn
-  takeDamage(damage: number): boolean {
+  takeDamage(damage: number) {
     return false;
   }
 

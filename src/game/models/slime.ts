@@ -40,7 +40,10 @@ export class Slime extends Pawn {
   takeDamage(damage: number) {
     this.hp = this.hp - damage;
     bus.emit(EVENT_KEY.CHANGE_HP, this);
-    return this.hp <= 0;
+
+    if (this.hp <= 0) {
+      bus.emit(EVENT_KEY.KILLED, { victim: this });
+    }
   }
 
   split(): void {
