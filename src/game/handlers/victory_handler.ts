@@ -1,12 +1,15 @@
-import { APP, textHandler, scores, winnerStore, tournamentMode } from '../../ui/store';
+import { APP, scores, winnerStore, tournamentMode, bus } from '../../ui/store';
 import { playerOne, playerTwo } from '../../stores/player_store';
 import { Fireworks } from '../../ui/game/fireworks';
+import { EVENT_KEY } from '../schema';
 
 export class VictoryHandler {
   private fireworks: Fireworks;
 
   constructor() {
     this.fireworks = new Fireworks();
+    bus.subscribe(EVENT_KEY.END_GAME, this.endGame.bind(this));
+    bus.subscribe(EVENT_KEY.RESET, this.reset.bind(this));
   }
 
   private winner() {
@@ -21,16 +24,15 @@ export class VictoryHandler {
     return 3;
   }
 
-  endGame() {
+  private endGame() {
     // don't show fireworks when doing a tournament
     if (!tournamentMode) {
       APP.ticker.stop();
-      textHandler.clearAllTexts();
       this.fireworks.start(this.winner());
     }
   }
 
-  reset() {
+  private reset() {
     this.fireworks.stop();
   }
 }

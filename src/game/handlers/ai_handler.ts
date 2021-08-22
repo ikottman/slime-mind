@@ -1,21 +1,21 @@
-import { textHandler, configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore } from '../../ui/store';
+import { configuration, turn, hoveredPawnId, hoveredPawn, hoveredPawnStore, bus } from '../../ui/store';
 import { playerOne, playerTwo } from '../../stores/player_store';
-import { Map } from '../models/map';
+import { map } from '../../ui/store';
 import { Pawn } from '../models/pawn';
 import { Slime } from '../models/slime';
 import Player from '../models/player';
 import { Action } from '../models/action';
-import { ACTIONS, PAWN_TYPE } from '../schema';
+import { ACTIONS, EVENT_KEY } from '../schema';
 import { randomInt, isGameOver } from '../utils';
 
 export class AiHandler {
-  map: Map;
-  playerOne!: Player;
-  playerTwo!: Player;
+  private playerOne!: Player;
+  private playerTwo!: Player;
 
-  constructor(map: Map) {
-    this.map = map;
+  constructor() {
     this.loadAis();
+    bus.subscribe(EVENT_KEY.RESET, this.loadAis.bind(this))
+    bus.subscribe(EVENT_KEY.START_TURN, this.takeTurn.bind(this))
   }
 
   private invalidMove(action: Action, source: Pawn): boolean {
@@ -23,7 +23,7 @@ export class AiHandler {
       return true;
     }
 
-    if (this.map.cellOccupied(action.x, action.y)) {
+    if (map.cellOccupied(action.x, action.y)) {
       console.log(`invalid MOVE, ${source.x},${source.y} tried to move to occupied square: ${JSON.stringify(action)}`);
       return true;
     }
@@ -66,21 +66,18 @@ export class AiHandler {
   }
 
   private attemptMerge(slime: Slime): void {
-    const mySlimes = this.map.neighbors(slime).filter(pawn => pawn.owner === slime.owner) as Array<Slime>;
+    const mySlimes = map.neighbors(slime).filter(pawn => pawn.owner === slime.owner) as Array<Slime>;
     const mergeableSlimes = mySlimes.filter(slime => slime?.readyToMerge);
     if (mergeableSlimes[0]) {
       const sacrifice = mergeableSlimes[0];
-      slime.gainExperience(sacrifice.xp);
-      slime.gainHp(slime.maxHp); // set hp to max
-      this.map.clearCell(sacrifice.x, sacrifice.y);
-      textHandler.addText('MERGE', slime, '#72fa78');
+      bus.emit(EVENT_KEY.MERGE, { slime, sacrifice });
     } else {
       slime.readyToMerge = true;
     }
   }
 
   private attemptSplit(slime: Slime): void {
-    const cells = this.map.emptyCells(slime);
+    const cells = map.emptyCells(slime);
     if (cells.length === 0) {
       console.log(`slime ${slime.id} for player ${slime.owner} attempted to split without any valid cells`);
       return;
@@ -91,19 +88,12 @@ export class AiHandler {
       return;
     }
 
-    slime.split();
-    const targetCell = cells[randomInt(0, cells.length - 1)];
-    const child = new Slime(slime.owner, targetCell[0], targetCell[1]);
-    // set the child stats based on the split initiator
-    child.gainExperience(slime.xp - 1); // -1 to offset the 1 you start with
-    child.hp = slime.hp
-    this.map.move(child, child.x, child.y);
-    textHandler.addText('SPLIT', slime, '#941651');
+    bus.emit(EVENT_KEY.SPLIT, { slime });
   }
 
   private updatePawnStats() {
     if (hoveredPawnId) {
-      const pawn = this.map.findById(hoveredPawnId);
+      const pawn = map.findById(hoveredPawnId);
       if (pawn) {
         hoveredPawnStore.update(_ => pawn.json());
       }
@@ -121,26 +111,25 @@ export class AiHandler {
         if (this.invalidMove(action, source)) {
           return;
         }
-        this.map.move(source, action.x, action.y);
+        const event = {
+          pawn: source,
+          from: {
+            x: source.x,
+            y: source.y
+          },
+          to: {
+            x: action.x,
+            y: action.y
+          }
+        };
+        bus.emit(EVENT_KEY.MOVE, event);
         break;
       case ACTIONS.BITE:
-        const target = this.map.get(action.x, action.y);
+        const target = map.get(action.x, action.y);
         if (this.invalidBite(action, source, target) || !source.attack || !target) {
           return;
         }
-        if (target.type === PAWN_TYPE.ROCK){
-          const killed = target?.takeDamage(source.attack);
-          if (killed) {
-            this.map.clearCell(target.x, target.y);
-          }
-          return;
-        }
-        const killed = target?.takeDamage(source.attack);
-        if (killed) {
-          this.map.clearCell(target.x, target.y);
-        }
-        source.gainExperience(1);
-        source.gainHp(1);
+        bus.emit(EVENT_KEY.BITE, { source, target })
         break;
       case ACTIONS.MERGE:
         this.attemptMerge(source as Slime);
@@ -155,19 +144,19 @@ export class AiHandler {
 
   private runAi(slime: Slime): void {
     // skip slimes that were eaten or merged away
-    const currentCellOccupant = this.map.get(slime.x, slime.y);
-    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id || isGameOver(this.map, turn)) {
+    const currentCellOccupant = map.get(slime.x, slime.y);
+    if (currentCellOccupant === null || currentCellOccupant.id !== slime.id || isGameOver(turn)) {
       return;
     }
 
     let playerAction;
     try {
       if (slime.owner === 1) {
-        playerAction = this.playerOne.ai.takeAction(this.map.readOnlyMap, slime.id,configuration,turn);
+        playerAction = this.playerOne.ai.takeAction(map.readOnlyMap, slime.id,configuration,turn);
       } else {
-        playerAction = this.playerTwo.ai.takeAction(this.map.readOnlyMap, slime.id,configuration,turn);
+        playerAction = this.playerTwo.ai.takeAction(map.readOnlyMap, slime.id,configuration,turn);
       }
-    } catch (exception) {
+    } catch (exception: any) {
       console.log(`player ${slime.owner} takeAction errored with: ${exception}`);
       console.log(exception.stack);
       return;
@@ -181,8 +170,8 @@ export class AiHandler {
   // get array alternating each player's slimes
   // leftover slimes are at the end of the array
   private getSlimes(): Array<Slime> {
-    const one = this.map.pawns.filter(pawn => pawn.owner === 1);
-    const two = this.map.pawns.filter(pawn => pawn.owner === 2);
+    const one = map.pawns.filter(pawn => pawn.owner === 1);
+    const two = map.pawns.filter(pawn => pawn.owner === 2);
     let slimes = [];
     const whoGoesFirst = randomInt(1, 2);
     while (one.length > 0 || two.length > 0) {
@@ -206,6 +195,5 @@ export class AiHandler {
   takeTurn() {
     const slimes = this.getSlimes();
     slimes.forEach((slime) => this.runAi(slime));
-    slimes.forEach((slime) => slime.readyToMerge = false);
   }
 }

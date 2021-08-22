@@ -1,10 +1,10 @@
-import { Map } from './models/map';
+import { map } from '../ui/store';
 
 export function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function isGameOver(map: Map, turn: number): boolean {
+export function isGameOver(turn: number): boolean {
   if (turn >= 1000) {
     return true;
   }

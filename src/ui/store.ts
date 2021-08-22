@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 import * as PIXI from "pixi.js";
 import { Game } from '../game/game';
-import { TextHandler } from '../game/handlers/text_handler';
+import { Bus } from '../game/handlers/bus';
+import { Map as GameMap } from '../game/models/map';
 import { Configuration } from '../game/schema';
 
 // turn
@@ -13,9 +14,6 @@ turnStore.subscribe(value => turn = value);
 export const scoresStore = writable([0, 0]);
 export let scores: Array<number>;
 scoresStore.subscribe(value => scores = value);
-
-// handles rendered text (like SPLIT and MERGE)
-export const textHandler = new TextHandler();
 
 // for displaying details of the pawn the mouse is hovering over
 export const hoveredPawnStore = writable({});
@@ -71,4 +69,10 @@ export let configuration: Configuration;
 // @ts-ignore
 configurationStore.subscribe(value => configuration = { ...configuration, ...value });
 
+
+// game state
+export const bus = new Bus();
+export const map = new GameMap();
+export const sprites = new Map<number, PIXI.Container>(); // keyed by id
+// TODO: move pawns up here out of the map
 export const game = new Game();
